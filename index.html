@@ -964,7 +964,7 @@
         <div class="koreksi-header">
             <div class="koreksi-header-left">
                 <div class="koreksi-title">❗ Koreksi Ayat</div>
-                <div class="koreksi-sub">Ketuk ayat yang salah untuk menandainya</div>
+                <div class="koreksi-sub">Ketuk ayat yang salah · Arab tampil khusus Juz 30</div>
             </div>
             <button class="btn-close" onclick="closeKoreksi()">✕</button>
         </div>
@@ -1347,8 +1347,13 @@
         document.getElementById('juzModal').classList.remove('active');
     }
     function selectJuz(num) {
+        const prevJuz = document.getElementById('juz').value;
         document.getElementById('juz').value = String(num);
         document.getElementById('juzText').textContent = 'Juz ' + num;
+        if (String(num) !== prevJuz && state.selectedSurah.length) {
+            state.selectedSurah = [];
+            renderSuratList();
+        }
     }
 
     /* ─── MODAL SISWA ─── */
@@ -1763,20 +1768,24 @@ function tambahSiswa() {
         const body = document.getElementById('koreksiBody');
         const empty = document.getElementById('koreksiEmpty');
 
+        // Selalu hapus konten lama KECUALI element koreksiEmpty, lalu tambah kembali
+        // Ini mencegah bug di mana koreksiEmpty hilang dari DOM setelah innerHTML = ''
+        Array.from(body.children).forEach(child => {
+            if (child.id !== 'koreksiEmpty') child.remove();
+        });
+
         if (!state.selectedSurah.length) {
-            body.innerHTML = '';
-            body.appendChild(empty);
             empty.style.display = 'block';
             updateKoreksiSummary();
             return;
         }
 
         empty.style.display = 'none';
-        body.innerHTML = '';
 
-        state.selectedSurah.forEach(surat => {
+        state.selectedSurah.forEach((surat, suratIndex) => {
             if (!surat.ayatSalah) surat.ayatSalah = [];
             const suratAyatArab = AYAT_ARAB[surat.num] || null;
+            const hasArab = !!suratAyatArab;
 
             const block = document.createElement('div');
             block.className = 'koreksi-surat-block';
@@ -1793,10 +1802,10 @@ function tambahSiswa() {
                       id="koreksi-count-${surat.num}">${surat.ayatSalah.length} salah</span>`;
             block.appendChild(header);
 
-            // Render ayat
+            // Render ayat sesuai range dari–sampai
             for (let a = surat.dari; a <= surat.sampai; a++) {
                 const isSalah = surat.ayatSalah.includes(a);
-                const arabText = suratAyatArab ? (suratAyatArab[a] || null) : null;
+                const arabText = hasArab ? (suratAyatArab[a] || null) : null;
 
                 const item = document.createElement('div');
                 item.className = 'koreksi-ayat-item' + (isSalah ? ' salah' : '');
@@ -1811,13 +1820,10 @@ function tambahSiswa() {
                             <span class="koreksi-salah-tag">✕ Salah</span>
                         </div>`;
                 } else {
-                    // Fallback jika ayat Arab tidak tersedia
+                    // Tampilan tanpa teks Arab — tetap bisa diklik untuk menandai salah
                     item.innerHTML = `
-                        <div class="koreksi-ayat-arab" style="font-size:14px;color:var(--g5);font-family:inherit;direction:ltr;text-align:left;">
-                            (Teks Arab tidak tersedia untuk surat ini)
-                        </div>
-                        <div class="koreksi-ayat-footer">
-                            <span class="koreksi-ayat-nomor">Ayat ${a}</span>
+                        <div class="koreksi-ayat-footer" style="padding:0;">
+                            <span class="koreksi-ayat-nomor" style="font-size:13px;font-weight:800;">Ayat ${a}</span>
                             <span class="koreksi-salah-tag">✕ Salah</span>
                         </div>`;
                 }
@@ -1825,8 +1831,8 @@ function tambahSiswa() {
                 block.appendChild(item);
             }
 
-            // Divider antar surat
-            if (state.selectedSurah.indexOf(surat) < state.selectedSurah.length - 1) {
+            // Divider antar surat (kecuali surat terakhir)
+            if (suratIndex < state.selectedSurah.length - 1) {
                 const div = document.createElement('div');
                 div.className = 'divider';
                 block.appendChild(div);
