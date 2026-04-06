@@ -1,5 +1,7 @@
-const CACHE_NAME = 'tahfidz-v2';
+const CACHE_NAME = 'tahfidz-v3';
+
 const ASSETS = [
+  './',
   './index.html',
   './manifest.json',
   './icons/icon-72x72.png',
@@ -10,60 +12,102 @@ const ASSETS = [
   './icons/icon-192x192.png',
   './icons/icon-384x384.png',
   './icons/icon-512x512.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
 ];
 
-// Install: cache semua assets termasuk seluruh icon
+// CDN pihak ketiga — di-cache terpisah dengan mode 'no-cors' (opaque response)
+const CDN_ASSETS = [
+  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+];
+
+// ── INSTALL: pre-cache semua aset lokal + CDN ──
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(async cache => {
+      // Cache aset lokal (same-origin, aman)
+      await cache.addAll(ASSETS);
+
+      // Cache CDN dengan no-cors (hasilnya opaque tapi tetap bisa disajikan)
+      await Promise.all(
+        CDN_ASSETS.map(url =>
+          fetch(url, { mode: 'no-cors' })
+            .then(res => cache.put(url, res))
+            .catch(err => console.warn('[SW] Gagal cache CDN:', url, err))
+        )
+      );
+    })
   );
   self.skipWaiting();
 });
 
-// Activate: hapus semua cache lama (termasuk v1)
+// ── ACTIVATE: hapus cache lama ──
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => {
-        console.log('[SW] Menghapus cache lama:', k);
-        return caches.delete(k);
-      }))
+      Promise.all(
+        keys
+          .filter(k => k !== CACHE_NAME)
+          .map(k => {
+            console.log('[SW] Hapus cache lama:', k);
+            return caches.delete(k);
+          })
+      )
     ).then(() => self.clients.claim())
   );
 });
 
-// Fetch: network-first untuk icon & manifest, cache-first untuk lainnya
+// ── FETCH: strategi per tipe request ──
 self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
-  const isIcon = url.pathname.includes('/icons/');
-  const isManifest = url.pathname.endsWith('manifest.json');
+  const { request } = e;
+  const url = new URL(request.url);
 
-  if (isIcon || isManifest) {
-    // Network-first: ambil versi terbaru dari server, fallback ke cache
+  // Abaikan request non-GET
+  if (request.method !== 'GET') return;
+
+  // Abaikan protokol non-http
+  if (!url.protocol.startsWith('http')) return;
+
+  const isCDN = url.hostname === 'cdnjs.cloudflare.com';
+
+  if (isCDN) {
+    // CDN: cache-first → jika tidak ada, fetch no-cors lalu simpan
     e.respondWith(
-      fetch(e.request).then(response => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-        }
-        return response;
-      }).catch(() => caches.match(e.request))
-    );
-  } else {
-    // Cache-first untuk aset lain
-    e.respondWith(
-      caches.match(e.request).then(cached => {
+      caches.match(request).then(cached => {
         if (cached) return cached;
-        return fetch(e.request).then(response => {
-          if (!response || response.status !== 200 || response.type === 'opaque') {
-            return response;
+        return fetch(request, { mode: 'no-cors' }).then(res => {
+          if (res) {
+            caches.open(CACHE_NAME).then(cache => cache.put(request, res.clone()));
           }
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-          return response;
-        }).catch(() => caches.match('./index.html'));
+          return res;
+        }).catch(() => {
+          console.warn('[SW] CDN offline dan tidak ada cache:', request.url);
+        });
       })
     );
+    return;
+  }
+
+  // Aset lokal: cache-first → fallback network → fallback index.html
+  e.respondWith(
+    caches.match(request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(request).then(response => {
+        if (!response || response.status !== 200) return response;
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+        return response;
+      }).catch(() => {
+        if (request.destination === 'document') {
+          return caches.match('./index.html');
+        }
+      });
+    })
+  );
+});
+
+// ── MESSAGE: trigger skip waiting dari halaman ──
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
 });

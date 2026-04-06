@@ -453,6 +453,25 @@
         .divider { height: 1px; background: var(--g2); margin: 10px 0; }
         input[type=file] { display: none; }
 
+        /* ── OFFLINE BANNER ── */
+        #offlineBanner {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 9999;
+            background: #b45309;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            padding: 7px 12px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.25);
+            animation: slideDown .3s ease;
+        }
+        #offlineBanner.show { display: block; }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
         /* ── PILL GRID (kelas, juz, siswa) ── */
         .grid-pills {
             display: flex; flex-wrap: wrap; gap: 7px;
@@ -838,6 +857,7 @@
 </head>
 <body>
 <div class="toast" id="toast"></div>
+<div id="offlineBanner">📵 Anda sedang offline — data tersimpan lokal, semua fitur tetap berjalan</div>
 <div class="app">
 
     <!-- HEADER -->
@@ -2016,11 +2036,49 @@ function tambahSiswa() {
 </script>
 
 <script>
+  // ── OFFLINE BANNER ──
+  const offlineBanner = document.getElementById('offlineBanner');
+
+  function updateOnlineStatus() {
+    if (!navigator.onLine) {
+      offlineBanner.classList.add('show');
+    } else {
+      offlineBanner.classList.remove('show');
+    }
+  }
+
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus(); // cek status awal
+
+  // ── SERVICE WORKER REGISTRATION ──
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
-        .then(r => console.log('SW registered:', r.scope))
-        .catch(e => console.log('SW error:', e));
+        .then(reg => {
+          console.log('[PWA] SW terdaftar:', reg.scope);
+
+          // Deteksi update SW baru
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Ada versi baru — minta SW baru langsung aktif
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        })
+        .catch(err => console.warn('[PWA] SW gagal:', err));
+
+      // Reload otomatis saat SW baru aktif (tanpa perlu refresh manual)
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
     });
   }
 </script>

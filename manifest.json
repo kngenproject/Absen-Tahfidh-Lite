@@ -2,7 +2,7 @@
   "name": "Absensi Tahfidz Pro",
   "short_name": "Tahfidz",
   "description": "Aplikasi Setoran Hafalan Al-Qur'an",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#059669",
