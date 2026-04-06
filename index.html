@@ -853,6 +853,205 @@
             border-bottom: 1px solid var(--g2);
             background: white;
         }
+
+        /* ══════════════════════════════════════════
+           ── MONITORING TAB ──
+        ══════════════════════════════════════════ */
+
+        /* Tab monitoring wrapper */
+        #tab-monitoring {
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #tab-monitoring.active { display: flex; }
+
+        /* Toolbar atas monitoring */
+        .mon-toolbar {
+            flex-shrink: 0;
+            padding: 8px 12px;
+            background: white;
+            border-bottom: 1px solid var(--g2);
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .mon-filter-pill {
+            display: inline-flex; align-items: center;
+            padding: 6px 12px;
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600; color: var(--g8);
+            cursor: pointer; transition: all .12s;
+            white-space: nowrap;
+        }
+        .mon-filter-pill.active { background: var(--p); border-color: var(--p); color: white; }
+        .mon-filter-pill:active { transform: scale(.95); }
+
+        .btn-export-mon {
+            margin-left: auto;
+            padding: 7px 12px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white; border: none; border-radius: var(--r);
+            font-size: 11px; font-weight: 700;
+            cursor: pointer; white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(14,165,233,.3);
+        }
+        .btn-export-mon:active { opacity: .85; transform: scale(.97); }
+
+        /* Scrollable list area */
+        .mon-list {
+            flex: 1; overflow-y: auto;
+            padding: 8px 12px 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mon-list::-webkit-scrollbar { width: 3px; }
+        .mon-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+
+        /* Card monitoring siswa */
+        .mon-card {
+            background: white;
+            border-radius: var(--r2);
+            box-shadow: var(--sh);
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid var(--g2);
+        }
+
+        /* Header card */
+        .mon-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid var(--g2);
+        }
+        .mon-card-identity { flex: 1; min-width: 0; }
+        .mon-card-name {
+            font-weight: 800; font-size: 13px; color: var(--g9);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .mon-badge-kelas {
+            display: inline-block;
+            font-size: 9px; font-weight: 700;
+            background: var(--p3); color: var(--p2);
+            padding: 2px 7px; border-radius: 10px; margin-top: 2px;
+        }
+
+        /* Status utama badge */
+        .mon-status-badge {
+            flex-shrink: 0;
+            font-size: 10px; font-weight: 700;
+            padding: 4px 9px; border-radius: 12px;
+            white-space: nowrap;
+        }
+        .msb-setoran { background: #fef9c3; color: #713f12; }
+        .msb-muroja  { background: #dbeafe; color: #1e3a8a; }
+        .msb-siap    { background: #ede9fe; color: #4c1d95; }
+        .msb-selesai { background: #dcfce7; color: #14532d; }
+        .msb-kosong  { background: var(--g1); color: var(--g5); }
+
+        /* Body card – grid info */
+        .mon-card-body {
+            padding: 8px 12px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Setoran terakhir */
+        .mon-last-row {
+            font-size: 11px; color: var(--g6);
+            display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+        }
+        .mon-last-label { font-weight: 700; color: var(--g5); }
+        .mon-chip {
+            display: inline-block;
+            padding: 2px 7px; border-radius: 8px;
+            font-size: 10px; font-weight: 600;
+        }
+        .chip-l { background: #dcfce7; color: #14532d; }
+        .chip-kl { background: #fee2e2; color: #7f1d1d; }
+
+        /* Progress bar Juz 30 */
+        .mon-progress-wrap { margin-top: 2px; }
+        .mon-progress-label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px; margin-bottom: 4px;
+        }
+        .mon-progress-title { font-weight: 700; color: var(--g7); }
+        .mon-progress-count { font-weight: 700; color: var(--p); }
+        .mon-progress-count.khatam { color: #16a34a; }
+        .mon-bar-bg {
+            background: var(--g2); border-radius: 6px; height: 7px; overflow: hidden;
+        }
+        .mon-bar-fill {
+            height: 100%; border-radius: 6px;
+            background: linear-gradient(90deg, var(--p), var(--p2));
+            transition: width .4s ease;
+            min-width: 4px;
+        }
+        .mon-bar-fill.khatam {
+            background: linear-gradient(90deg, #16a34a, #15803d);
+        }
+        .mon-sisa { font-size: 10px; color: var(--g5); margin-top: 2px; }
+
+        /* Row muroja'ah & tasmi' */
+        .mon-info-row {
+            display: flex; gap: 6px;
+        }
+        .mon-info-box {
+            flex: 1; background: var(--g1);
+            border-radius: 8px; padding: 6px 8px;
+            border: 1px solid var(--g2);
+        }
+        .mon-info-lbl { font-size: 9px; font-weight: 700; color: var(--g5); text-transform: uppercase; letter-spacing: 0.3px; }
+        .mon-info-val {
+            font-size: 11px; font-weight: 700; color: var(--g7);
+            margin-top: 2px;
+        }
+        .miv-belum { color: var(--danger); }
+        .miv-proses { color: #d97706; }
+        .miv-selesai { color: #16a34a; }
+        .miv-siap { color: var(--purple); }
+
+        /* Tombol Tasmi' */
+        .mon-card-foot {
+            padding: 0 12px 10px;
+        }
+        .btn-tasmi {
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+            color: white; border: none; border-radius: var(--r);
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(124,58,237,.3);
+        }
+        .btn-tasmi:active { opacity: .85; transform: scale(.98); }
+
+        /* Modal Tasmi' */
+        #tasmiModal .modal-sheet { max-height: 92vh; }
+        .tasmi-nilai-row { display: flex; gap: 8px; }
+        .tasmi-nilai-opt {
+            flex: 1; display: flex; align-items: center; gap: 8px;
+            padding: 10px 12px;
+            border: 2px solid var(--g2); border-radius: var(--r);
+            background: white; cursor: pointer; transition: all .15s;
+        }
+        .tasmi-nilai-opt .tn-letter { font-size: 20px; font-weight: 900; line-height: 1; min-width: 26px; text-align: center; }
+        .tasmi-nilai-opt .tn-desc { font-size: 11px; color: var(--g5); font-weight: 500; }
+        .tasmi-nilai-opt.sel-l { background: var(--p); border-color: var(--p); color: white; }
+        .tasmi-nilai-opt.sel-l .tn-desc { color: rgba(255,255,255,.85); }
+        .tasmi-nilai-opt.sel-kl { background: var(--danger); border-color: var(--danger); color: white; }
+        .tasmi-nilai-opt.sel-kl .tn-desc { color: rgba(255,255,255,.85); }
+        .tasmi-nilai-opt:active { transform: scale(.97); }
+
+        /* Empty state monitoring */
+        .mon-empty { text-align: center; padding: 40px 20px; color: var(--g4); }
+        .mon-empty-icon { font-size: 40px; margin-bottom: 8px; }
+        .mon-empty-text { font-size: 13px; font-weight: 600; }
+        .mon-empty-sub { font-size: 11px; margin-top: 4px; color: var(--g4); }
     </style>
 </head>
 <body>
@@ -876,6 +1075,7 @@
     <div class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
         <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
+        <button class="tab-btn" onclick="switchTab('monitoring')">📊 Monitoring</button>
     </div>
 
     <div class="container">
@@ -1045,6 +1245,27 @@
 
         </div><!-- /tab-keterangan -->
 
+        <!-- ════ TAB MONITORING ════ -->
+        <div id="tab-monitoring" class="tab-content">
+
+            <!-- Toolbar filter kelas -->
+            <div class="mon-toolbar">
+                <div class="mon-filter-pill active" id="monFilterAll" onclick="monSetFilter('')">Semua</div>
+                <div id="monFilterKelas" style="display:contents;"></div>
+                <button class="btn-export-mon" onclick="exportMonitoringBulanan()">📤 Export</button>
+            </div>
+
+            <!-- List card siswa -->
+            <div class="mon-list" id="monList">
+                <div class="mon-empty">
+                    <div class="mon-empty-icon">📊</div>
+                    <div class="mon-empty-text">Belum ada data siswa</div>
+                    <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
+                </div>
+            </div>
+
+        </div><!-- /tab-monitoring -->
+
     </div><!-- /container -->
 </div><!-- /app -->
 
@@ -1100,6 +1321,57 @@
         </div>
         <div class="modal-body">
             <div id="gridContainer" class="grid-surat"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ════ MODAL TASMI' ════ -->
+<div id="tasmiModal" class="modal-overlay" onclick="closeTasmiModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>🎤 Form Tasmi'</h2>
+            <button class="btn-close" onclick="closeTasmiModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="fg">
+                <label class="lbl">Nama Siswa</label>
+                <input type="text" id="tasmiNama" class="field" disabled>
+            </div>
+            <div class="fg row">
+                <div>
+                    <label class="lbl">Juz</label>
+                    <input type="text" id="tasmiJuz" class="field" value="30" disabled style="text-align:center;font-weight:700;">
+                </div>
+                <div>
+                    <label class="lbl">Tanggal</label>
+                    <input type="date" id="tasmiTanggal" class="field">
+                </div>
+            </div>
+            <div class="fg">
+                <label class="lbl">Penilaian</label>
+                <div class="tasmi-nilai-row" id="tasmiNilaiRow">
+                    <div class="tasmi-nilai-opt" data-nilai="L" onclick="pilihTasmiNilai('L')">
+                        <span class="tn-letter">L</span>
+                        <span class="tn-desc">Lancar</span>
+                    </div>
+                    <div class="tasmi-nilai-opt" data-nilai="KL" onclick="pilihTasmiNilai('KL')">
+                        <span class="tn-letter">KL</span>
+                        <span class="tn-desc">Kurang Lancar</span>
+                    </div>
+                </div>
+            </div>
+            <div class="fg">
+                <label class="lbl">Penguji</label>
+                <input type="text" id="tasmiPenguji" class="field" placeholder="Nama penguji...">
+            </div>
+            <div class="fg">
+                <label class="lbl">Catatan</label>
+                <textarea id="tasmiCatatan" class="field" rows="2" placeholder="Catatan tambahan..." style="resize:none;"></textarea>
+            </div>
+            <div class="fg">
+                <button class="btn-primary" onclick="simpanTasmi()">💾 &nbsp;Simpan Tasmi'</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1242,6 +1514,10 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + name).classList.add('active');
         document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+        if (name === 'monitoring') {
+            renderMonFilterKelas();
+            renderMonitoring();
+        }
     }
 
     /* ─── SUB-TABS (Info) ─── */
@@ -2033,6 +2309,325 @@ function tambahSiswa() {
     }
 
     init();
+
+    /* ══════════════════════════════════════════
+       ── MONITORING TAHFIDZ ──
+    ══════════════════════════════════════════ */
+
+    // Surat Juz 30 urutan setoran: An-Nas (114) → An-Naba (78)
+    const JUZ30_SURAT = (ALL_SURAT[30] || []).map(s => s.num);
+    // Total surat Juz 30
+    const JUZ30_TOTAL = JUZ30_SURAT.length; // 37
+
+    let monFilterKelas = '';
+    let tasmiSiswaId = null;
+    let tasmiNilaiSelected = null;
+
+    /* ── Hitung progress Juz 30 dari dataSetoran ── */
+    function hitungProgressJuz30(siswaId) {
+        const setoranSiswa = state.dataSetoran.filter(s => s.SiswaId === siswaId && String(s.juz) === '30');
+        const suratDihafalSet = new Set();
+        setoranSiswa.forEach(s => {
+            (s.surah || []).forEach(sr => {
+                if (JUZ30_SURAT.includes(sr.num)) suratDihafalSet.add(sr.num);
+            });
+        });
+        return suratDihafalSet.size;
+    }
+
+    /* ── Cek apakah sudah khatam Juz 30 ── */
+    function isKhatamJuz30(siswaId) {
+        return hitungProgressJuz30(siswaId) >= JUZ30_TOTAL;
+    }
+
+    /* ── Hitung progress muroja'ah ──
+       Muroja'ah = setoran dengan jenis='muroja' di Juz 30
+    */
+    function hitungProgressMuroja(siswaId) {
+        const setoranMuroja = state.dataSetoran.filter(
+            s => s.SiswaId === siswaId && String(s.juz) === '30' && s.jenis === 'muroja'
+        );
+        const suratMurojaSet = new Set();
+        setoranMuroja.forEach(s => {
+            (s.surah || []).forEach(sr => {
+                if (JUZ30_SURAT.includes(sr.num)) suratMurojaSet.add(sr.num);
+            });
+        });
+        return suratMurojaSet.size;
+    }
+
+    /* ── Ambil data tasmi' siswa dari localStorage ── */
+    function getTasmiData() {
+        const raw = localStorage.getItem('dataTasmi');
+        return raw ? JSON.parse(raw) : [];
+    }
+    function saveTasmiData(data) {
+        localStorage.setItem('dataTasmi', JSON.stringify(data));
+    }
+    function getTasmiSiswa(siswaId) {
+        return getTasmiData().find(t => t.siswaId === siswaId) || null;
+    }
+
+    /* ── Tentukan status utama siswa ── */
+    function getStatusUtama(siswaId) {
+        const khatam = isKhatamJuz30(siswaId);
+        const murojaCount = hitungProgressMuroja(siswaId);
+        const tasmi = getTasmiSiswa(siswaId);
+
+        if (tasmi) return 'selesai';
+        if (khatam && murojaCount >= JUZ30_TOTAL) return 'siap';
+        if (khatam) return 'muroja';
+        return 'setoran';
+    }
+
+    /* ── Ambil setoran terakhir siswa ── */
+    function getSetoranTerakhir(siswaId) {
+        return state.dataSetoran.find(s => s.SiswaId === siswaId) || null;
+    }
+
+    /* ── Render filter kelas di toolbar monitoring ── */
+    function renderMonFilterKelas() {
+        const container = document.getElementById('monFilterKelas');
+        if (!container) return;
+        const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+        container.innerHTML = kelasList.map(k =>
+            `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${k}')">Kelas ${k}</div>`
+        ).join('');
+    }
+
+    function monSetFilter(kelas) {
+        monFilterKelas = kelas;
+        // Update pill aktif
+        document.getElementById('monFilterAll').classList.toggle('active', kelas === '');
+        renderMonFilterKelas();
+        renderMonitoring();
+    }
+
+    /* ── Render card monitoring ── */
+    function renderMonitoring() {
+        const container = document.getElementById('monList');
+        if (!container) return;
+
+        let siswaList = state.dataSiswa;
+        if (monFilterKelas) siswaList = siswaList.filter(s => s.kelas === monFilterKelas);
+
+        if (!siswaList.length) {
+            container.innerHTML = `<div class="mon-empty">
+                <div class="mon-empty-icon">📊</div>
+                <div class="mon-empty-text">${state.dataSiswa.length ? 'Tidak ada siswa di kelas ini' : 'Belum ada data siswa'}</div>
+                <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = siswaList.map(siswa => buildMonCard(siswa)).join('');
+    }
+
+    function buildMonCard(siswa) {
+        const { id, nama, kelas } = siswa;
+        const statusUtama = getStatusUtama(id);
+        const progressJuz = hitungProgressJuz30(id);
+        const murojaCount = hitungProgressMuroja(id);
+        const khatam = progressJuz >= JUZ30_TOTAL;
+        const tasmi = getTasmiSiswa(id);
+        const last = getSetoranTerakhir(id);
+
+        // Status badge label
+        const statusBadgeMap = {
+            setoran: { cls: 'msb-setoran', label: '📚 Setoran' },
+            muroja:  { cls: 'msb-muroja',  label: '🔄 Muroja\'ah' },
+            siap:    { cls: 'msb-siap',    label: '🔥 Siap Tasmi\'' },
+            selesai: { cls: 'msb-selesai', label: '✅ Tasmi\' Selesai' },
+        };
+        const badge = statusBadgeMap[statusUtama] || { cls: 'msb-kosong', label: '-' };
+
+        // Setoran terakhir
+        let lastHtml = '<span style="color:var(--g4);font-size:11px;">Belum ada setoran</span>';
+        if (last) {
+            const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
+            const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+            const suratNames = (last.surah || []).map(sr => `${sr.name} ${sr.dari}–${sr.sampai}`).join(', ');
+            const chipCls = last.status === 'lancar' ? 'chip-l' : 'chip-kl';
+            const chipTxt = last.status === 'lancar' ? 'L' : 'KL';
+            lastHtml = `<span class="mon-last-label">Terakhir:</span>
+                <span>${tgl}</span>
+                <span>·</span>
+                <span>${jenisMap[last.jenis] || last.jenis}</span>
+                <span>·</span>
+                <span style="font-size:11px;color:var(--g7);">${suratNames}</span>
+                <span class="mon-chip ${chipCls}">${chipTxt}</span>`;
+        }
+
+        // Progress Juz 30
+        const pct = Math.round((progressJuz / JUZ30_TOTAL) * 100);
+        const progressHtml = khatam
+            ? `<div class="mon-progress-label">
+                <span class="mon-progress-title">📖 Progress Juz 30</span>
+                <span class="mon-progress-count khatam">Khatam 🎉</span>
+               </div>
+               <div class="mon-bar-bg"><div class="mon-bar-fill khatam" style="width:100%"></div></div>`
+            : `<div class="mon-progress-label">
+                <span class="mon-progress-title">📖 Progress Juz 30</span>
+                <span class="mon-progress-count">${progressJuz} / ${JUZ30_TOTAL} surat</span>
+               </div>
+               <div class="mon-bar-bg"><div class="mon-bar-fill" style="width:${pct}%"></div></div>
+               <div class="mon-sisa">Sisa ${JUZ30_TOTAL - progressJuz} surat</div>`;
+
+        // Status muroja'ah
+        let murojaHtml, murojaValCls;
+        if (!khatam) {
+            murojaHtml = 'Belum'; murojaValCls = 'miv-belum';
+        } else if (murojaCount >= JUZ30_TOTAL) {
+            murojaHtml = 'Selesai ✅'; murojaValCls = 'miv-selesai';
+        } else if (murojaCount > 0) {
+            murojaHtml = `${murojaCount} / ${JUZ30_TOTAL}`; murojaValCls = 'miv-proses';
+        } else {
+            murojaHtml = 'Belum'; murojaValCls = 'miv-belum';
+        }
+
+        // Status tasmi'
+        let tasmiHtml, tasmiValCls;
+        if (tasmi) {
+            tasmiHtml = `Sudah ✅<br><span style="font-size:10px;font-weight:600;">${tasmi.nilai} · ${tasmi.tanggal ? tasmi.tanggal.split('-').reverse().join('/') : ''}</span>`;
+            tasmiValCls = 'miv-selesai';
+        } else if (statusUtama === 'siap') {
+            tasmiHtml = 'Siap 🔥'; tasmiValCls = 'miv-siap';
+        } else {
+            tasmiHtml = 'Belum'; tasmiValCls = 'miv-belum';
+        }
+
+        // Tombol tasmi' hanya jika siap
+        const tasmiBtn = statusUtama === 'siap'
+            ? `<div class="mon-card-foot"><button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Input Tasmi'</button></div>`
+            : '';
+
+        return `<div class="mon-card">
+            <div class="mon-card-head">
+                <div class="mon-card-identity">
+                    <div class="mon-card-name">${nama}</div>
+                    <span class="mon-badge-kelas">Kelas ${kelas}</span>
+                </div>
+                <span class="mon-status-badge ${badge.cls}">${badge.label}</span>
+            </div>
+            <div class="mon-card-body">
+                <div class="mon-last-row">${lastHtml}</div>
+                <div class="mon-progress-wrap">${progressHtml}</div>
+                <div class="mon-info-row">
+                    <div class="mon-info-box">
+                        <div class="mon-info-lbl">Muroja'ah</div>
+                        <div class="mon-info-val ${murojaValCls}">${murojaHtml}</div>
+                    </div>
+                    <div class="mon-info-box">
+                        <div class="mon-info-lbl">Tasmi'</div>
+                        <div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div>
+                    </div>
+                </div>
+            </div>
+            ${tasmiBtn}
+        </div>`;
+    }
+
+    /* ── Modal Tasmi' ── */
+    function openTasmiModal(siswaId) {
+        const siswa = state.dataSiswa.find(s => s.id === siswaId);
+        if (!siswa) return;
+        tasmiSiswaId = siswaId;
+        tasmiNilaiSelected = null;
+        document.getElementById('tasmiNama').value = siswa.nama;
+        document.getElementById('tasmiJuz').value = 30;
+        document.getElementById('tasmiTanggal').value = todayStr();
+        document.getElementById('tasmiPenguji').value = '';
+        document.getElementById('tasmiCatatan').value = '';
+        document.querySelectorAll('.tasmi-nilai-opt').forEach(el => el.classList.remove('sel-l','sel-kl'));
+        document.getElementById('tasmiModal').classList.add('active');
+    }
+    function closeTasmiModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('tasmiModal').classList.remove('active');
+        tasmiSiswaId = null;
+    }
+    function pilihTasmiNilai(val) {
+        tasmiNilaiSelected = val;
+        document.querySelectorAll('.tasmi-nilai-opt').forEach(el => {
+            el.classList.remove('sel-l','sel-kl');
+            if (el.getAttribute('data-nilai') === val) {
+                el.classList.add(val === 'L' ? 'sel-l' : 'sel-kl');
+            }
+        });
+    }
+    function simpanTasmi() {
+        if (!tasmiSiswaId) return;
+        if (!tasmiNilaiSelected) { showToast('⚠️ Pilih penilaian L atau KL'); return; }
+        const tgl = document.getElementById('tasmiTanggal').value;
+        if (!tgl) { showToast('⚠️ Isi tanggal tasmi\''); return; }
+        const penguji = document.getElementById('tasmiPenguji').value.trim();
+        const catatan = document.getElementById('tasmiCatatan').value.trim();
+
+        const allTasmi = getTasmiData();
+        const existing = allTasmi.findIndex(t => t.siswaId === tasmiSiswaId);
+        const record = { siswaId: tasmiSiswaId, juz: 30, tanggal: tgl, nilai: tasmiNilaiSelected, penguji, catatan };
+        if (existing !== -1) allTasmi[existing] = record;
+        else allTasmi.push(record);
+        saveTasmiData(allTasmi);
+
+        showToast('✅ Data Tasmi\' tersimpan!');
+        closeTasmiModal();
+        renderMonitoring();
+    }
+
+    /* ── Export Bulanan ── */
+    function exportMonitoringBulanan() {
+        if (!state.dataSiswa.length) { showToast('⚠️ Belum ada data siswa'); return; }
+        const now = new Date();
+        const bulanIni = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+        const rows = state.dataSiswa.map(siswa => {
+            const { id, nama, kelas } = siswa;
+            const statusUtama = getStatusUtama(id);
+            const progJuz = hitungProgressJuz30(id);
+            const khatam = progJuz >= JUZ30_TOTAL;
+            const tasmi = getTasmiSiswa(id);
+
+            // Setoran bulan ini
+            const setoranBulanIni = state.dataSetoran.filter(s =>
+                s.SiswaId === id && s.tanggal && s.tanggal.startsWith(bulanIni)
+            );
+
+            const last = getSetoranTerakhir(id);
+            const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+            const lastText = last
+                ? `${last.tanggal} · ${jenisMap[last.jenis]||last.jenis} · ${(last.surah||[]).map(sr=>sr.name).join(', ')}`
+                : '-';
+
+            const statusMap = { setoran:'Setoran', muroja:"Muroja'ah", siap:"Siap Tasmi'", selesai:'Tasmi\' Selesai' };
+            const progressText = khatam ? 'Khatam (37/37)' : `${progJuz} / ${JUZ30_TOTAL} surat`;
+            const tasmiText = tasmi ? `${tasmi.nilai} · ${tasmi.tanggal}` : 'Belum';
+
+            return {
+                'Nama': nama,
+                'Kelas': kelas,
+                'Total Setoran Bulan Ini': setoranBulanIni.length,
+                'Setoran Terakhir': lastText,
+                'Status': statusMap[statusUtama] || statusUtama,
+                'Progress Juz 30': progressText,
+                'Tasmi\'': tasmiText
+            };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Monitoring');
+
+        // Set column widths
+        ws['!cols'] = [
+            { wch: 24 }, { wch: 8 }, { wch: 22 }, { wch: 50 },
+            { wch: 18 }, { wch: 20 }, { wch: 20 }
+        ];
+
+        const bulanLabel = now.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+        XLSX.writeFile(wb, `Monitoring_Tahfidz_${bulanIni}.xlsx`);
+        showToast(`✅ Export ${bulanLabel} berhasil!`);
+    }
 </script>
 
 <script>
