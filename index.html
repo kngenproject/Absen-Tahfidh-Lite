@@ -727,6 +727,28 @@
 
         /* Font Arab dari Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
+
+        /* ── RELOAD BUTTON ── */
+        .btn-reload {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            border: none;
+            border-radius: var(--r2);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(14,165,233,.3);
+            transition: all .15s;
+            text-align: left;
+        }
+        .btn-reload:active { transform: scale(.98); box-shadow: none; opacity: .9; }
+        .btn-reload-icon { font-size: 22px; flex-shrink: 0; }
+        .btn-reload-text { display: flex; flex-direction: column; gap: 2px; }
+        .btn-reload-title { font-size: 13px; font-weight: 700; }
+        .btn-reload-sub { font-size: 10px; opacity: .85; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -894,6 +916,20 @@
                     <div id="resultList"></div>
                 </div>
                 <div id="riwayatEmpty" class="empty-state" style="display:block;">📋 Belum ada riwayat setoran</div>
+
+                <div class="divider"></div>
+
+                <!-- Reload App -->
+                <div class="fg">
+                    <div class="section-label">🔄 Pembaruan Aplikasi</div>
+                    <button class="btn-reload" onclick="reloadApp()">
+                        <span class="btn-reload-icon">🔄</span>
+                        <div class="btn-reload-text">
+                            <span class="btn-reload-title">Muat Ulang Aplikasi</span>
+                            <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
+                        </div>
+                    </button>
+                </div>
 
             </div>
         </div>
@@ -1648,6 +1684,29 @@ function tambahSiswa() {
     function getSuratByJuz(juz) {
     return ALL_SURAT[juz] || [];
 }
+
+    /* ── RELOAD APP ── */
+    function reloadApp() {
+        // Hapus cache service worker jika ada, lalu reload
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+                Promise.all(regs.map(r => r.unregister())).then(() => {
+                    // Hapus cache
+                    if ('caches' in window) {
+                        caches.keys().then(keys => {
+                            Promise.all(keys.map(k => caches.delete(k))).then(() => {
+                                window.location.reload(true);
+                            });
+                        });
+                    } else {
+                        window.location.reload(true);
+                    }
+                });
+            });
+        } else {
+            window.location.reload(true);
+        }
+    }
 
     /* ══════════════════════════════════════════
        ── DATABASE AYAT ARAB (Juz 30) ──
