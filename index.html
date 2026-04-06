@@ -749,6 +749,83 @@
         .btn-reload-text { display: flex; flex-direction: column; gap: 2px; }
         .btn-reload-title { font-size: 13px; font-weight: 700; }
         .btn-reload-sub { font-size: 10px; opacity: .85; font-weight: 500; }
+
+        /* ══════════════════════════════════════════
+           ── SUB-TAB (Info Panel) ──
+        ══════════════════════════════════════════ */
+
+        /* Wrapper untuk tab keterangan agar flexbox column */
+        #tab-keterangan {
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #tab-keterangan.active { display: flex; }
+
+        /* Nav sub-tab */
+        .sub-tab-nav {
+            display: flex;
+            gap: 6px;
+            padding: 10px 12px 0;
+            background: var(--g1);
+            border-bottom: 1px solid var(--g2);
+            flex-shrink: 0;
+        }
+
+        /* Tombol sub-tab */
+        .sub-tab-btn {
+            flex: 1;
+            padding: 9px 10px;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--g5);
+            background: transparent;
+            transition: all .2s ease;
+            letter-spacing: 0.1px;
+            white-space: nowrap;
+        }
+        .sub-tab-btn.active {
+            background: white;
+            color: var(--p);
+            box-shadow: 0 -2px 8px rgba(0,0,0,.06), 0 1px 0 white;
+        }
+        .sub-tab-btn:not(.active):active {
+            background: rgba(255,255,255,.5);
+        }
+
+        /* Konten sub-tab */
+        .sub-tab-content {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity .15s ease;
+        }
+        .sub-tab-content.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Area scroll hanya untuk list siswa & riwayat */
+        .scrollable-list {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            padding: 0 12px 12px;
+        }
+        .scrollable-list::-webkit-scrollbar { width: 3px; }
+        .scrollable-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+
+        /* Form area (tidak scroll sendiri) di sub-siswa */
+        .sub-form-area {
+            padding: 10px 12px 6px;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--g2);
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -878,61 +955,69 @@
 
         <!-- ════ TAB KETERANGAN ════ -->
         <div id="tab-keterangan" class="tab-content">
-            <div class="form-section">
 
-                <!-- ── DATA SISWA ── -->
-                <div class="section-label">👥 Data Siswa</div>
-
-                <!-- Form tambah -->
-                <div class="fg row">
-                    <div>
-                        <label class="lbl">Nama Siswa</label>
-                        <input type="text" id="inputNamaSiswa" class="field" placeholder="Nama lengkap...">
-                    </div>
-                    <div class="shrink">
-                        <label class="lbl">Kelas</label>
-                        <input type="text" id="inputKelas" class="field" placeholder="Contoh: A, 2B" style="width:110px;" maxlength="20" autocomplete="off">
-                    </div>
-                </div>
-
-                <!-- Action buttons -->
-                <div class="fg row">
-                    <button class="btn-primary" onclick="tambahSiswa()" style="padding:10px;">➕ Tambah</button>
-                    <button class="btn-purple" onclick="document.getElementById('fileInput').click()">📂 Import</button>
-                    <button class="btn-secondary" onclick="downloadTemplate()">📥 Template</button>
-                </div>
-                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
-
-                <div class="divider"></div>
-
-                <div class="section-label">Daftar Siswa</div>
-                <div id="dataList" class="data-list"></div>
-
-                <div class="divider"></div>
-
-                <!-- Riwayat Setoran -->
-                <div id="resultSection" style="display:none;">
-                    <div class="section-label">📋 Riwayat Setoran Terbaru</div>
-                    <div id="resultList"></div>
-                </div>
-                <div id="riwayatEmpty" class="empty-state" style="display:block;">📋 Belum ada riwayat setoran</div>
-
-                <div class="divider"></div>
-
-                <!-- Reload App -->
-                <div class="fg">
-                    <div class="section-label">🔄 Pembaruan Aplikasi</div>
-                    <button class="btn-reload" onclick="reloadApp()">
-                        <span class="btn-reload-icon">🔄</span>
-                        <div class="btn-reload-text">
-                            <span class="btn-reload-title">Muat Ulang Aplikasi</span>
-                            <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
-                        </div>
-                    </button>
-                </div>
-
+            <!-- ── SUB-TAB NAV ── -->
+            <div class="sub-tab-nav">
+                <button class="sub-tab-btn active" id="subBtn-siswa" onclick="switchSubTab('siswa')">👥 Data Siswa</button>
+                <button class="sub-tab-btn" id="subBtn-riwayat" onclick="switchSubTab('riwayat')">📋 Riwayat Setoran</button>
             </div>
-        </div>
+
+            <!-- ══ SUB-TAB: DATA SISWA ══ -->
+            <div id="sub-siswa" class="sub-tab-content active">
+
+                <!-- Form area (fixed, tidak scroll) -->
+                <div class="sub-form-area">
+                    <div class="fg row" style="margin-bottom:8px;">
+                        <div>
+                            <label class="lbl">Nama Siswa</label>
+                            <input type="text" id="inputNamaSiswa" class="field" placeholder="Nama lengkap...">
+                        </div>
+                        <div class="shrink">
+                            <label class="lbl">Kelas</label>
+                            <input type="text" id="inputKelas" class="field" placeholder="Contoh: A, 2B" style="width:110px;" maxlength="20" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="fg row" style="margin-bottom:0;">
+                        <button class="btn-primary" onclick="tambahSiswa()" style="padding:10px;">➕ Tambah</button>
+                        <button class="btn-purple" onclick="document.getElementById('fileInput').click()">📂 Import</button>
+                        <button class="btn-secondary" onclick="downloadTemplate()">📥 Template</button>
+                    </div>
+                    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
+                </div>
+
+                <!-- Daftar siswa (scrollable) -->
+                <div class="scrollable-list">
+                    <div class="section-label" style="padding-top:10px;">Daftar Siswa</div>
+                    <div id="dataList" class="data-list"></div>
+
+                    <!-- Reload App -->
+                    <div class="divider"></div>
+                    <div class="fg">
+                        <div class="section-label">🔄 Pembaruan Aplikasi</div>
+                        <button class="btn-reload" onclick="reloadApp()">
+                            <span class="btn-reload-icon">🔄</span>
+                            <div class="btn-reload-text">
+                                <span class="btn-reload-title">Muat Ulang Aplikasi</span>
+                                <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /sub-siswa -->
+
+            <!-- ══ SUB-TAB: RIWAYAT SETORAN ══ -->
+            <div id="sub-riwayat" class="sub-tab-content">
+                <div class="scrollable-list">
+                    <div class="section-label" style="padding-top:10px;">Riwayat Setoran Terbaru</div>
+                    <div id="resultSection" style="display:none;">
+                        <div id="resultList"></div>
+                    </div>
+                    <div id="riwayatEmpty" class="empty-state" style="display:block;">📋 Belum ada riwayat setoran</div>
+                </div>
+            </div><!-- /sub-riwayat -->
+
+        </div><!-- /tab-keterangan -->
 
     </div><!-- /container -->
 </div><!-- /app -->
@@ -1121,6 +1206,14 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + name).classList.add('active');
         document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+    }
+
+    /* ─── SUB-TABS (Info) ─── */
+    function switchSubTab(name) {
+        document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('sub-' + name).classList.add('active');
+        document.getElementById('subBtn-' + name).classList.add('active');
     }
 
     /* ─── TOAST ─── */
