@@ -526,7 +526,6 @@
     <!-- TAB NAV -->
     <div class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
-        <button class="tab-btn" onclick="switchTab('Siswa')">👥 Siswa</button>
         <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
     </div>
 
@@ -625,38 +624,6 @@
 
         </div>
 
-        <!-- ════ TAB Siswa ════ -->
-        <div id="tab-Siswa" class="tab-content">
-            <div class="form-section">
-
-                <!-- Form tambah -->
-                <div class="fg row">
-                    <div>
-                        <label class="lbl">Nama Siswa</label>
-                        <input type="text" id="inputNamaSiswa" class="field" placeholder="Nama lengkap...">
-                    </div>
-                    <div class="shrink">
-    <label class="lbl">Kelas</label>
-    <input type="text" id="inputKelas" class="field" placeholder="Contoh: A, 2B, Tahfidz 1" style="width:110px;" maxlength="20" autocomplete="off">
-</div>
-                </div>
-
-                <!-- Action buttons -->
-                <div class="fg row">
-                    <button class="btn-primary" onclick="tambahSiswa()" style="padding:10px;">➕ Tambah</button>
-                    <button class="btn-purple" onclick="document.getElementById('fileInput').click()">📂 Import</button>
-                    <button class="btn-secondary" onclick="downloadTemplate()">📥 Template</button>
-                </div>
-                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
-
-                <div class="divider"></div>
-
-                <div class="section-label">Daftar Siswa</div>
-                <div id="dataList" class="data-list"></div>
-
-            </div>
-        </div>
-
         <!-- ════ TAB KETERANGAN ════ -->
         <div id="tab-keterangan" class="tab-content">
             <div class="form-section">
@@ -690,6 +657,36 @@
                         3. Riwayat setoran tampil di tab ini dan bisa diubah statusnya
                     </div>
                 </div>
+
+                <div class="divider"></div>
+
+                <!-- ── DATA SISWA ── -->
+                <div class="section-label">👥 Data Siswa</div>
+
+                <!-- Form tambah -->
+                <div class="fg row">
+                    <div>
+                        <label class="lbl">Nama Siswa</label>
+                        <input type="text" id="inputNamaSiswa" class="field" placeholder="Nama lengkap...">
+                    </div>
+                    <div class="shrink">
+                        <label class="lbl">Kelas</label>
+                        <input type="text" id="inputKelas" class="field" placeholder="Contoh: A, 2B" style="width:110px;" maxlength="20" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="fg row">
+                    <button class="btn-primary" onclick="tambahSiswa()" style="padding:10px;">➕ Tambah</button>
+                    <button class="btn-purple" onclick="document.getElementById('fileInput').click()">📂 Import</button>
+                    <button class="btn-secondary" onclick="downloadTemplate()">📥 Template</button>
+                </div>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
+
+                <div class="divider"></div>
+
+                <div class="section-label">Daftar Siswa</div>
+                <div id="dataList" class="data-list"></div>
 
                 <div class="divider"></div>
 
