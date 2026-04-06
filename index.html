@@ -623,11 +623,6 @@
 
             </div><!-- /form-section -->
 
-            <!-- Riwayat -->
-            <div id="resultSection" class="result-section" style="display:none;">
-                <div class="section-label">📋 Riwayat Setoran Terbaru</div>
-                <div id="resultList"></div>
-            </div>
         </div>
 
         <!-- ════ TAB Siswa ════ -->
@@ -692,9 +687,18 @@
                     <div class="legend-desc-text" style="margin-top: 4px;">
                         1. Tab <strong>Setoran</strong> → Isi data Siswa, tanggal, surat, dan beri nilai L atau KL<br>
                         2. Tab <strong>Siswa</strong> → Tambah/hapus Siswa atau import dari CSV<br>
-                        3. Riwayat setoran tampil di bawah form dan bisa diubah statusnya
+                        3. Riwayat setoran tampil di tab ini dan bisa diubah statusnya
                     </div>
                 </div>
+
+                <div class="divider"></div>
+
+                <!-- Riwayat Setoran -->
+                <div id="resultSection" style="display:none;">
+                    <div class="section-label">📋 Riwayat Setoran Terbaru</div>
+                    <div id="resultList"></div>
+                </div>
+                <div id="riwayatEmpty" class="empty-state" style="display:block;">📋 Belum ada riwayat setoran</div>
 
             </div>
         </div>
@@ -1301,8 +1305,14 @@ function tambahSiswa() {
     function renderResult() {
         const section = document.getElementById('resultSection');
         const container = document.getElementById('resultList');
-        if (!state.dataSetoran.length) { section.style.display = 'none'; return; }
+        const empty = document.getElementById('riwayatEmpty');
+        if (!state.dataSetoran.length) {
+            section.style.display = 'none';
+            if (empty) empty.style.display = 'block';
+            return;
+        }
         section.style.display = 'block';
+        if (empty) empty.style.display = 'none';
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
         container.innerHTML = state.dataSetoran.slice(0, 7).map(s => {
             const suratText = s.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
