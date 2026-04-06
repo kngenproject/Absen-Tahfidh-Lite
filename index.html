@@ -725,6 +725,14 @@
         }
         .btn-koreksi-close:active { opacity: .85; transform: scale(.98); }
 
+        /* ── RELOAD BAR (fixed bottom in tab siswa) ── */
+        .reload-bar {
+            flex-shrink: 0;
+            padding: 8px 12px 10px;
+            background: white;
+            border-top: 1px solid var(--g2);
+        }
+
         /* Font Arab dari Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
 
@@ -989,19 +997,17 @@
                 <div class="scrollable-list">
                     <div class="section-label" style="padding-top:10px;">Daftar Siswa</div>
                     <div id="dataList" class="data-list"></div>
+                </div>
 
-                    <!-- Reload App -->
-                    <div class="divider"></div>
-                    <div class="fg">
-                        <div class="section-label">🔄 Pembaruan Aplikasi</div>
-                        <button class="btn-reload" onclick="reloadApp()">
-                            <span class="btn-reload-icon">🔄</span>
-                            <div class="btn-reload-text">
-                                <span class="btn-reload-title">Muat Ulang Aplikasi</span>
-                                <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
-                            </div>
-                        </button>
-                    </div>
+                <!-- Reload App – selalu di bawah, tidak ikut scroll -->
+                <div class="reload-bar">
+                    <button class="btn-reload" onclick="reloadApp()">
+                        <span class="btn-reload-icon">🔄</span>
+                        <div class="btn-reload-text">
+                            <span class="btn-reload-title">Muat Ulang Aplikasi</span>
+                            <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
+                        </div>
+                    </button>
                 </div>
 
             </div><!-- /sub-siswa -->
@@ -1193,6 +1199,16 @@
         renderDataSiswa();
         renderResult();
         pilihStatus('lancar');
+
+        // Selalu update tanggal ke hari ini saat halaman kembali aktif
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                document.getElementById('tanggal').value = todayStr();
+            }
+        });
+        window.addEventListener('focus', () => {
+            document.getElementById('tanggal').value = todayStr();
+        });
     }
 
     function todayStr() {
