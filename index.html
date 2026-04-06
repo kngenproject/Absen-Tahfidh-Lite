@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Absensi Tahfidz Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --p: #059669;
+            --p2: #047857;
+            --p3: #d1fae5;
+            --p4: #ecfdf5;
+            --danger: #ef4444;
+            --warn: #f59e0b;
+            --purple: #7c3aed;
+            --purple2: #6d28d9;
+            --g9: #0f172a;
+            --g8: #1e293b;
+            --g7: #334155;
+            --g6: #475569;
+            --g5: #64748b;
+            --g4: #94a3b8;
+            --g3: #cbd5e1;
+            --g2: #e2e8f0;
+            --g1: #f1f5f9;
+            --g0: #f8fafc;
+            --white: #fff;
+            --r: 10px;
+            --r2: 14px;
+            --sh: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+            --sh2: 0 4px 12px rgba(0,0,0,.1);
+        }
+
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--g0);
+            color: var(--g9);
+            font-size: 14px;
+        }
+
+        /* ── APP SHELL ── */
+        .app { display: flex; flex-direction: column; height: 100dvh; }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, var(--p) 0%, var(--p2) 100%);
+            color: white;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(5,150,105,.3);
+        }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .header-icon { font-size: 20px; }
+        .header-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+        .header-sub { font-size: 10px; opacity: .8; margin-top: 1px; }
+        .header-badge {
+            background: rgba(255,255,255,.2);
+            border: 1px solid rgba(255,255,255,.3);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        /* ── TAB NAV ── */
+        .tab-nav {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid var(--g2);
+            flex-shrink: 0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0 4px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            color: var(--g5);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            letter-spacing: 0.2px;
+            border-bottom: 2.5px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        .tab-btn.active { color: var(--p); border-bottom-color: var(--p); }
+
+        /* ── CONTAINER ── */
+        .container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .tab-content.active { display: flex; }
+
+        /* ── FORM SECTION (scrollable inner) ── */
+        .form-section {
+            flex: 1; overflow-y: auto; padding: 10px 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .form-section::-webkit-scrollbar { width: 3px; }
+        .form-section::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+
+        /* ── FORM ELEMENTS ── */
+        .row { display: flex; gap: 8px; align-items: flex-end; }
+        .row > * { flex: 1; min-width: 0; }
+        .row > .shrink { flex: 0 0 auto; }
+
+        .fg { margin-bottom: 8px; }
+        .lbl {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--g5);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1.5px solid var(--g2);
+            border-radius: var(--r);
+            font-size: 13px;
+            color: var(--g9);
+            background: white;
+            transition: border-color .15s, box-shadow .15s;
+            -webkit-appearance: none;
+        }
+        .field:focus { outline: none; border-color: var(--p); box-shadow: 0 0 0 3px rgba(5,150,105,.1); }
+        .field:disabled { background: var(--g1); color: var(--g5); }
+        .field.sel {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%2364748b' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
+            padding-right: 26px;
+        }
+
+        /* ── SEGMENTED ── */
+        .seg { display: flex; gap: 4px; background: var(--g1); padding: 3px; border-radius: var(--r); }
+        .seg-btn {
+            flex: 1;
+            padding: 7px 6px;
+            border: 1.5px solid transparent;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 600;
+            background: transparent;
+            color: var(--g6);
+            cursor: pointer;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+        .seg-btn.active { background: white; color: var(--p); border-color: var(--p); box-shadow: var(--sh); }
+
+        /* ── STATUS L / KL ── */
+        .status-row { display: flex; gap: 8px; }
+        .status-opt {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 2px solid var(--g2);
+            border-radius: var(--r);
+            background: white;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .status-opt .s-letter {
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1;
+            min-width: 28px;
+            text-align: center;
+        }
+        .status-opt .s-desc { font-size: 11px; color: var(--g5); font-weight: 500; }
+        .status-opt.sel-l { background: var(--p); border-color: var(--p); color: white; }
+        .status-opt.sel-l .s-desc { color: rgba(255,255,255,.85); }
+        .status-opt.sel-kl { background: var(--danger); border-color: var(--danger); color: white; }
+        .status-opt.sel-kl .s-desc { color: rgba(255,255,255,.85); }
+        .status-opt:active { transform: scale(.97); }
+
+        /* ── SURAT PICKER ── */
+        .clickable {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 9px 11px;
+            background: white; border: 1.5px solid var(--g2);
+            border-radius: var(--r); cursor: pointer; font-size: 13px;
+            color: var(--g9); transition: border-color .15s;
+        }
+        .clickable.empty { color: var(--g4); }
+        .clickable:active { border-color: var(--p); background: var(--p4); }
+        .clickable-ico { color: var(--g4); font-size: 13px; }
+
+        .surat-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
+        .surat-item {
+            background: var(--p4); padding: 8px 10px;
+            border-radius: 8px; border-left: 3px solid var(--p);
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .surat-item-top {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .surat-item-name { font-weight: 700; font-size: 12px; color: var(--g9); }
+        .surat-ayat-pickers {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ayat-picker-col {
+            flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            background: white; border: 1.5px solid var(--p3);
+            border-radius: 8px; padding: 6px 8px; cursor: pointer;
+            transition: border-color .12s, background .12s;
+        }
+        .ayat-picker-col:active { border-color: var(--p); background: var(--p4); }
+        .ayat-picker-label {
+            font-size: 9px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--g5);
+        }
+        .ayat-picker-val {
+            font-size: 18px; font-weight: 900; line-height: 1;
+        }
+        .dari-val { color: #1d4ed8; }
+        .sampai-val { color: var(--p2); }
+        .ayat-picker-arrow { font-size: 14px; color: var(--g4); flex-shrink: 0; }
+        .btn-rm {
+            background: none; border: none; color: var(--danger);
+            cursor: pointer; font-size: 14px; padding: 2px 4px;
+            border-radius: 4px; line-height: 1;
+        }
+        .btn-rm:active { background: #fee2e2; }
+
+        .btn-add-surat {
+            width: 100%; padding: 8px;
+            border: 1.5px dashed var(--p);
+            border-radius: var(--r); background: transparent;
+            color: var(--p); font-size: 12px; font-weight: 600;
+            cursor: pointer; margin-top: 4px; transition: background .15s;
+        }
+        .btn-add-surat:active { background: var(--p4); }
+
+        /* ── BUTTONS ── */
+        .btn-primary {
+            width: 100%; padding: 11px;
+            background: linear-gradient(135deg, var(--p) 0%, var(--p2) 100%);
+            color: white; border: none; border-radius: var(--r2);
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 2px 8px rgba(5,150,105,.3); transition: all .15s;
+        }
+        .btn-primary:active { transform: scale(.98); box-shadow: none; }
+
+        .btn-secondary {
+            padding: 10px 14px;
+            background: var(--g1); color: var(--g7);
+            border: 1.5px solid var(--g2); border-radius: var(--r);
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            white-space: nowrap; transition: all .15s;
+        }
+        .btn-secondary:active { background: var(--g2); }
+
+        .btn-purple {
+            padding: 10px 14px;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+            color: white; border: none; border-radius: var(--r);
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-purple:active { opacity: .85; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+            background: var(--g9); color: white;
+            padding: 8px 16px; border-radius: 20px;
+            font-size: 12px; font-weight: 600;
+            box-shadow: var(--sh2); z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity .2s;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; }
+
+        /* ── RESULT SECTION ── */
+        .result-section {
+            border-top: 1px solid var(--g2);
+            background: var(--g1);
+            overflow-y: auto;
+            padding: 8px 12px 10px;
+            flex-shrink: 0;
+            max-height: 40vh;
+        }
+        .result-section::-webkit-scrollbar { width: 3px; }
+        .result-section::-webkit-scrollbar-thumb { background: var(--g3); }
+
+        .section-label {
+            font-size: 10px; font-weight: 700;
+            color: var(--g5); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 7px;
+        }
+
+        .result-card {
+            background: white; border-radius: var(--r);
+            padding: 8px 10px; margin-bottom: 6px;
+            box-shadow: var(--sh); display: flex; gap: 8px;
+            align-items: center;
+        }
+        .rc-left { flex: 1; min-width: 0; }
+        .rc-name { font-weight: 700; font-size: 12px; }
+        .rc-meta { font-size: 10px; color: var(--g5); margin-top: 1px; }
+        .rc-surat { font-size: 11px; color: var(--g7); margin-top: 3px; font-weight: 500; }
+        .rc-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .btn-stat {
+            padding: 6px 10px;
+            border: none; border-radius: 7px;
+            font-size: 11px; font-weight: 800;
+            cursor: pointer; transition: all .15s;
+            background: var(--g2); color: var(--g6);
+        }
+        .btn-stat.al { background: var(--p); color: white; }
+        .btn-stat.akl { background: var(--danger); color: white; }
+
+        /* ── DATA Siswa ── */
+        .data-list { display: flex; flex-direction: column; gap: 6px; }
+        .data-card {
+            background: white; border-radius: var(--r);
+            padding: 10px 12px; box-shadow: var(--sh);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .data-name { font-weight: 700; font-size: 13px; }
+        .data-kelas {
+            display: inline-block;
+            font-size: 10px; font-weight: 600;
+            background: var(--p3); color: var(--p2);
+            padding: 2px 7px; border-radius: 10px; margin-top: 3px;
+        }
+        .btn-del {
+            background: #fee2e2; color: var(--danger);
+            border: none; border-radius: 7px;
+            width: 30px; height: 30px; cursor: pointer;
+            font-size: 13px; display: flex; align-items: center; justify-content: center;
+        }
+        .btn-del:active { background: #fecaca; }
+
+        /* ── KETERANGAN ── */
+        .legend-grid { display: flex; gap: 10px; margin-bottom: 12px; }
+        .legend-card {
+            flex: 1; padding: 14px 12px; border-radius: var(--r2);
+            text-align: center; color: white;
+        }
+        .legend-card.l { background: linear-gradient(135deg, var(--p), var(--p2)); }
+        .legend-card.kl { background: linear-gradient(135deg, var(--danger), #b91c1c); }
+        .legend-letter { font-size: 32px; font-weight: 900; line-height: 1; }
+        .legend-word { font-size: 11px; font-weight: 600; opacity: .9; margin-top: 4px; }
+        .legend-desc-card {
+            background: white; border-radius: var(--r); padding: 12px;
+            box-shadow: var(--sh); margin-bottom: 8px;
+            border-left: 3px solid var(--p);
+        }
+        .legend-desc-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .legend-desc-text { font-size: 11px; color: var(--g6); line-height: 1.5; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state { text-align: center; padding: 24px 16px; color: var(--g4); font-size: 12px; }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.45);
+            display: none; align-items: flex-end;
+            z-index: 200;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-sheet {
+            background: white; width: 100%;
+            border-radius: 20px 20px 0 0;
+            max-height: 88vh; overflow: hidden;
+            display: flex; flex-direction: column;
+            animation: sheetUp .25s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-handle {
+            width: 36px; height: 4px; background: var(--g2);
+            border-radius: 2px; margin: 10px auto 0;
+            flex-shrink: 0;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 16px 10px;
+            border-bottom: 1px solid var(--g2);
+            flex-shrink: 0;
+        }
+        .modal-header h2 { font-size: 15px; font-weight: 800; }
+        .btn-close {
+            background: var(--g1); border: none;
+            width: 28px; height: 28px; border-radius: 50%;
+            font-size: 14px; color: var(--g6);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
+        .modal-body::-webkit-scrollbar { width: 3px; }
+        .modal-body::-webkit-scrollbar-thumb { background: var(--g3); }
+
+        /* ── SURAT GRID ── */
+        .grid-surat { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 60vh; overflow-y: auto; }
+        .grid-surat::-webkit-scrollbar { width: 3px; }
+        .grid-item {
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 9px; padding: 8px 4px;
+            text-align: center; cursor: pointer; transition: all .1s;
+        }
+        .grid-item:active { background: var(--p3); border-color: var(--p); transform: scale(.95); }
+        .grid-item-num { font-size: 11px; font-weight: 800; color: var(--g7); }
+        .grid-item-name { font-size: 9px; font-weight: 500; color: var(--g5); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* ── AYAT GRID ── */
+        .grid-ayat-single {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;
+            max-height: 55vh; overflow-y: auto; align-content: start;
+        }
+        .grid-ayat-single::-webkit-scrollbar { width: 3px; }
+        .grid-ayat-single::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+        .ayat-item {
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 8px; padding: 10px 4px;
+            text-align: center; cursor: pointer;
+            font-weight: 700; font-size: 13px;
+            transition: all .1s;
+        }
+        .ayat-item:active { transform: scale(.92); }
+        .ayat-item.sel-dari { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+        .ayat-item.sel-sampai { background: var(--p); border-color: var(--p); color: white; }
+
+        /* ── MISC ── */
+        .divider { height: 1px; background: var(--g2); margin: 10px 0; }
+        input[type=file] { display: none; }
+
+        /* ── PILL GRID (kelas, juz, siswa) ── */
+        .grid-pills {
+            display: flex; flex-wrap: wrap; gap: 7px;
+            padding: 2px 0;
+        }
+        .pill-item {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px 14px;
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 20px;
+            font-size: 13px; font-weight: 600; color: var(--g8);
+            cursor: pointer; transition: all .12s;
+            white-space: nowrap;
+        }
+        .pill-item:active { transform: scale(.95); }
+        .pill-item.active { background: var(--p); border-color: var(--p); color: white; }
+        .pill-item.pill-all { border-style: dashed; color: var(--g5); }
+        .pill-item.pill-all.active { background: var(--p4); border-color: var(--p); color: var(--p); border-style: solid; }
+
+        /* ── JUZ GRID ── */
+        .grid-juz {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 6px;
+        }
+        .juz-item {
+            padding: 10px 4px;
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 9px; text-align: center;
+            font-size: 13px; font-weight: 700; color: var(--g8);
+            cursor: pointer; transition: all .12s;
+        }
+        .juz-item:active { transform: scale(.95); }
+        .juz-item.active { background: var(--p); border-color: var(--p); color: white; }
+
+        /* ── SISWA LIST in modal ── */
+        .siswa-list-modal { display: flex; flex-direction: column; gap: 6px; }
+        .siswa-modal-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 14px;
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: var(--r); cursor: pointer; transition: all .12s;
+        }
+        .siswa-modal-item:active { background: var(--p3); border-color: var(--p); }
+        .siswa-modal-item.active { background: var(--p); border-color: var(--p); }
+        .siswa-modal-item.active .smi-name { color: white; }
+        .siswa-modal-item.active .smi-kelas { color: rgba(255,255,255,.8); }
+        .smi-name { font-weight: 700; font-size: 13px; color: var(--g9); }
+        .smi-kelas { font-size: 11px; color: var(--g5); }
+
+        /* ── SETORAN TERAKHIR CHIP ── */
+        .last-setoran-bar {
+            background: var(--p4); border: 1.5px solid var(--p3);
+            border-radius: var(--r); padding: 8px 11px;
+            margin-top: 8px; display: none; gap: 8px; align-items: flex-start;
+        }
+        .last-setoran-bar.show { display: flex; }
+        .lsb-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .lsb-body { flex: 1; min-width: 0; }
+        .lsb-title { font-size: 10px; font-weight: 700; color: var(--p2); text-transform: uppercase; letter-spacing: 0.4px; }
+        .lsb-text { font-size: 12px; color: var(--g7); margin-top: 2px; font-weight: 500; }
+    </style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="app">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <span class="header-icon">📖</span>
+            <div>
+                <div class="header-title">Absensi Tahfidz</div>
+                <div class="header-sub">Setoran Hafalan Al-Qur'an</div>
+            </div>
+        </div>
+        <div class="header-badge">L · KL</div>
+    </div>
+
+    <!-- TAB NAV -->
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
+        <button class="tab-btn" onclick="switchTab('Siswa')">👥 Siswa</button>
+        <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
+    </div>
+
+    <div class="container">
+
+        <!-- ════ TAB SETORAN ════ -->
+        <div id="tab-setoran" class="tab-content active">
+            <div class="form-section">
+
+                <!-- Row: Filter Kelas + Nama Siswa -->
+                <div class="fg">
+                    <label class="lbl">Filter Kelas</label>
+                    <div class="clickable empty" id="filterKelasDisplay" onclick="openKelasModal()">
+                        <span id="filterKelasText">Semua Kelas</span><span class="clickable-ico">▼</span>
+                    </div>
+                    <input type="hidden" id="filterKelas" value="">
+                </div>
+                <div class="fg row">
+                    <div>
+                        <label class="lbl">Nama Siswa</label>
+                        <div class="clickable empty" id="namaSiswaDisplay" onclick="openSiswaModal()">
+                            <span id="namaSiswaText">-- Pilih Nama --</span><span class="clickable-ico">▼</span>
+                        </div>
+                        <input type="hidden" id="namaSiswa" value="">
+                    </div>
+                    <div class="shrink">
+                        <label class="lbl">Kelas</label>
+                        <input type="text" id="kelas" class="field" disabled placeholder="-" style="width:60px; text-align:center; font-weight:700;">
+                    </div>
+                </div>
+                <!-- Setoran terakhir siswa -->
+                <div class="last-setoran-bar" id="lastSetoranBar">
+                    <div class="lsb-icon">📋</div>
+                    <div class="lsb-body">
+                        <div class="lsb-title">Setoran Terakhir</div>
+                        <div class="lsb-text" id="lastSetoranText"></div>
+                    </div>
+                </div>
+
+                <!-- Row: Tanggal + Juz -->
+                <div class="fg row">
+                    <div>
+                        <label class="lbl">Tanggal</label>
+                        <input type="date" id="tanggal" class="field">
+                    </div>
+                    <div class="shrink">
+                        <label class="lbl">Juz</label>
+                        <div class="clickable" id="juzDisplay" onclick="openJuzModal()" style="width:90px; justify-content:center;">
+                            <span id="juzText">Juz 30</span><span class="clickable-ico" style="font-size:10px;">▼</span>
+                        </div>
+                        <input type="hidden" id="juz" value="30">
+                    </div>
+                </div>
+
+                <!-- Jenis Setoran -->
+                <div class="fg">
+                    <label class="lbl">Jenis Setoran</label>
+                    <div class="seg">
+                        <button class="seg-btn active" data-jenis="tasmi" onclick="changeJenis(this)">Tasmi'</button>
+                        <button class="seg-btn" data-jenis="muroja" onclick="changeJenis(this)">Muroja'ah</button>
+                        <button class="seg-btn" data-jenis="belum" onclick="changeJenis(this)">Blm Khatam</button>
+                    </div>
+                </div>
+
+                <!-- Hafalan Surat -->
+                <div class="fg">
+                    <label class="lbl">Hafalan / Surat</label>
+                    <div id="suratList" class="surat-list"></div>
+                    <div class="clickable empty" id="selectSurat" onclick="openSuratModal()">
+                        <span>Pilih surat...</span><span class="clickable-ico">▼</span>
+                    </div>
+                    <button class="btn-add-surat" id="btnAddSurat" style="display:none;" onclick="openSuratModal()">＋ Tambah Surat</button>
+                </div>
+
+                <!-- Keterangan L / KL -->
+                <div class="fg">
+                    <label class="lbl">Keterangan Hafalan</label>
+                    <div class="status-row" id="statusRow">
+                        <div class="status-opt" data-status="lancar" onclick="pilihStatus('lancar')">
+                            <span class="s-letter">L</span>
+                            <span class="s-desc">Lancar</span>
+                        </div>
+                        <div class="status-opt" data-status="kurang" onclick="pilihStatus('kurang')">
+                            <span class="s-letter">KL</span>
+                            <span class="s-desc">Kurang Lancar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="fg">
+                    <button class="btn-primary" onclick="simpanSetoran()">💾 &nbsp;Submit Setoran</button>
+                </div>
+
+            </div><!-- /form-section -->
+
+            <!-- Riwayat -->
+            <div id="resultSection" class="result-section" style="display:none;">
+                <div class="section-label">📋 Riwayat Setoran Terbaru</div>
+                <div id="resultList"></div>
+            </div>
+        </div>
+
+        <!-- ════ TAB Siswa ════ -->
+        <div id="tab-Siswa" class="tab-content">
+            <div class="form-section">
+
+                <!-- Form tambah -->
+                <div class="fg row">
+                    <div>
+                        <label class="lbl">Nama Siswa</label>
+                        <input type="text" id="inputNamaSiswa" class="field" placeholder="Nama lengkap...">
+                    </div>
+                    <div class="shrink">
+    <label class="lbl">Kelas</label>
+    <input type="text" id="inputKelas" class="field" placeholder="Contoh: A, 2B, Tahfidz 1" style="width:110px;" maxlength="20" autocomplete="off">
+</div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="fg row">
+                    <button class="btn-primary" onclick="tambahSiswa()" style="padding:10px;">➕ Tambah</button>
+                    <button class="btn-purple" onclick="document.getElementById('fileInput').click()">📂 Import</button>
+                    <button class="btn-secondary" onclick="downloadTemplate()">📥 Template</button>
+                </div>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
+
+                <div class="divider"></div>
+
+                <div class="section-label">Daftar Siswa</div>
+                <div id="dataList" class="data-list"></div>
+
+            </div>
+        </div>
+
+        <!-- ════ TAB KETERANGAN ════ -->
+        <div id="tab-keterangan" class="tab-content">
+            <div class="form-section">
+
+                <div class="legend-grid">
+                    <div class="legend-card l">
+                        <div class="legend-letter">L</div>
+                        <div class="legend-word">Lancar</div>
+                    </div>
+                    <div class="legend-card kl">
+                        <div class="legend-letter">KL</div>
+                        <div class="legend-word">Kurang Lancar</div>
+                    </div>
+                </div>
+
+                <div class="legend-desc-card">
+                    <div class="legend-desc-title">✅ L — Lancar</div>
+                    <div class="legend-desc-text">Siswa membaca hafalan dengan fasih dan lancar, tanpa terbata-bata atau lupa ayat. Hafalan sudah kuat dan baik.</div>
+                </div>
+
+                <div class="legend-desc-card" style="border-left-color: var(--danger);">
+                    <div class="legend-desc-title">⚠️ KL — Kurang Lancar</div>
+                    <div class="legend-desc-text">Siswa hafalan namun masih ada yang keliru, lupa, atau perlu banyak koreksi dari guru. Masih perlu bimbingan lebih lanjut.</div>
+                </div>
+
+                <div style="background: var(--g1); border-radius: var(--r); padding: 12px; margin-top: 4px;">
+                    <div class="legend-desc-title">📝 Cara Penggunaan</div>
+                    <div class="legend-desc-text" style="margin-top: 4px;">
+                        1. Tab <strong>Setoran</strong> → Isi data Siswa, tanggal, surat, dan beri nilai L atau KL<br>
+                        2. Tab <strong>Siswa</strong> → Tambah/hapus Siswa atau import dari CSV<br>
+                        3. Riwayat setoran tampil di bawah form dan bisa diubah statusnya
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /container -->
+</div><!-- /app -->
+
+<!-- ════ MODAL PILIH KELAS ════ -->
+<div id="kelasModal" class="modal-overlay" onclick="closeKelasModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>Filter Kelas</h2>
+            <button class="btn-close" onclick="closeKelasModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="kelasGridContainer" class="grid-pills"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ════ MODAL PILIH JUZ ════ -->
+<div id="juzModal" class="modal-overlay" onclick="closeJuzModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>Pilih Juz</h2>
+            <button class="btn-close" onclick="closeJuzModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="juzGridContainer" class="grid-juz"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ════ MODAL PILIH SISWA ════ -->
+<div id="siswaModal" class="modal-overlay" onclick="closeSiswaModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>Pilih Siswa</h2>
+            <button class="btn-close" onclick="closeSiswaModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="siswaListContainer" class="siswa-list-modal"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="suratModal" class="modal-overlay" onclick="closeSuratModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>Pilih Surat – Juz <span id="juzNumber">30</span></h2>
+            <button class="btn-close" onclick="closeSuratModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="gridContainer" class="grid-surat"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ════ MODAL PILIH AYAT ════ -->
+<div id="ayatModal" class="modal-overlay" onclick="closeAyatModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>Pilih Ayat – <span id="ayatModalSurat"></span></h2>
+            <button class="btn-close" onclick="closeAyatModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="dariGrid" class="grid-ayat-single" style="display:none;"></div>
+            <div id="sampaiGrid" class="grid-ayat-single" style="display:none;"></div>
+            <button class="btn-primary" onclick="confirmAyatGrid()" style="margin-top:12px;">✓ &nbsp;Konfirmasi</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ─── DATA ─── */
+    const ALL_SURAT = {
+    1: [{ num:1, name:'Al-Fatihah', ayat:7 }, { num:2, name:'Al-Baqarah', ayat:286 }],
+    2: [{ num:2, name:'Al-Baqarah', ayat:286 }],
+    3: [{ num:2, name:'Al-Baqarah', ayat:286 }, { num:3, name:"Ali 'Imran", ayat:200 }],
+    4: [{ num:3, name:"Ali 'Imran", ayat:200 }, { num:4, name:'An-Nisa', ayat:176 }],
+    5: [{ num:4, name:'An-Nisa', ayat:176 }],
+    6: [{ num:4, name:'An-Nisa', ayat:176 }, { num:5, name:'Al-Ma\'idah', ayat:120 }],
+    7: [{ num:5, name:'Al-Ma\'idah', ayat:120 }, { num:6, name:'Al-An\'am', ayat:165 }],
+    8: [{ num:6, name:'Al-An\'am', ayat:165 }, { num:7, name:'Al-A\'raf', ayat:206 }],
+    9: [{ num:7, name:'Al-A\'raf', ayat:206 }, { num:8, name:'Al-Anfal', ayat:75 }],
+    10: [{ num:8, name:'Al-Anfal', ayat:75 }, { num:9, name:'At-Taubah', ayat:129 }],
+    11: [{ num:9, name:'At-Taubah', ayat:129 }, { num:10, name:'Yunus', ayat:109 }, { num:11, name:'Hud', ayat:123 }],
+    12: [{ num:11, name:'Hud', ayat:123 }, { num:12, name:'Yusuf', ayat:111 }],
+    13: [{ num:12, name:'Yusuf', ayat:111 }, { num:13, name:'Ar-Ra\'d', ayat:43 }, { num:14, name:'Ibrahim', ayat:52 }],
+    14: [{ num:15, name:'Al-Hijr', ayat:99 }, { num:16, name:'An-Nahl', ayat:128 }],
+    15: [{ num:17, name:'Al-Isra', ayat:111 }, { num:18, name:'Al-Kahf', ayat:110 }],
+    16: [{ num:18, name:'Al-Kahf', ayat:110 }, { num:19, name:'Maryam', ayat:98 }, { num:20, name:'Taha', ayat:135 }],
+    17: [{ num:21, name:'Al-Anbiya', ayat:112 }, { num:22, name:'Al-Hajj', ayat:78 }],
+    18: [{ num:23, name:'Al-Mu\'minun', ayat:118 }, { num:24, name:'An-Nur', ayat:64 }, { num:25, name:'Al-Furqan', ayat:77 }],
+    19: [{ num:25, name:'Al-Furqan', ayat:77 }, { num:26, name:'Asy-Syu\'ara', ayat:227 }, { num:27, name:'An-Naml', ayat:93 }],
+    20: [{ num:27, name:'An-Naml', ayat:93 }, { num:28, name:'Al-Qasas', ayat:88 }, { num:29, name:'Al-Ankabut', ayat:69 }],
+    21: [{ num:29, name:'Al-Ankabut', ayat:69 }, { num:30, name:'Ar-Rum', ayat:60 }, { num:31, name:'Luqman', ayat:34 }, { num:32, name:'As-Sajdah', ayat:30 }],
+    22: [{ num:33, name:'Al-Ahzab', ayat:73 }, { num:34, name:'Saba', ayat:54 }, { num:35, name:'Fatir', ayat:45 }],
+    23: [{ num:36, name:'Yasin', ayat:83 }, { num:37, name:'As-Saffat', ayat:182 }, { num:38, name:'Sad', ayat:88 }],
+    24: [{ num:39, name:'Az-Zumar', ayat:75 }, { num:40, name:'Ghafir', ayat:85 }],
+    25: [{ num:41, name:'Fussilat', ayat:54 }, { num:42, name:'Asy-Syura', ayat:53 }, { num:43, name:'Az-Zukhruf', ayat:89 }],
+    26: [{ num:44, name:'Ad-Dukhan', ayat:59 }, { num:45, name:'Al-Jasiyah', ayat:37 }, { num:46, name:'Al-Ahqaf', ayat:35 }, { num:47, name:'Muhammad', ayat:38 }],
+    27: [{ num:48, name:'Al-Fath', ayat:29 }, { num:49, name:'Al-Hujurat', ayat:18 }, { num:50, name:'Qaf', ayat:45 }, { num:51, name:'Az-Zariyat', ayat:60 }],
+    28: [{ num:52, name:'At-Tur', ayat:49 }, { num:53, name:'An-Najm', ayat:62 }, { num:54, name:'Al-Qamar', ayat:55 }, { num:55, name:'Ar-Rahman', ayat:78 }],
+    29: [{ num:56, name:'Al-Waqi\'ah', ayat:96 }, { num:57, name:'Al-Hadid', ayat:29 }, { num:58, name:'Al-Mujadilah', ayat:22 }, { num:59, name:'Al-Hasyr', ayat:24 }, { num:60, name:'Al-Mumtahanah', ayat:13 }],
+    30: [
+        { num:78, name:'An-Naba', ayat:40 }, { num:79, name:"An-Nazi'at", ayat:46 },
+        { num:80, name:'Abasa', ayat:42 }, { num:81, name:'At-Takwir', ayat:29 },
+        { num:82, name:'Al-Infithar', ayat:19 }, { num:83, name:'Al-Mutaffifin', ayat:36 },
+        { num:84, name:'Al-Insyiqaq', ayat:25 }, { num:85, name:'Al-Buruj', ayat:22 },
+        { num:86, name:'At-Tariq', ayat:17 }, { num:87, name:"Al-A'la", ayat:19 },
+        { num:88, name:'Al-Ghasyiyah', ayat:26 }, { num:89, name:'Al-Fajr', ayat:30 },
+        { num:90, name:'Al-Balad', ayat:20 }, { num:91, name:'Asy-Syams', ayat:15 },
+        { num:92, name:'Al-Lail', ayat:21 }, { num:93, name:'Ad-Duha', ayat:11 },
+        { num:94, name:'Asy-Syarh', ayat:8 }, { num:95, name:'At-Tin', ayat:8 },
+        { num:96, name:'Al-Alaq', ayat:19 }, { num:97, name:'Al-Qadr', ayat:5 },
+        { num:98, name:'Al-Bayyinah', ayat:8 }, { num:99, name:'Az-Zalzalah', ayat:8 },
+        { num:100, name:"Al-Adiyat", ayat:11 }, { num:101, name:"Al-Qari'ah", ayat:11 },
+        { num:102, name:'At-Takatsur', ayat:8 }, { num:103, name:'Al-Asr', ayat:3 },
+        { num:104, name:'Al-Humazah', ayat:9 }, { num:105, name:'Al-Fil', ayat:5 },
+        { num:106, name:'Quraisy', ayat:4 }, { num:107, name:"Al-Ma'un", ayat:7 },
+        { num:108, name:'Al-Kautsar', ayat:3 }, { num:109, name:'Al-Kafirun', ayat:6 },
+        { num:110, name:'An-Nasr', ayat:3 }, { num:111, name:'Al-Lahab', ayat:5 },
+        { num:112, name:'Al-Ikhlas', ayat:4 }, { num:113, name:'Al-Falaq', ayat:5 },
+        { num:114, name:'An-Nas', ayat:6 }
+    ]
+};
+    let state = {
+        currentJenis: 'tasmi',
+        selectedSurah: [],
+        dataSetoran: [],
+        dataSiswa: [],
+        currentAyatSurat: null,
+        currentStatus: 'lancar'
+    };
+
+    let selectedAyatStart = null;
+    let selectedAyatEnd = null;
+    let ayatPickerContext = null; // { num: suratNum, mode: 'dari'|'sampai' }
+
+    /* ─── INIT ─── */
+    function init() {
+        document.getElementById('tanggal').value = todayStr();
+        loadAllData();
+        renderNamaSiswaSelect();
+        renderFilterKelas();
+        renderDataSiswa();
+        renderResult();
+        pilihStatus('lancar');
+    }
+
+    function todayStr() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    /* ─── TABS ─── */
+    function switchTab(name) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+    }
+
+    /* ─── TOAST ─── */
+    function showToast(msg, duration=2200) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    /* ─── JENIS & STATUS ─── */
+    function changeJenis(btn) {
+        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.currentJenis = btn.getAttribute('data-jenis');
+        renderSuratList();
+    }
+
+    function pilihStatus(status) {
+        state.currentStatus = status;
+        document.querySelectorAll('.status-opt').forEach(opt => {
+            opt.classList.remove('sel-l', 'sel-kl');
+            const s = opt.getAttribute('data-status');
+            if (s === 'lancar' && status === 'lancar') opt.classList.add('sel-l');
+            if (s === 'kurang' && status === 'kurang') opt.classList.add('sel-kl');
+        });
+    }
+
+    /* ─── MODAL SURAT ─── */
+    function openSuratModal() {
+        const juzVal = document.getElementById('juz').value || '30';
+        document.getElementById('juzNumber').innerText = juzVal;
+        const grid = document.getElementById('gridContainer');
+        grid.innerHTML = '';
+        (ALL_SURAT[juzVal] || []).forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            div.innerHTML = `<div class="grid-item-num">${s.num}</div><div class="grid-item-name">${s.name}</div>`;
+            div.onclick = () => selectSurat(s);
+            grid.appendChild(div);
+        });
+        document.getElementById('suratModal').classList.add('active');
+    }
+    function closeSuratModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('suratModal').classList.remove('active');
+    }
+    function selectSurat(surat) {
+        state.currentAyatSurat = surat;
+        const idx = state.selectedSurah.findIndex(s => s.num === surat.num);
+        if (idx === -1) {
+            state.selectedSurah.push({ ...surat, dari: 1, sampai: surat.ayat });
+        }
+        closeSuratModal();
+        renderSuratList();
+    }
+
+    /* ─── MODAL AYAT ─── */
+    function openDariModal(suratNum) {
+        const surat = state.selectedSurah.find(s => s.num === suratNum);
+        if (!surat) return;
+        ayatPickerContext = { num: suratNum, mode: 'dari' };
+        selectedAyatStart = surat.dari || 1;
+        selectedAyatEnd = surat.sampai || surat.ayat;
+        document.getElementById('ayatModalSurat').innerText = surat.name;
+        document.getElementById('dariGrid').style.display = 'grid';
+        document.getElementById('sampaiGrid').style.display = 'none';
+        buildSingleGrid('dari', surat.ayat);
+        document.getElementById('ayatModal').classList.add('active');
+        setTimeout(() => {
+            const el = document.querySelector(`#dariGrid .ayat-item[data-dari="${selectedAyatStart}"]`);
+            if (el) el.scrollIntoView({ block: 'center' });
+        }, 60);
+    }
+
+    function openSampaiModal(suratNum) {
+        const surat = state.selectedSurah.find(s => s.num === suratNum);
+        if (!surat) return;
+        ayatPickerContext = { num: suratNum, mode: 'sampai' };
+        selectedAyatStart = surat.dari || 1;
+        selectedAyatEnd = surat.sampai || surat.ayat;
+        document.getElementById('ayatModalSurat').innerText = surat.name;
+        document.getElementById('dariGrid').style.display = 'none';
+        document.getElementById('sampaiGrid').style.display = 'grid';
+        buildSingleGrid('sampai', surat.ayat);
+        document.getElementById('ayatModal').classList.add('active');
+        setTimeout(() => {
+            const el = document.querySelector(`#sampaiGrid .ayat-item[data-sampai="${selectedAyatEnd}"]`);
+            if (el) el.scrollIntoView({ block: 'center' });
+        }, 60);
+    }
+
+    function openAyatModal(surat) { /* legacy */ }
+
+    function buildSingleGrid(mode, total) {
+        const grid = document.getElementById(mode === 'dari' ? 'dariGrid' : 'sampaiGrid');
+        grid.innerHTML = '';
+        const cur = mode === 'dari' ? selectedAyatStart : selectedAyatEnd;
+        for (let i = 1; i <= total; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'ayat-item' + (i === cur ? (mode === 'dari' ? ' sel-dari' : ' sel-sampai') : '');
+            btn.textContent = i;
+            btn.setAttribute('data-' + mode, i);
+            btn.onclick = mode === 'dari' ? (n => () => selectDari(n))(i) : (n => () => selectSampai(n))(i);
+            grid.appendChild(btn);
+        }
+    }
+
+    function selectDari(num) {
+        selectedAyatStart = num;
+        document.querySelectorAll('#dariGrid .ayat-item').forEach(el => {
+            el.classList.toggle('sel-dari', +el.getAttribute('data-dari') === num);
+        });
+    }
+
+    function selectSampai(num) {
+        selectedAyatEnd = num;
+        document.querySelectorAll('#sampaiGrid .ayat-item').forEach(el => {
+            el.classList.toggle('sel-sampai', +el.getAttribute('data-sampai') === num);
+        });
+    }
+
+    function refreshAyatHighlight() { /* legacy */ }
+
+    function closeAyatModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('ayatModal').classList.remove('active');
+    }
+
+    function selectAyatRange(num) { /* legacy – tidak dipakai */ }
+    function confirmAyatGrid() {
+        if (!ayatPickerContext) return;
+        const { num, mode } = ayatPickerContext;
+        const idx = state.selectedSurah.findIndex(s => s.num === num);
+        if (idx === -1) return;
+        if (mode === 'dari') {
+            if (selectedAyatStart === null) { showToast('⚠️ Pilih ayat Dari'); return; }
+            state.selectedSurah[idx].dari = selectedAyatStart;
+            // pastikan sampai >= dari
+            if (state.selectedSurah[idx].sampai < selectedAyatStart) {
+                state.selectedSurah[idx].sampai = selectedAyatStart;
+            }
+        } else {
+            if (selectedAyatEnd === null) { showToast('⚠️ Pilih ayat Sampai'); return; }
+            state.selectedSurah[idx].sampai = selectedAyatEnd;
+            if (state.selectedSurah[idx].dari > selectedAyatEnd) {
+                state.selectedSurah[idx].dari = selectedAyatEnd;
+            }
+        }
+        renderSuratList();
+        closeAyatModal();
+        selectedAyatStart = null;
+        selectedAyatEnd = null;
+        ayatPickerContext = null;
+    }
+
+    /* ─── SURAT LIST ─── */
+    function renderSuratList() {
+        const c = document.getElementById('suratList');
+        c.innerHTML = '';
+        state.selectedSurah.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'surat-item';
+            div.innerHTML = `
+                <div class="surat-item-top">
+                    <div class="surat-item-name">${s.name}</div>
+                    <button class="btn-rm" onclick="removeSurat(${s.num})">✕</button>
+                </div>
+                <div class="surat-ayat-pickers">
+                    <div class="ayat-picker-col" onclick="openDariModal(${s.num})">
+                        <span class="ayat-picker-label">Dari</span>
+                        <span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span>
+                    </div>
+                    <span class="ayat-picker-arrow">→</span>
+                    <div class="ayat-picker-col" onclick="openSampaiModal(${s.num})">
+                        <span class="ayat-picker-label">Sampai</span>
+                        <span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span>
+                    </div>
+                </div>`;
+            c.appendChild(div);
+        });
+        document.getElementById('btnAddSurat').style.display = state.selectedSurah.length ? 'block' : 'none';
+        const sd = document.getElementById('selectSurat');
+        if (state.selectedSurah.length) {
+            sd.classList.remove('empty');
+            sd.innerHTML = `<span>${state.selectedSurah.length} surat dipilih</span><span class="clickable-ico">▼</span>`;
+        } else {
+            sd.classList.add('empty');
+            sd.innerHTML = `<span>Pilih surat...</span><span class="clickable-ico">▼</span>`;
+        }
+    }
+    function removeSurat(num) {
+        state.selectedSurah = state.selectedSurah.filter(s => s.num !== num);
+        renderSuratList();
+    }
+
+    /* ─── MODAL KELAS ─── */
+    function openKelasModal() {
+        const cur = document.getElementById('filterKelas').value;
+        const kelas = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+        const container = document.getElementById('kelasGridContainer');
+        container.innerHTML = '';
+        // "Semua Kelas" pill
+        const allPill = document.createElement('div');
+        allPill.className = 'pill-item pill-all' + (!cur ? ' active' : '');
+        allPill.textContent = 'Semua Kelas';
+        allPill.onclick = () => { selectKelas(''); closeKelasModal(); };
+        container.appendChild(allPill);
+        kelas.forEach(k => {
+            const pill = document.createElement('div');
+            pill.className = 'pill-item' + (cur === k ? ' active' : '');
+            pill.textContent = 'Kelas ' + k;
+            pill.onclick = () => { selectKelas(k); closeKelasModal(); };
+            container.appendChild(pill);
+        });
+        document.getElementById('kelasModal').classList.add('active');
+    }
+    function closeKelasModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('kelasModal').classList.remove('active');
+    }
+    function selectKelas(k) {
+        document.getElementById('filterKelas').value = k;
+        const disp = document.getElementById('filterKelasDisplay');
+        const txt = document.getElementById('filterKelasText');
+        if (k) {
+            txt.textContent = 'Kelas ' + k;
+            disp.classList.remove('empty');
+        } else {
+            txt.textContent = 'Semua Kelas';
+            disp.classList.add('empty');
+        }
+        // Reset pilihan siswa lama jika tidak ada di kelas baru
+        const curSiswaId = document.getElementById('namaSiswa').value;
+        if (curSiswaId) {
+            const siswa = state.dataSiswa.find(s => s.id === curSiswaId);
+            if (siswa && k && siswa.kelas !== k) {
+                resetSiswaSelection();
+            }
+        }
+    }
+
+    /* ─── MODAL JUZ ─── */
+    function openJuzModal() {
+        const cur = document.getElementById('juz').value;
+        const container = document.getElementById('juzGridContainer');
+        container.innerHTML = '';
+        for (let i = 1; i <= 30; i++) {
+            const div = document.createElement('div');
+            div.className = 'juz-item' + (String(i) === cur ? ' active' : '');
+            div.textContent = i;
+            div.onclick = () => { selectJuz(i); closeJuzModal(); };
+            container.appendChild(div);
+        }
+        document.getElementById('juzModal').classList.add('active');
+    }
+    function closeJuzModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('juzModal').classList.remove('active');
+    }
+    function selectJuz(num) {
+        document.getElementById('juz').value = String(num);
+        document.getElementById('juzText').textContent = 'Juz ' + num;
+    }
+
+    /* ─── MODAL SISWA ─── */
+    function openSiswaModal() {
+        const cur = document.getElementById('namaSiswa').value;
+        const kelasFilter = document.getElementById('filterKelas').value;
+        const list = kelasFilter
+            ? state.dataSiswa.filter(s => s.kelas === kelasFilter)
+            : state.dataSiswa;
+        const container = document.getElementById('siswaListContainer');
+        container.innerHTML = '';
+        if (!list.length) {
+            container.innerHTML = '<div class="empty-state">👥 Belum ada siswa</div>';
+        } else {
+            list.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'siswa-modal-item' + (cur === s.id ? ' active' : '');
+                div.innerHTML = `<span class="smi-name">${s.nama}</span><span class="smi-kelas">Kelas ${s.kelas}</span>`;
+                div.onclick = () => { selectSiswa(s.id); closeSiswaModal(); };
+                container.appendChild(div);
+            });
+        }
+        document.getElementById('siswaModal').classList.add('active');
+    }
+    function closeSiswaModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('siswaModal').classList.remove('active');
+    }
+    function selectSiswa(id) {
+        document.getElementById('namaSiswa').value = id;
+        const siswa = state.dataSiswa.find(s => s.id === id);
+        const disp = document.getElementById('namaSiswaDisplay');
+        if (siswa) {
+            document.getElementById('namaSiswaText').textContent = siswa.nama;
+            document.getElementById('kelas').value = siswa.kelas;
+            disp.classList.remove('empty');
+            loadSetoranTerakhir(id);
+        }
+    }
+    function resetSiswaSelection() {
+        document.getElementById('namaSiswa').value = '';
+        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
+        document.getElementById('namaSiswaDisplay').classList.add('empty');
+        document.getElementById('kelas').value = '';
+        document.getElementById('lastSetoranBar').classList.remove('show');
+    }
+
+    /* ─── AUTO-LOAD SETORAN TERAKHIR ─── */
+    function loadSetoranTerakhir(siswaId) {
+        const bar = document.getElementById('lastSetoranBar');
+        const txt = document.getElementById('lastSetoranText');
+        const last = state.dataSetoran.find(s => s.SiswaId === siswaId);
+        if (!last) { bar.classList.remove('show'); return; }
+
+        // ── Load ke form ──
+        // Juz
+        if (last.juz) {
+            document.getElementById('juz').value = String(last.juz);
+            document.getElementById('juzText').textContent = 'Juz ' + last.juz;
+        }
+        // Jenis
+        state.currentJenis = last.jenis || 'tasmi';
+        document.querySelectorAll('.seg-btn').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis);
+        });
+        // Status
+        pilihStatus(last.status || 'lancar');
+        // Surat
+        if (last.surah && last.surah.length) {
+            state.selectedSurah = last.surah.map(sr => ({ ...sr }));
+            renderSuratList();
+        }
+
+        // ── Bar info ──
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+        const suratNames = last.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
+        const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
+        txt.textContent = `${tgl} · ${jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
+        bar.classList.add('show');
+    }
+
+    /* ─── Siswa SELECTS (compat shim) ─── */
+    function renderNamaSiswaSelect() {
+        // no-op, display handled by modal
+    }
+    function renderFilterKelas() {
+        // no-op, display handled by modal
+    }
+    function filterSiswaByKelas() {
+        // Dipanggil dari compat lama — cukup reset siswa
+        resetSiswaSelection();
+    }
+    function updateKelasDisplay() {
+        const id = document.getElementById('namaSiswa').value;
+        const el = document.getElementById('kelas');
+        if (id) { const s = state.dataSiswa.find(s => s.id === id); el.value = s ? s.kelas : ''; }
+        else el.value = '';
+    }
+
+    /* ─── DATA Siswa ─── */
+function tambahSiswa() {
+    const nama = document.getElementById('inputNamaSiswa').value.trim();
+    const kelas = document.getElementById('inputKelas').value.trim();
+    if (!nama) { showToast('⚠️ Isi nama siswa'); return; }
+    if (!kelas) { showToast('⚠️ Isi kelas'); return; }
+    state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas });
+    saveAllData();
+    renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
+    filterSiswaByKelas();
+    document.getElementById('inputNamaSiswa').value = '';
+    document.getElementById('inputKelas').value = '';
+    showToast('✓ Siswa ditambahkan');
+}    function deleteSiswa(id) {
+        if (!confirm('Hapus Siswa ini?')) return;
+        state.dataSiswa = state.dataSiswa.filter(s => s.id !== id);
+        saveAllData();
+        renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
+        showToast('🗑 Siswa dihapus');
+    }
+    function renderDataSiswa() {
+        const list = document.getElementById('dataList');
+        if (!state.dataSiswa.length) { list.innerHTML = '<div class="empty-state">👥 Belum ada Siswa</div>'; return; }
+        list.innerHTML = state.dataSiswa.map(s =>
+            `<div class="data-card">
+                <div>
+                    <div class="data-name">${s.nama}</div>
+                    <span class="data-kelas">Kelas ${s.kelas}</span>
+                </div>
+                <button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button>
+            </div>`
+        ).join('');
+    }
+
+    /* ─── SIMPAN SETORAN ─── */
+    function simpanSetoran() {
+        const SiswaId = document.getElementById('namaSiswa').value;
+        const tgl = document.getElementById('tanggal').value;
+        if (!SiswaId) { showToast('⚠️ Pilih Siswa terlebih dahulu'); return; }
+        if (!tgl) { showToast('⚠️ Isi tanggal'); return; }
+        if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
+        const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
+        if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
+        state.dataSetoran.unshift({
+            id: Date.now(), SiswaId, nama: Siswa.nama, kelas: Siswa.kelas, tanggal: tgl,
+            jenis: state.currentJenis, juz: document.getElementById('juz').value,
+            surah: [...state.selectedSurah], status: state.currentStatus
+        });
+        saveAllData();
+        showToast('✅ Setoran tersimpan!');
+        renderResult();
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('namaSiswa').value = '';
+        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
+        document.getElementById('namaSiswaDisplay').classList.add('empty');
+        document.getElementById('kelas').value = '';
+        document.getElementById('lastSetoranBar').classList.remove('show');
+        state.selectedSurah = [];
+        state.currentJenis = 'tasmi';
+        state.currentStatus = 'lancar';
+        pilihStatus('lancar');
+        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+        const tb = document.querySelector('[data-jenis="tasmi"]');
+        if (tb) tb.classList.add('active');
+        renderSuratList();
+        document.getElementById('tanggal').value = todayStr();
+    }
+
+    /* ─── RESULT ─── */
+    function renderResult() {
+        const section = document.getElementById('resultSection');
+        const container = document.getElementById('resultList');
+        if (!state.dataSetoran.length) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => {
+            const suratText = s.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+            const jLabel = jenisMap[s.jenis] || s.jenis;
+            return `<div class="result-card">
+                <div class="rc-left">
+                    <div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div>
+                    <div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${s.tanggal.split('-').reverse().join('/')}</div>
+                    <div class="rc-surat">${suratText}</div>
+                </div>
+                <div class="rc-actions">
+                    <button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button>
+                    <button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+    function updateStatus(id, newStatus) {
+        const item = state.dataSetoran.find(i => i.id === id);
+        if (item) { item.status = newStatus; saveAllData(); renderResult(); }
+    }
+
+    /* ─── STORAGE ─── */
+    function saveAllData() {
+        localStorage.setItem('setoranData', JSON.stringify(state.dataSetoran));
+        localStorage.setItem('SiswaData', JSON.stringify(state.dataSiswa));
+    }
+    function loadAllData() {
+        const s1 = localStorage.getItem('setoranData'); if (s1) state.dataSetoran = JSON.parse(s1);
+        const s2 = localStorage.getItem('SiswaData'); if (s2) state.dataSiswa = JSON.parse(s2);
+    }
+
+    /* ─── IMPORT CSV / EXCEL ─── */
+    function importSiswaFromFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!['csv', 'xlsx', 'xls'].includes(ext)) {
+            showToast('⚠️ Format tidak didukung. Gunakan CSV atau Excel (.xlsx/.xls)');
+            document.getElementById('fileInput').value = '';
+            return;
+        }
+        const reader = new FileReader();
+        if (ext === 'csv') {
+            reader.onload = e => parseCSVAndImport(e.target.result);
+            reader.readAsText(file, 'UTF-8');
+        } else {
+            reader.onload = e => parseExcelAndImport(e.target.result);
+            reader.readAsArrayBuffer(file);
+        }
+    }
+
+    function parseExcelAndImport(arrayBuffer) {
+        if (typeof XLSX === 'undefined') {
+            showToast('⚠️ Library Excel belum siap, coba lagi');
+            document.getElementById('fileInput').value = '';
+            return;
+        }
+        try {
+            const wb = XLSX.read(arrayBuffer, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+            importRowsFromArray(rows);
+        } catch (err) {
+            showToast('⚠️ Gagal membaca file Excel');
+            console.error(err);
+        }
+        document.getElementById('fileInput').value = '';
+    }
+
+    function parseCSVAndImport(csv) {
+        const rows = csv.split(/\r?\n/).map(line => line.split(','));
+        importRowsFromArray(rows);
+        document.getElementById('fileInput').value = '';
+    }
+
+    function importRowsFromArray(rows) {
+        let added = 0, skipped = 0;
+        rows.forEach((parts, i) => {
+            // Skip header row jika ada kata 'nama' atau 'kelas'
+            if (i === 0) {
+                const first = String(parts[0] || '').toLowerCase();
+                const second = String(parts[1] || '').toLowerCase();
+                if (first.includes('nama') || second.includes('kelas')) return;
+            }
+            const nama = String(parts[0] || '').trim();
+            const kelas = String(parts[1] || '').trim();
+            if (!nama || !kelas) return;
+            const exists = state.dataSiswa.some(s => s.nama.toLowerCase() === nama.toLowerCase() && s.kelas === kelas);
+            if (!exists) { state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas }); added++; }
+            else skipped++;
+        });
+        if (added > 0) {
+            saveAllData(); renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
+            filterSiswaByKelas();
+            showToast(`✅ Import ${added} Siswa${skipped ? ` (${skipped} duplikat)` : ''}`);
+        } else {
+            showToast(skipped ? `⚠️ ${skipped} data duplikat, tidak ada yang baru` : '⚠️ File kosong/format salah');
+        }
+    }
+    function downloadTemplate() {
+        const csv = "nama,kelas\nAhmad,A\nBudi,B\nCitra,C\nDewi,A\nEka,D";
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+        a.download = 'template_Siswa.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+    function getSuratByJuz(juz) {
+    return ALL_SURAT[juz] || [];
+}
+
+    init();
+</script>
+</body>
+</html>
