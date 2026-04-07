@@ -538,7 +538,6 @@
            ── KOREKSI AYAT PANEL ──
         ══════════════════════════════════════════ */
 
-        /* Tombol trigger */
         .btn-koreksi {
             width: 100%;
             padding: 10px;
@@ -566,7 +565,6 @@
             font-weight: 800;
         }
 
-        /* Overlay */
         #koreksiOverlay {
             position: fixed;
             inset: 0;
@@ -577,7 +575,6 @@
         }
         #koreksiOverlay.active { display: flex; }
 
-        /* Panel sheet */
         .koreksi-sheet {
             background: white;
             width: 100%;
@@ -589,7 +586,6 @@
             overflow: hidden;
         }
 
-        /* Header panel */
         .koreksi-header {
             display: flex;
             justify-content: space-between;
@@ -608,7 +604,6 @@
             margin: 10px auto 0;
         }
 
-        /* Scrollable body */
         .koreksi-body {
             flex: 1;
             overflow-y: auto;
@@ -618,7 +613,6 @@
         .koreksi-body::-webkit-scrollbar { width: 3px; }
         .koreksi-body::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
 
-        /* Empty state */
         .koreksi-empty {
             text-align: center;
             padding: 32px 16px;
@@ -626,7 +620,6 @@
             font-size: 13px;
         }
 
-        /* Per-surat block */
         .koreksi-surat-block {
             margin-bottom: 14px;
         }
@@ -660,7 +653,6 @@
         }
         .koreksi-salah-count.show { display: inline-block; }
 
-        /* Ayat item dalam koreksi */
         .koreksi-ayat-item {
             padding: 10px 12px;
             border-radius: 10px;
@@ -715,7 +707,6 @@
         }
         .koreksi-ayat-item.salah .koreksi-salah-tag { display: inline-block; }
 
-        /* Footer panel */
         .koreksi-footer {
             padding: 10px 14px 14px;
             border-top: 1px solid var(--g2);
@@ -744,7 +735,6 @@
         }
         .btn-koreksi-close:active { opacity: .85; transform: scale(.98); }
 
-        /* ── RELOAD BAR (fixed bottom in tab siswa) ── */
         .reload-bar {
             flex-shrink: 0;
             padding: 8px 12px 10px;
@@ -752,10 +742,8 @@
             border-top: 1px solid var(--g2);
         }
 
-        /* Font Arab dari Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
 
-        /* ── RELOAD BUTTON ── */
         .btn-reload {
             width: 100%;
             display: flex;
@@ -777,19 +765,6 @@
         .btn-reload-title { font-size: 13px; font-weight: 700; }
         .btn-reload-sub { font-size: 10px; opacity: .85; font-weight: 500; }
 
-        /* ══════════════════════════════════════════
-           ── SUB-TAB (Info Panel) ──
-        ══════════════════════════════════════════ */
-
-        /* Wrapper untuk tab keterangan agar flexbox column */
-        #tab-keterangan {
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        #tab-keterangan.active { display: flex; }
-
-        /* Nav sub-tab */
         .sub-tab-nav {
             display: flex;
             gap: 6px;
@@ -798,8 +773,6 @@
             border-bottom: 1px solid var(--g2);
             flex-shrink: 0;
         }
-
-        /* Tombol sub-tab */
         .sub-tab-btn {
             flex: 1;
             padding: 9px 10px;
@@ -819,11 +792,6 @@
             color: var(--p);
             box-shadow: 0 -2px 8px rgba(0,0,0,.06), 0 1px 0 white;
         }
-        .sub-tab-btn:not(.active):active {
-            background: rgba(255,255,255,.5);
-        }
-
-        /* Konten sub-tab */
         .sub-tab-content {
             display: none;
             flex: 1;
@@ -835,8 +803,6 @@
             display: flex;
             opacity: 1;
         }
-
-        /* Area scroll hanya untuk list siswa & riwayat */
         .scrollable-list {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -845,28 +811,18 @@
         }
         .scrollable-list::-webkit-scrollbar { width: 3px; }
         .scrollable-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
-
-        /* Form area (tidak scroll sendiri) di sub-siswa */
         .sub-form-area {
             padding: 10px 12px 6px;
             flex-shrink: 0;
             border-bottom: 1px solid var(--g2);
             background: white;
         }
-
-        /* ══════════════════════════════════════════
-           ── MONITORING TAB ──
-        ══════════════════════════════════════════ */
-
-        /* Tab monitoring wrapper */
         #tab-monitoring {
             display: none;
             flex-direction: column;
             overflow: hidden;
         }
         #tab-monitoring.active { display: flex; }
-
-        /* Toolbar atas monitoring */
         .mon-toolbar {
             flex-shrink: 0;
             padding: 8px 12px;
@@ -888,7 +844,6 @@
         }
         .mon-filter-pill.active { background: var(--p); border-color: var(--p); color: white; }
         .mon-filter-pill:active { transform: scale(.95); }
-
         .btn-export-mon {
             margin-left: auto;
             padding: 7px 12px;
@@ -899,17 +854,11 @@
             box-shadow: 0 2px 6px rgba(14,165,233,.3);
         }
         .btn-export-mon:active { opacity: .85; transform: scale(.97); }
-
-        /* Scrollable list area */
         .mon-list {
             flex: 1; overflow-y: auto;
             padding: 8px 12px 16px;
             -webkit-overflow-scrolling: touch;
         }
-        .mon-list::-webkit-scrollbar { width: 3px; }
-        .mon-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
-
-        /* Card monitoring siswa */
         .mon-card {
             background: white;
             border-radius: var(--r2);
@@ -918,8 +867,6 @@
             overflow: hidden;
             border: 1px solid var(--g2);
         }
-
-        /* Header card */
         .mon-card-head {
             display: flex;
             align-items: center;
@@ -938,8 +885,6 @@
             background: var(--p3); color: var(--p2);
             padding: 2px 7px; border-radius: 10px; margin-top: 2px;
         }
-
-        /* Status utama badge */
         .mon-status-badge {
             flex-shrink: 0;
             font-size: 10px; font-weight: 700;
@@ -951,16 +896,12 @@
         .msb-siap    { background: #ede9fe; color: #4c1d95; }
         .msb-selesai { background: #dcfce7; color: #14532d; }
         .msb-kosong  { background: var(--g1); color: var(--g5); }
-
-        /* Body card – grid info */
         .mon-card-body {
             padding: 8px 12px 10px;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
-
-        /* Setoran terakhir */
         .mon-last-row {
             font-size: 11px; color: var(--g6);
             display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
@@ -973,8 +914,6 @@
         }
         .chip-l { background: #dcfce7; color: #14532d; }
         .chip-kl { background: #fee2e2; color: #7f1d1d; }
-
-        /* Progress bar Juz 30 */
         .mon-progress-wrap { margin-top: 2px; }
         .mon-progress-label {
             display: flex; justify-content: space-between; align-items: center;
@@ -996,8 +935,6 @@
             background: linear-gradient(90deg, #16a34a, #15803d);
         }
         .mon-sisa { font-size: 10px; color: var(--g5); margin-top: 2px; }
-
-        /* Row muroja'ah & tasmi' */
         .mon-info-row {
             display: flex; gap: 6px;
         }
@@ -1015,13 +952,12 @@
         .miv-proses { color: #d97706; }
         .miv-selesai { color: #16a34a; }
         .miv-siap { color: var(--purple); }
-
-        /* Tombol Tasmi' */
         .mon-card-foot {
             padding: 0 12px 10px;
+            display: flex; gap: 6px;
         }
         .btn-tasmi {
-            width: 100%;
+            flex: 1;
             padding: 8px;
             background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
             color: white; border: none; border-radius: var(--r);
@@ -1029,8 +965,15 @@
             box-shadow: 0 2px 6px rgba(124,58,237,.3);
         }
         .btn-tasmi:active { opacity: .85; transform: scale(.98); }
-
-        /* Modal Tasmi' */
+        .btn-hafalan-awal {
+            flex: 1;
+            padding: 8px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white; border: none; border-radius: var(--r);
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(14,165,233,.3);
+        }
+        .btn-hafalan-awal:active { opacity: .85; transform: scale(.98); }
         #tasmiModal .modal-sheet { max-height: 92vh; }
         .tasmi-nilai-row { display: flex; gap: 8px; }
         .tasmi-nilai-opt {
@@ -1045,9 +988,6 @@
         .tasmi-nilai-opt.sel-l .tn-desc { color: rgba(255,255,255,.85); }
         .tasmi-nilai-opt.sel-kl { background: var(--danger); border-color: var(--danger); color: white; }
         .tasmi-nilai-opt.sel-kl .tn-desc { color: rgba(255,255,255,.85); }
-        .tasmi-nilai-opt:active { transform: scale(.97); }
-
-        /* Empty state monitoring */
         .mon-empty { text-align: center; padding: 40px 20px; color: var(--g4); }
         .mon-empty-icon { font-size: 40px; margin-bottom: 8px; }
         .mon-empty-text { font-size: 13px; font-weight: 600; }
@@ -1059,7 +999,6 @@
 <div id="offlineBanner">📵 Anda sedang offline — data tersimpan lokal, semua fitur tetap berjalan</div>
 <div class="app">
 
-    <!-- HEADER -->
     <div class="header">
         <div class="header-left">
             <span class="header-icon">📖</span>
@@ -1071,7 +1010,6 @@
         <div class="header-badge">L · KL</div>
     </div>
 
-    <!-- TAB NAV -->
     <div class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
         <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
@@ -1080,11 +1018,8 @@
 
     <div class="container">
 
-        <!-- ════ TAB SETORAN ════ -->
         <div id="tab-setoran" class="tab-content active">
             <div class="form-section">
-
-                <!-- Row: Filter Kelas + Nama Siswa -->
                 <div class="fg">
                     <label class="lbl">Filter Kelas</label>
                     <div class="clickable empty" id="filterKelasDisplay" onclick="openKelasModal()">
@@ -1105,7 +1040,6 @@
                         <input type="text" id="kelas" class="field" disabled placeholder="-" style="width:60px; text-align:center; font-weight:700;">
                     </div>
                 </div>
-                <!-- Setoran terakhir siswa -->
                 <div class="last-setoran-bar" id="lastSetoranBar">
                     <div class="lsb-icon">📋</div>
                     <div class="lsb-body">
@@ -1113,8 +1047,6 @@
                         <div class="lsb-text" id="lastSetoranText"></div>
                     </div>
                 </div>
-
-                <!-- Row: Tanggal + Juz -->
                 <div class="fg row">
                     <div>
                         <label class="lbl">Tanggal</label>
@@ -1128,8 +1060,6 @@
                         <input type="hidden" id="juz" value="30">
                     </div>
                 </div>
-
-                <!-- Jenis Setoran -->
                 <div class="fg">
                     <label class="lbl">Jenis Setoran</label>
                     <div class="seg">
@@ -1138,8 +1068,6 @@
                         <button class="seg-btn" data-jenis="belum" onclick="changeJenis(this)">Blm Khatam</button>
                     </div>
                 </div>
-
-                <!-- Hafalan Surat -->
                 <div class="fg">
                     <label class="lbl">Hafalan / Surat</label>
                     <div id="suratList" class="surat-list"></div>
@@ -1148,8 +1076,6 @@
                     </div>
                     <button class="btn-add-surat" id="btnAddSurat" style="display:none;" onclick="openSuratModal()">＋ Tambah Surat</button>
                 </div>
-
-                <!-- Keterangan L / KL -->
                 <div class="fg">
                     <label class="lbl">Keterangan Hafalan</label>
                     <div class="status-row" id="statusRow">
@@ -1163,37 +1089,24 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Koreksi Ayat -->
                 <div class="fg" id="koreksiTriggerArea" style="display:none;">
                     <button class="btn-koreksi" onclick="openKoreksi()">
                         ❗ Koreksi Ayat
                         <span class="btn-koreksi-badge" id="koreksiTotalBadge">0</span>
                     </button>
                 </div>
-
-                <!-- Submit -->
                 <div class="fg">
                     <button class="btn-primary" onclick="simpanSetoran()">💾 &nbsp;Submit Setoran</button>
                 </div>
-
-            </div><!-- /form-section -->
-
+            </div>
         </div>
 
-        <!-- ════ TAB KETERANGAN ════ -->
         <div id="tab-keterangan" class="tab-content">
-
-            <!-- ── SUB-TAB NAV ── -->
             <div class="sub-tab-nav">
                 <button class="sub-tab-btn active" id="subBtn-siswa" onclick="switchSubTab('siswa')">👥 Data Siswa</button>
                 <button class="sub-tab-btn" id="subBtn-riwayat" onclick="switchSubTab('riwayat')">📋 Riwayat Setoran</button>
             </div>
-
-            <!-- ══ SUB-TAB: DATA SISWA ══ -->
             <div id="sub-siswa" class="sub-tab-content active">
-
-                <!-- Form area (fixed, tidak scroll) -->
                 <div class="sub-form-area">
                     <div class="fg row" style="margin-bottom:8px;">
                         <div>
@@ -1212,14 +1125,10 @@
                     </div>
                     <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="importSiswaFromFile(this)">
                 </div>
-
-                <!-- Daftar siswa (scrollable) -->
                 <div class="scrollable-list">
                     <div class="section-label" style="padding-top:10px;">Daftar Siswa</div>
                     <div id="dataList" class="data-list"></div>
                 </div>
-
-                <!-- Reload App – selalu di bawah, tidak ikut scroll -->
                 <div class="reload-bar">
                     <button class="btn-reload" onclick="reloadApp()">
                         <span class="btn-reload-icon">🔄</span>
@@ -1229,10 +1138,7 @@
                         </div>
                     </button>
                 </div>
-
-            </div><!-- /sub-siswa -->
-
-            <!-- ══ SUB-TAB: RIWAYAT SETORAN ══ -->
+            </div>
             <div id="sub-riwayat" class="sub-tab-content">
                 <div class="scrollable-list">
                     <div class="section-label" style="padding-top:10px;">Riwayat Setoran Terbaru</div>
@@ -1241,21 +1147,15 @@
                     </div>
                     <div id="riwayatEmpty" class="empty-state" style="display:block;">📋 Belum ada riwayat setoran</div>
                 </div>
-            </div><!-- /sub-riwayat -->
+            </div>
+        </div>
 
-        </div><!-- /tab-keterangan -->
-
-        <!-- ════ TAB MONITORING ════ -->
         <div id="tab-monitoring" class="tab-content">
-
-            <!-- Toolbar filter kelas -->
             <div class="mon-toolbar">
                 <div class="mon-filter-pill active" id="monFilterAll" onclick="monSetFilter('')">Semua</div>
                 <div id="monFilterKelas" style="display:contents;"></div>
                 <button class="btn-export-mon" onclick="exportMonitoringBulanan()">📤 Export</button>
             </div>
-
-            <!-- List card siswa -->
             <div class="mon-list" id="monList">
                 <div class="mon-empty">
                     <div class="mon-empty-icon">📊</div>
@@ -1263,150 +1163,81 @@
                     <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-        </div><!-- /tab-monitoring -->
-
-    </div><!-- /container -->
-</div><!-- /app -->
-
-<!-- ════ MODAL PILIH KELAS ════ -->
+<!-- MODALS -->
 <div id="kelasModal" class="modal-overlay" onclick="closeKelasModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>Filter Kelas</h2>
-            <button class="btn-close" onclick="closeKelasModal()">✕</button>
-        </div>
-        <div class="modal-body">
-            <div id="kelasGridContainer" class="grid-pills"></div>
-        </div>
+        <div class="modal-header"><h2>Filter Kelas</h2><button class="btn-close" onclick="closeKelasModal()">✕</button></div>
+        <div class="modal-body"><div id="kelasGridContainer" class="grid-pills"></div></div>
     </div>
 </div>
-
-<!-- ════ MODAL PILIH JUZ ════ -->
 <div id="juzModal" class="modal-overlay" onclick="closeJuzModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>Pilih Juz</h2>
-            <button class="btn-close" onclick="closeJuzModal()">✕</button>
-        </div>
-        <div class="modal-body">
-            <div id="juzGridContainer" class="grid-juz"></div>
-        </div>
+        <div class="modal-header"><h2>Pilih Juz</h2><button class="btn-close" onclick="closeJuzModal()">✕</button></div>
+        <div class="modal-body"><div id="juzGridContainer" class="grid-juz"></div></div>
     </div>
 </div>
-
-<!-- ════ MODAL PILIH SISWA ════ -->
 <div id="siswaModal" class="modal-overlay" onclick="closeSiswaModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>Pilih Siswa</h2>
-            <button class="btn-close" onclick="closeSiswaModal()">✕</button>
-        </div>
-        <div class="modal-body">
-            <div id="siswaListContainer" class="siswa-list-modal"></div>
-        </div>
+        <div class="modal-header"><h2>Pilih Siswa</h2><button class="btn-close" onclick="closeSiswaModal()">✕</button></div>
+        <div class="modal-body"><div id="siswaListContainer" class="siswa-list-modal"></div></div>
     </div>
 </div>
-
-
 <div id="suratModal" class="modal-overlay" onclick="closeSuratModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>Pilih Surat – Juz <span id="juzNumber">30</span></h2>
-            <button class="btn-close" onclick="closeSuratModal()">✕</button>
-        </div>
-        <div class="modal-body">
-            <div id="gridContainer" class="grid-surat"></div>
-        </div>
+        <div class="modal-header"><h2>Pilih Surat – Juz <span id="juzNumber">30</span></h2><button class="btn-close" onclick="closeSuratModal()">✕</button></div>
+        <div class="modal-body"><div id="gridContainer" class="grid-surat"></div></div>
     </div>
 </div>
-
-<!-- ════ MODAL TASMI' ════ -->
 <div id="tasmiModal" class="modal-overlay" onclick="closeTasmiModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>🎤 Form Tasmi'</h2>
-            <button class="btn-close" onclick="closeTasmiModal()">✕</button>
-        </div>
+        <div class="modal-header"><h2>🎤 Form Tasmi'</h2><button class="btn-close" onclick="closeTasmiModal()">✕</button></div>
         <div class="modal-body">
-            <div class="fg">
-                <label class="lbl">Nama Siswa</label>
-                <input type="text" id="tasmiNama" class="field" disabled>
-            </div>
+            <div class="fg"><label class="lbl">Nama Siswa</label><input type="text" id="tasmiNama" class="field" disabled></div>
             <div class="fg row">
-                <div>
-                    <label class="lbl">Juz</label>
-                    <input type="text" id="tasmiJuz" class="field" value="30" disabled style="text-align:center;font-weight:700;">
-                </div>
-                <div>
-                    <label class="lbl">Tanggal</label>
-                    <input type="date" id="tasmiTanggal" class="field">
-                </div>
+                <div><label class="lbl">Juz</label><input type="text" id="tasmiJuz" class="field" value="30" disabled style="text-align:center;font-weight:700;"></div>
+                <div><label class="lbl">Tanggal</label><input type="date" id="tasmiTanggal" class="field"></div>
             </div>
             <div class="fg">
                 <label class="lbl">Penilaian</label>
                 <div class="tasmi-nilai-row" id="tasmiNilaiRow">
                     <div class="tasmi-nilai-opt" data-nilai="L" onclick="pilihTasmiNilai('L')">
-                        <span class="tn-letter">L</span>
-                        <span class="tn-desc">Lancar</span>
+                        <span class="tn-letter">L</span><span class="tn-desc">Lancar</span>
                     </div>
                     <div class="tasmi-nilai-opt" data-nilai="KL" onclick="pilihTasmiNilai('KL')">
-                        <span class="tn-letter">KL</span>
-                        <span class="tn-desc">Kurang Lancar</span>
+                        <span class="tn-letter">KL</span><span class="tn-desc">Kurang Lancar</span>
                     </div>
                 </div>
             </div>
-            <div class="fg">
-                <label class="lbl">Penguji</label>
-                <input type="text" id="tasmiPenguji" class="field" placeholder="Nama penguji...">
-            </div>
-            <div class="fg">
-                <label class="lbl">Catatan</label>
-                <textarea id="tasmiCatatan" class="field" rows="2" placeholder="Catatan tambahan..." style="resize:none;"></textarea>
-            </div>
-            <div class="fg">
-                <button class="btn-primary" onclick="simpanTasmi()">💾 &nbsp;Simpan Tasmi'</button>
-            </div>
+            <div class="fg"><label class="lbl">Penguji</label><input type="text" id="tasmiPenguji" class="field" placeholder="Nama penguji..."></div>
+            <div class="fg"><label class="lbl">Catatan</label><textarea id="tasmiCatatan" class="field" rows="2" placeholder="Catatan tambahan..." style="resize:none;"></textarea></div>
+            <div class="fg"><button class="btn-primary" onclick="simpanTasmi()">💾 &nbsp;Simpan Tasmi'</button></div>
         </div>
     </div>
 </div>
-
-<!-- ════ PANEL KOREKSI AYAT ════ -->
 <div id="koreksiOverlay" onclick="closeKoreksiOnOverlay(event)">
     <div class="koreksi-sheet" onclick="event.stopPropagation()">
         <div class="koreksi-handle"></div>
         <div class="koreksi-header">
-            <div class="koreksi-header-left">
-                <div class="koreksi-title">❗ Koreksi Ayat</div>
-                <div class="koreksi-sub">Ketuk ayat yang salah · Arab tampil khusus Juz 30</div>
-            </div>
+            <div class="koreksi-header-left"><div class="koreksi-title">❗ Koreksi Ayat</div><div class="koreksi-sub">Ketuk ayat yang salah · Arab tampil khusus Juz 30</div></div>
             <button class="btn-close" onclick="closeKoreksi()">✕</button>
         </div>
-        <div class="koreksi-body" id="koreksiBody">
-            <div class="koreksi-empty" id="koreksiEmpty">
-                📖 Pilih surat terlebih dahulu di tab Setoran
-            </div>
-        </div>
-        <div class="koreksi-footer">
-            <div class="koreksi-summary" id="koreksiSummary"></div>
-            <button class="btn-koreksi-close" onclick="closeKoreksi()">✓ &nbsp;Selesai Koreksi</button>
-        </div>
+        <div class="koreksi-body" id="koreksiBody"><div class="koreksi-empty" id="koreksiEmpty">📖 Pilih surat terlebih dahulu di tab Setoran</div></div>
+        <div class="koreksi-footer"><div class="koreksi-summary" id="koreksiSummary"></div><button class="btn-koreksi-close" onclick="closeKoreksi()">✓ &nbsp;Selesai Koreksi</button></div>
     </div>
 </div>
-
-<!-- ════ MODAL PILIH AYAT ════ -->
 <div id="ayatModal" class="modal-overlay" onclick="closeAyatModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
-        <div class="modal-header">
-            <h2>Pilih Ayat – <span id="ayatModalSurat"></span></h2>
-            <button class="btn-close" onclick="closeAyatModal()">✕</button>
-        </div>
+        <div class="modal-header"><h2>Pilih Ayat – <span id="ayatModalSurat"></span></h2><button class="btn-close" onclick="closeAyatModal()">✕</button></div>
         <div class="modal-body">
             <div id="dariGrid" class="grid-ayat-single" style="display:none;"></div>
             <div id="sampaiGrid" class="grid-ayat-single" style="display:none;"></div>
@@ -1416,706 +1247,62 @@
 </div>
 
 <script>
-    /* ─── DATA ─── */
     const ALL_SURAT = {
-    1: [{ num:1, name:'Al-Fatihah', ayat:7 }, { num:2, name:'Al-Baqarah', ayat:286 }],
-    2: [{ num:2, name:'Al-Baqarah', ayat:286 }],
-    3: [{ num:2, name:'Al-Baqarah', ayat:286 }, { num:3, name:"Ali 'Imran", ayat:200 }],
-    4: [{ num:3, name:"Ali 'Imran", ayat:200 }, { num:4, name:'An-Nisa', ayat:176 }],
-    5: [{ num:4, name:'An-Nisa', ayat:176 }],
-    6: [{ num:4, name:'An-Nisa', ayat:176 }, { num:5, name:'Al-Ma\'idah', ayat:120 }],
-    7: [{ num:5, name:'Al-Ma\'idah', ayat:120 }, { num:6, name:'Al-An\'am', ayat:165 }],
-    8: [{ num:6, name:'Al-An\'am', ayat:165 }, { num:7, name:'Al-A\'raf', ayat:206 }],
-    9: [{ num:7, name:'Al-A\'raf', ayat:206 }, { num:8, name:'Al-Anfal', ayat:75 }],
-    10: [{ num:8, name:'Al-Anfal', ayat:75 }, { num:9, name:'At-Taubah', ayat:129 }],
-    11: [{ num:9, name:'At-Taubah', ayat:129 }, { num:10, name:'Yunus', ayat:109 }, { num:11, name:'Hud', ayat:123 }],
-    12: [{ num:11, name:'Hud', ayat:123 }, { num:12, name:'Yusuf', ayat:111 }],
-    13: [{ num:12, name:'Yusuf', ayat:111 }, { num:13, name:'Ar-Ra\'d', ayat:43 }, { num:14, name:'Ibrahim', ayat:52 }],
-    14: [{ num:15, name:'Al-Hijr', ayat:99 }, { num:16, name:'An-Nahl', ayat:128 }],
-    15: [{ num:17, name:'Al-Isra', ayat:111 }, { num:18, name:'Al-Kahf', ayat:110 }],
-    16: [{ num:18, name:'Al-Kahf', ayat:110 }, { num:19, name:'Maryam', ayat:98 }, { num:20, name:'Taha', ayat:135 }],
-    17: [{ num:21, name:'Al-Anbiya', ayat:112 }, { num:22, name:'Al-Hajj', ayat:78 }],
-    18: [{ num:23, name:'Al-Mu\'minun', ayat:118 }, { num:24, name:'An-Nur', ayat:64 }, { num:25, name:'Al-Furqan', ayat:77 }],
-    19: [{ num:25, name:'Al-Furqan', ayat:77 }, { num:26, name:'Asy-Syu\'ara', ayat:227 }, { num:27, name:'An-Naml', ayat:93 }],
-    20: [{ num:27, name:'An-Naml', ayat:93 }, { num:28, name:'Al-Qasas', ayat:88 }, { num:29, name:'Al-Ankabut', ayat:69 }],
-    21: [{ num:29, name:'Al-Ankabut', ayat:69 }, { num:30, name:'Ar-Rum', ayat:60 }, { num:31, name:'Luqman', ayat:34 }, { num:32, name:'As-Sajdah', ayat:30 }],
-    22: [{ num:33, name:'Al-Ahzab', ayat:73 }, { num:34, name:'Saba', ayat:54 }, { num:35, name:'Fatir', ayat:45 }],
-    23: [{ num:36, name:'Yasin', ayat:83 }, { num:37, name:'As-Saffat', ayat:182 }, { num:38, name:'Sad', ayat:88 }],
-    24: [{ num:39, name:'Az-Zumar', ayat:75 }, { num:40, name:'Ghafir', ayat:85 }],
-    25: [{ num:41, name:'Fussilat', ayat:54 }, { num:42, name:'Asy-Syura', ayat:53 }, { num:43, name:'Az-Zukhruf', ayat:89 }],
-    26: [{ num:44, name:'Ad-Dukhan', ayat:59 }, { num:45, name:'Al-Jasiyah', ayat:37 }, { num:46, name:'Al-Ahqaf', ayat:35 }, { num:47, name:'Muhammad', ayat:38 }],
-    27: [{ num:48, name:'Al-Fath', ayat:29 }, { num:49, name:'Al-Hujurat', ayat:18 }, { num:50, name:'Qaf', ayat:45 }, { num:51, name:'Az-Zariyat', ayat:60 }],
-    28: [{ num:52, name:'At-Tur', ayat:49 }, { num:53, name:'An-Najm', ayat:62 }, { num:54, name:'Al-Qamar', ayat:55 }, { num:55, name:'Ar-Rahman', ayat:78 }],
-    29: [{ num:56, name:'Al-Waqi\'ah', ayat:96 }, { num:57, name:'Al-Hadid', ayat:29 }, { num:58, name:'Al-Mujadilah', ayat:22 }, { num:59, name:'Al-Hasyr', ayat:24 }, { num:60, name:'Al-Mumtahanah', ayat:13 }],
-    30: [
-        { num:78, name:'An-Naba', ayat:40 }, { num:79, name:"An-Nazi'at", ayat:46 },
-        { num:80, name:'Abasa', ayat:42 }, { num:81, name:'At-Takwir', ayat:29 },
-        { num:82, name:'Al-Infithar', ayat:19 }, { num:83, name:'Al-Mutaffifin', ayat:36 },
-        { num:84, name:'Al-Insyiqaq', ayat:25 }, { num:85, name:'Al-Buruj', ayat:22 },
-        { num:86, name:'At-Tariq', ayat:17 }, { num:87, name:"Al-A'la", ayat:19 },
-        { num:88, name:'Al-Ghasyiyah', ayat:26 }, { num:89, name:'Al-Fajr', ayat:30 },
-        { num:90, name:'Al-Balad', ayat:20 }, { num:91, name:'Asy-Syams', ayat:15 },
-        { num:92, name:'Al-Lail', ayat:21 }, { num:93, name:'Ad-Duha', ayat:11 },
-        { num:94, name:'Asy-Syarh', ayat:8 }, { num:95, name:'At-Tin', ayat:8 },
-        { num:96, name:'Al-Alaq', ayat:19 }, { num:97, name:'Al-Qadr', ayat:5 },
-        { num:98, name:'Al-Bayyinah', ayat:8 }, { num:99, name:'Az-Zalzalah', ayat:8 },
-        { num:100, name:"Al-Adiyat", ayat:11 }, { num:101, name:"Al-Qari'ah", ayat:11 },
-        { num:102, name:'At-Takatsur', ayat:8 }, { num:103, name:'Al-Asr', ayat:3 },
-        { num:104, name:'Al-Humazah', ayat:9 }, { num:105, name:'Al-Fil', ayat:5 },
-        { num:106, name:'Quraisy', ayat:4 }, { num:107, name:"Al-Ma'un", ayat:7 },
-        { num:108, name:'Al-Kautsar', ayat:3 }, { num:109, name:'Al-Kafirun', ayat:6 },
-        { num:110, name:'An-Nasr', ayat:3 }, { num:111, name:'Al-Lahab', ayat:5 },
-        { num:112, name:'Al-Ikhlas', ayat:4 }, { num:113, name:'Al-Falaq', ayat:5 },
-        { num:114, name:'An-Nas', ayat:6 }
-    ]
-};
-    let state = {
-        currentJenis: 'tasmi',
-        selectedSurah: [],
-        dataSetoran: [],
-        dataSiswa: [],
-        currentAyatSurat: null,
-        currentStatus: 'lancar'
+        1: [{ num:1, name:'Al-Fatihah', ayat:7 }],
+        2: [{ num:2, name:'Al-Baqarah', ayat:286 }],
+        3: [{ num:2, name:'Al-Baqarah', ayat:286 }, { num:3, name:"Ali 'Imran", ayat:200 }],
+        4: [{ num:3, name:"Ali 'Imran", ayat:200 }, { num:4, name:'An-Nisa', ayat:176 }],
+        5: [{ num:4, name:'An-Nisa', ayat:176 }],
+        6: [{ num:4, name:'An-Nisa', ayat:176 }, { num:5, name:'Al-Ma\'idah', ayat:120 }],
+        7: [{ num:5, name:'Al-Ma\'idah', ayat:120 }, { num:6, name:'Al-An\'am', ayat:165 }],
+        8: [{ num:6, name:'Al-An\'am', ayat:165 }, { num:7, name:'Al-A\'raf', ayat:206 }],
+        9: [{ num:7, name:'Al-A\'raf', ayat:206 }, { num:8, name:'Al-Anfal', ayat:75 }],
+        10: [{ num:8, name:'Al-Anfal', ayat:75 }, { num:9, name:'At-Taubah', ayat:129 }],
+        11: [{ num:9, name:'At-Taubah', ayat:129 }, { num:10, name:'Yunus', ayat:109 }, { num:11, name:'Hud', ayat:123 }],
+        12: [{ num:11, name:'Hud', ayat:123 }, { num:12, name:'Yusuf', ayat:111 }],
+        13: [{ num:12, name:'Yusuf', ayat:111 }, { num:13, name:'Ar-Ra\'d', ayat:43 }, { num:14, name:'Ibrahim', ayat:52 }],
+        14: [{ num:15, name:'Al-Hijr', ayat:99 }, { num:16, name:'An-Nahl', ayat:128 }],
+        15: [{ num:17, name:'Al-Isra', ayat:111 }, { num:18, name:'Al-Kahf', ayat:110 }],
+        16: [{ num:18, name:'Al-Kahf', ayat:110 }, { num:19, name:'Maryam', ayat:98 }, { num:20, name:'Taha', ayat:135 }],
+        17: [{ num:21, name:'Al-Anbiya', ayat:112 }, { num:22, name:'Al-Hajj', ayat:78 }],
+        18: [{ num:23, name:'Al-Mu\'minun', ayat:118 }, { num:24, name:'An-Nur', ayat:64 }, { num:25, name:'Al-Furqan', ayat:77 }],
+        19: [{ num:25, name:'Al-Furqan', ayat:77 }, { num:26, name:'Asy-Syu\'ara', ayat:227 }, { num:27, name:'An-Naml', ayat:93 }],
+        20: [{ num:27, name:'An-Naml', ayat:93 }, { num:28, name:'Al-Qasas', ayat:88 }, { num:29, name:'Al-Ankabut', ayat:69 }],
+        21: [{ num:29, name:'Al-Ankabut', ayat:69 }, { num:30, name:'Ar-Rum', ayat:60 }, { num:31, name:'Luqman', ayat:34 }, { num:32, name:'As-Sajdah', ayat:30 }],
+        22: [{ num:33, name:'Al-Ahzab', ayat:73 }, { num:34, name:'Saba', ayat:54 }, { num:35, name:'Fatir', ayat:45 }],
+        23: [{ num:36, name:'Yasin', ayat:83 }, { num:37, name:'As-Saffat', ayat:182 }, { num:38, name:'Sad', ayat:88 }],
+        24: [{ num:39, name:'Az-Zumar', ayat:75 }, { num:40, name:'Ghafir', ayat:85 }],
+        25: [{ num:41, name:'Fussilat', ayat:54 }, { num:42, name:'Asy-Syura', ayat:53 }, { num:43, name:'Az-Zukhruf', ayat:89 }],
+        26: [{ num:44, name:'Ad-Dukhan', ayat:59 }, { num:45, name:'Al-Jasiyah', ayat:37 }, { num:46, name:'Al-Ahqaf', ayat:35 }, { num:47, name:'Muhammad', ayat:38 }],
+        27: [{ num:48, name:'Al-Fath', ayat:29 }, { num:49, name:'Al-Hujurat', ayat:18 }, { num:50, name:'Qaf', ayat:45 }, { num:51, name:'Az-Zariyat', ayat:60 }],
+        28: [{ num:52, name:'At-Tur', ayat:49 }, { num:53, name:'An-Najm', ayat:62 }, { num:54, name:'Al-Qamar', ayat:55 }, { num:55, name:'Ar-Rahman', ayat:78 }],
+        29: [{ num:56, name:'Al-Waqi\'ah', ayat:96 }, { num:57, name:'Al-Hadid', ayat:29 }, { num:58, name:'Al-Mujadilah', ayat:22 }, { num:59, name:'Al-Hasyr', ayat:24 }, { num:60, name:'Al-Mumtahanah', ayat:13 }],
+        30: [
+            { num:78, name:'An-Naba', ayat:40 }, { num:79, name:"An-Nazi'at", ayat:46 },
+            { num:80, name:'Abasa', ayat:42 }, { num:81, name:'At-Takwir', ayat:29 },
+            { num:82, name:'Al-Infithar', ayat:19 }, { num:83, name:'Al-Mutaffifin', ayat:36 },
+            { num:84, name:'Al-Insyiqaq', ayat:25 }, { num:85, name:'Al-Buruj', ayat:22 },
+            { num:86, name:'At-Tariq', ayat:17 }, { num:87, name:"Al-A'la", ayat:19 },
+            { num:88, name:'Al-Ghasyiyah', ayat:26 }, { num:89, name:'Al-Fajr', ayat:30 },
+            { num:90, name:'Al-Balad', ayat:20 }, { num:91, name:'Asy-Syams', ayat:15 },
+            { num:92, name:'Al-Lail', ayat:21 }, { num:93, name:'Ad-Duha', ayat:11 },
+            { num:94, name:'Asy-Syarh', ayat:8 }, { num:95, name:'At-Tin', ayat:8 },
+            { num:96, name:'Al-Alaq', ayat:19 }, { num:97, name:'Al-Qadr', ayat:5 },
+            { num:98, name:'Al-Bayyinah', ayat:8 }, { num:99, name:'Az-Zalzalah', ayat:8 },
+            { num:100, name:"Al-Adiyat", ayat:11 }, { num:101, name:"Al-Qari'ah", ayat:11 },
+            { num:102, name:'At-Takatsur', ayat:8 }, { num:103, name:'Al-Asr', ayat:3 },
+            { num:104, name:'Al-Humazah', ayat:9 }, { num:105, name:'Al-Fil', ayat:5 },
+            { num:106, name:'Quraisy', ayat:4 }, { num:107, name:"Al-Ma'un", ayat:7 },
+            { num:108, name:'Al-Kautsar', ayat:3 }, { num:109, name:'Al-Kafirun', ayat:6 },
+            { num:110, name:'An-Nasr', ayat:3 }, { num:111, name:'Al-Lahab', ayat:5 },
+            { num:112, name:'Al-Ikhlas', ayat:4 }, { num:113, name:'Al-Falaq', ayat:5 },
+            { num:114, name:'An-Nas', ayat:6 }
+        ]
     };
 
-    let selectedAyatStart = null;
-    let selectedAyatEnd = null;
-    let ayatPickerContext = null; // { num: suratNum, mode: 'dari'|'sampai' }
+    const JUZ30_SURAT = (ALL_SURAT[30] || []).map(s => s.num);
+    const JUZ30_TOTAL = JUZ30_SURAT.length;
 
-    /* ─── INIT ─── */
-    function init() {
-        document.getElementById('tanggal').value = todayStr();
-        loadAllData();
-        renderNamaSiswaSelect();
-        renderFilterKelas();
-        renderDataSiswa();
-        renderResult();
-        pilihStatus('lancar');
-
-        // Selalu update tanggal ke hari ini saat halaman kembali aktif
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                document.getElementById('tanggal').value = todayStr();
-            }
-        });
-        window.addEventListener('focus', () => {
-            document.getElementById('tanggal').value = todayStr();
-        });
-    }
-
-    function todayStr() {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    }
-
-    /* ─── TABS ─── */
-    function switchTab(name) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
-        if (name === 'monitoring') {
-            renderMonFilterKelas();
-            renderMonitoring();
-        }
-    }
-
-    /* ─── SUB-TABS (Info) ─── */
-    function switchSubTab(name) {
-        document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('sub-' + name).classList.add('active');
-        document.getElementById('subBtn-' + name).classList.add('active');
-    }
-
-    /* ─── TOAST ─── */
-    function showToast(msg, duration=2200) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), duration);
-    }
-
-    /* ─── JENIS & STATUS ─── */
-    function changeJenis(btn) {
-        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        state.currentJenis = btn.getAttribute('data-jenis');
-        renderSuratList();
-    }
-
-    function pilihStatus(status) {
-        state.currentStatus = status;
-        document.querySelectorAll('.status-opt').forEach(opt => {
-            opt.classList.remove('sel-l', 'sel-kl');
-            const s = opt.getAttribute('data-status');
-            if (s === 'lancar' && status === 'lancar') opt.classList.add('sel-l');
-            if (s === 'kurang' && status === 'kurang') opt.classList.add('sel-kl');
-        });
-    }
-
-    /* ─── MODAL SURAT ─── */
-    function openSuratModal() {
-        const juzVal = document.getElementById('juz').value || '30';
-        document.getElementById('juzNumber').innerText = juzVal;
-        const grid = document.getElementById('gridContainer');
-        grid.innerHTML = '';
-        (ALL_SURAT[juzVal] || []).forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'grid-item';
-            div.innerHTML = `<div class="grid-item-num">${s.num}</div><div class="grid-item-name">${s.name}</div>`;
-            div.onclick = () => selectSurat(s);
-            grid.appendChild(div);
-        });
-        document.getElementById('suratModal').classList.add('active');
-    }
-    function closeSuratModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('suratModal').classList.remove('active');
-    }
-    function selectSurat(surat) {
-        state.currentAyatSurat = surat;
-        const idx = state.selectedSurah.findIndex(s => s.num === surat.num);
-        if (idx === -1) {
-            state.selectedSurah.push({ ...surat, dari: 1, sampai: surat.ayat, ayatSalah: [] });
-        }
-        closeSuratModal();
-        renderSuratList();
-    }
-
-    /* ─── MODAL AYAT ─── */
-    function openDariModal(suratNum) {
-        const surat = state.selectedSurah.find(s => s.num === suratNum);
-        if (!surat) return;
-        ayatPickerContext = { num: suratNum, mode: 'dari' };
-        selectedAyatStart = surat.dari || 1;
-        selectedAyatEnd = surat.sampai || surat.ayat;
-        document.getElementById('ayatModalSurat').innerText = surat.name;
-        document.getElementById('dariGrid').style.display = 'grid';
-        document.getElementById('sampaiGrid').style.display = 'none';
-        buildSingleGrid('dari', surat.ayat);
-        document.getElementById('ayatModal').classList.add('active');
-        setTimeout(() => {
-            const el = document.querySelector(`#dariGrid .ayat-item[data-dari="${selectedAyatStart}"]`);
-            if (el) el.scrollIntoView({ block: 'center' });
-        }, 60);
-    }
-
-    function openSampaiModal(suratNum) {
-        const surat = state.selectedSurah.find(s => s.num === suratNum);
-        if (!surat) return;
-        ayatPickerContext = { num: suratNum, mode: 'sampai' };
-        selectedAyatStart = surat.dari || 1;
-        selectedAyatEnd = surat.sampai || surat.ayat;
-        document.getElementById('ayatModalSurat').innerText = surat.name;
-        document.getElementById('dariGrid').style.display = 'none';
-        document.getElementById('sampaiGrid').style.display = 'grid';
-        buildSingleGrid('sampai', surat.ayat);
-        document.getElementById('ayatModal').classList.add('active');
-        setTimeout(() => {
-            const el = document.querySelector(`#sampaiGrid .ayat-item[data-sampai="${selectedAyatEnd}"]`);
-            if (el) el.scrollIntoView({ block: 'center' });
-        }, 60);
-    }
-
-    function openAyatModal(surat) { /* legacy */ }
-
-    function buildSingleGrid(mode, total) {
-        const grid = document.getElementById(mode === 'dari' ? 'dariGrid' : 'sampaiGrid');
-        grid.innerHTML = '';
-        const cur = mode === 'dari' ? selectedAyatStart : selectedAyatEnd;
-        for (let i = 1; i <= total; i++) {
-            const btn = document.createElement('div');
-            btn.className = 'ayat-item' + (i === cur ? (mode === 'dari' ? ' sel-dari' : ' sel-sampai') : '');
-            btn.textContent = i;
-            btn.setAttribute('data-' + mode, i);
-            btn.onclick = mode === 'dari' ? (n => () => selectDari(n))(i) : (n => () => selectSampai(n))(i);
-            grid.appendChild(btn);
-        }
-    }
-
-    function selectDari(num) {
-        selectedAyatStart = num;
-        document.querySelectorAll('#dariGrid .ayat-item').forEach(el => {
-            el.classList.toggle('sel-dari', +el.getAttribute('data-dari') === num);
-        });
-    }
-
-    function selectSampai(num) {
-        selectedAyatEnd = num;
-        document.querySelectorAll('#sampaiGrid .ayat-item').forEach(el => {
-            el.classList.toggle('sel-sampai', +el.getAttribute('data-sampai') === num);
-        });
-    }
-
-    function refreshAyatHighlight() { /* legacy */ }
-
-    function closeAyatModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('ayatModal').classList.remove('active');
-    }
-
-    function selectAyatRange(num) { /* legacy – tidak dipakai */ }
-    function confirmAyatGrid() {
-        if (!ayatPickerContext) return;
-        const { num, mode } = ayatPickerContext;
-        const idx = state.selectedSurah.findIndex(s => s.num === num);
-        if (idx === -1) return;
-        if (mode === 'dari') {
-            if (selectedAyatStart === null) { showToast('⚠️ Pilih ayat Dari'); return; }
-            state.selectedSurah[idx].dari = selectedAyatStart;
-            // pastikan sampai >= dari
-            if (state.selectedSurah[idx].sampai < selectedAyatStart) {
-                state.selectedSurah[idx].sampai = selectedAyatStart;
-            }
-        } else {
-            if (selectedAyatEnd === null) { showToast('⚠️ Pilih ayat Sampai'); return; }
-            state.selectedSurah[idx].sampai = selectedAyatEnd;
-            if (state.selectedSurah[idx].dari > selectedAyatEnd) {
-                state.selectedSurah[idx].dari = selectedAyatEnd;
-            }
-        }
-        renderSuratList();
-        closeAyatModal();
-        selectedAyatStart = null;
-        selectedAyatEnd = null;
-        ayatPickerContext = null;
-    }
-
-    /* ─── SURAT LIST ─── */
-    function renderSuratList() {
-        const c = document.getElementById('suratList');
-        c.innerHTML = '';
-        state.selectedSurah.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'surat-item';
-            div.innerHTML = `
-                <div class="surat-item-top">
-                    <div class="surat-item-name">${s.name}</div>
-                    <button class="btn-rm" onclick="removeSurat(${s.num})">✕</button>
-                </div>
-                <div class="surat-ayat-pickers">
-                    <div class="ayat-picker-col" onclick="openDariModal(${s.num})">
-                        <span class="ayat-picker-label">Dari</span>
-                        <span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span>
-                    </div>
-                    <span class="ayat-picker-arrow">→</span>
-                    <div class="ayat-picker-col" onclick="openSampaiModal(${s.num})">
-                        <span class="ayat-picker-label">Sampai</span>
-                        <span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span>
-                    </div>
-                </div>`;
-            c.appendChild(div);
-        });
-        document.getElementById('btnAddSurat').style.display = state.selectedSurah.length ? 'block' : 'none';
-        const sd = document.getElementById('selectSurat');
-        if (state.selectedSurah.length) {
-            sd.classList.remove('empty');
-            sd.innerHTML = `<span>${state.selectedSurah.length} surat dipilih</span><span class="clickable-ico">▼</span>`;
-        } else {
-            sd.classList.add('empty');
-            sd.innerHTML = `<span>Pilih surat...</span><span class="clickable-ico">▼</span>`;
-        }
-        updateKoreksiButton();
-    }
-    function removeSurat(num) {
-        state.selectedSurah = state.selectedSurah.filter(s => s.num !== num);
-        renderSuratList();
-    }
-
-    /* ─── MODAL KELAS ─── */
-    function openKelasModal() {
-        const cur = document.getElementById('filterKelas').value;
-        const kelas = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
-        const container = document.getElementById('kelasGridContainer');
-        container.innerHTML = '';
-        // "Semua Kelas" pill
-        const allPill = document.createElement('div');
-        allPill.className = 'pill-item pill-all' + (!cur ? ' active' : '');
-        allPill.textContent = 'Semua Kelas';
-        allPill.onclick = () => { selectKelas(''); closeKelasModal(); };
-        container.appendChild(allPill);
-        kelas.forEach(k => {
-            const pill = document.createElement('div');
-            pill.className = 'pill-item' + (cur === k ? ' active' : '');
-            pill.textContent = 'Kelas ' + k;
-            pill.onclick = () => { selectKelas(k); closeKelasModal(); };
-            container.appendChild(pill);
-        });
-        document.getElementById('kelasModal').classList.add('active');
-    }
-    function closeKelasModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('kelasModal').classList.remove('active');
-    }
-    function selectKelas(k) {
-        document.getElementById('filterKelas').value = k;
-        const disp = document.getElementById('filterKelasDisplay');
-        const txt = document.getElementById('filterKelasText');
-        if (k) {
-            txt.textContent = 'Kelas ' + k;
-            disp.classList.remove('empty');
-        } else {
-            txt.textContent = 'Semua Kelas';
-            disp.classList.add('empty');
-        }
-        // Reset pilihan siswa lama jika tidak ada di kelas baru
-        const curSiswaId = document.getElementById('namaSiswa').value;
-        if (curSiswaId) {
-            const siswa = state.dataSiswa.find(s => s.id === curSiswaId);
-            if (siswa && k && siswa.kelas !== k) {
-                resetSiswaSelection();
-            }
-        }
-    }
-
-    /* ─── MODAL JUZ ─── */
-    function openJuzModal() {
-        const cur = document.getElementById('juz').value;
-        const container = document.getElementById('juzGridContainer');
-        container.innerHTML = '';
-        for (let i = 1; i <= 30; i++) {
-            const div = document.createElement('div');
-            div.className = 'juz-item' + (String(i) === cur ? ' active' : '');
-            div.textContent = i;
-            div.onclick = () => { selectJuz(i); closeJuzModal(); };
-            container.appendChild(div);
-        }
-        document.getElementById('juzModal').classList.add('active');
-    }
-    function closeJuzModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('juzModal').classList.remove('active');
-    }
-    function selectJuz(num) {
-        const prevJuz = document.getElementById('juz').value;
-        document.getElementById('juz').value = String(num);
-        document.getElementById('juzText').textContent = 'Juz ' + num;
-        if (String(num) !== prevJuz && state.selectedSurah.length) {
-            state.selectedSurah = [];
-            renderSuratList();
-        }
-    }
-
-    /* ─── MODAL SISWA ─── */
-    function openSiswaModal() {
-        const cur = document.getElementById('namaSiswa').value;
-        const kelasFilter = document.getElementById('filterKelas').value;
-        const list = kelasFilter
-            ? state.dataSiswa.filter(s => s.kelas === kelasFilter)
-            : state.dataSiswa;
-        const container = document.getElementById('siswaListContainer');
-        container.innerHTML = '';
-        if (!list.length) {
-            container.innerHTML = '<div class="empty-state">👥 Belum ada siswa</div>';
-        } else {
-            list.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'siswa-modal-item' + (cur === s.id ? ' active' : '');
-                div.innerHTML = `<span class="smi-name">${s.nama}</span><span class="smi-kelas">Kelas ${s.kelas}</span>`;
-                div.onclick = () => { selectSiswa(s.id); closeSiswaModal(); };
-                container.appendChild(div);
-            });
-        }
-        document.getElementById('siswaModal').classList.add('active');
-    }
-    function closeSiswaModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('siswaModal').classList.remove('active');
-    }
-    function selectSiswa(id) {
-        document.getElementById('namaSiswa').value = id;
-        const siswa = state.dataSiswa.find(s => s.id === id);
-        const disp = document.getElementById('namaSiswaDisplay');
-        if (siswa) {
-            document.getElementById('namaSiswaText').textContent = siswa.nama;
-            document.getElementById('kelas').value = siswa.kelas;
-            disp.classList.remove('empty');
-            loadSetoranTerakhir(id);
-        }
-    }
-    function resetSiswaSelection() {
-        document.getElementById('namaSiswa').value = '';
-        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
-        document.getElementById('namaSiswaDisplay').classList.add('empty');
-        document.getElementById('kelas').value = '';
-        document.getElementById('lastSetoranBar').classList.remove('show');
-    }
-
-    /* ─── AUTO-LOAD SETORAN TERAKHIR ─── */
-    function loadSetoranTerakhir(siswaId) {
-        const bar = document.getElementById('lastSetoranBar');
-        const txt = document.getElementById('lastSetoranText');
-        const last = state.dataSetoran.find(s => s.SiswaId === siswaId);
-        if (!last) { bar.classList.remove('show'); return; }
-
-        // ── Load ke form ──
-        // Juz
-        if (last.juz) {
-            document.getElementById('juz').value = String(last.juz);
-            document.getElementById('juzText').textContent = 'Juz ' + last.juz;
-        }
-        // Jenis
-        state.currentJenis = last.jenis || 'tasmi';
-        document.querySelectorAll('.seg-btn').forEach(b => {
-            b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis);
-        });
-        // Status
-        pilihStatus(last.status || 'lancar');
-        // Surat
-        if (last.surah && last.surah.length) {
-            state.selectedSurah = last.surah.map(sr => ({ ...sr }));
-            renderSuratList();
-        }
-
-        // ── Bar info ──
-        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-        const suratNames = last.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
-        const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
-        const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
-        txt.textContent = `${tgl} · ${jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
-        bar.classList.add('show');
-    }
-
-    /* ─── Siswa SELECTS (compat shim) ─── */
-    function renderNamaSiswaSelect() {
-        // no-op, display handled by modal
-    }
-    function renderFilterKelas() {
-        // no-op, display handled by modal
-    }
-    function filterSiswaByKelas() {
-        // Dipanggil dari compat lama — cukup reset siswa
-        resetSiswaSelection();
-    }
-    function updateKelasDisplay() {
-        const id = document.getElementById('namaSiswa').value;
-        const el = document.getElementById('kelas');
-        if (id) { const s = state.dataSiswa.find(s => s.id === id); el.value = s ? s.kelas : ''; }
-        else el.value = '';
-    }
-
-    /* ─── DATA Siswa ─── */
-function tambahSiswa() {
-    const nama = document.getElementById('inputNamaSiswa').value.trim();
-    const kelas = document.getElementById('inputKelas').value.trim();
-    if (!nama) { showToast('⚠️ Isi nama siswa'); return; }
-    if (!kelas) { showToast('⚠️ Isi kelas'); return; }
-    state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas });
-    saveAllData();
-    renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
-    filterSiswaByKelas();
-    document.getElementById('inputNamaSiswa').value = '';
-    document.getElementById('inputKelas').value = '';
-    showToast('✓ Siswa ditambahkan');
-}    function deleteSiswa(id) {
-        if (!confirm('Hapus Siswa ini?')) return;
-        state.dataSiswa = state.dataSiswa.filter(s => s.id !== id);
-        saveAllData();
-        renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
-        showToast('🗑 Siswa dihapus');
-    }
-    function renderDataSiswa() {
-        const list = document.getElementById('dataList');
-        if (!state.dataSiswa.length) { list.innerHTML = '<div class="empty-state">👥 Belum ada Siswa</div>'; return; }
-        list.innerHTML = state.dataSiswa.map(s =>
-            `<div class="data-card">
-                <div>
-                    <div class="data-name">${s.nama}</div>
-                    <span class="data-kelas">Kelas ${s.kelas}</span>
-                </div>
-                <button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button>
-            </div>`
-        ).join('');
-    }
-
-    /* ─── SIMPAN SETORAN ─── */
-    function simpanSetoran() {
-        const SiswaId = document.getElementById('namaSiswa').value;
-        const tgl = document.getElementById('tanggal').value;
-        if (!SiswaId) { showToast('⚠️ Pilih Siswa terlebih dahulu'); return; }
-        if (!tgl) { showToast('⚠️ Isi tanggal'); return; }
-        if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
-        const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
-        if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
-        state.dataSetoran.unshift({
-            id: Date.now(), SiswaId, nama: Siswa.nama, kelas: Siswa.kelas, tanggal: tgl,
-            jenis: state.currentJenis, juz: document.getElementById('juz').value,
-            surah: [...state.selectedSurah], status: state.currentStatus
-        });
-        saveAllData();
-        showToast('✅ Setoran tersimpan!');
-        renderResult();
-        resetForm();
-    }
-
-    function resetForm() {
-        document.getElementById('namaSiswa').value = '';
-        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
-        document.getElementById('namaSiswaDisplay').classList.add('empty');
-        document.getElementById('kelas').value = '';
-        document.getElementById('lastSetoranBar').classList.remove('show');
-        state.selectedSurah = [];
-        state.currentJenis = 'tasmi';
-        state.currentStatus = 'lancar';
-        pilihStatus('lancar');
-        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-        const tb = document.querySelector('[data-jenis="tasmi"]');
-        if (tb) tb.classList.add('active');
-        renderSuratList();
-        document.getElementById('tanggal').value = todayStr();
-    }
-
-    /* ─── RESULT ─── */
-    function renderResult() {
-        const section = document.getElementById('resultSection');
-        const container = document.getElementById('resultList');
-        const empty = document.getElementById('riwayatEmpty');
-        if (!state.dataSetoran.length) {
-            section.style.display = 'none';
-            if (empty) empty.style.display = 'block';
-            return;
-        }
-        section.style.display = 'block';
-        if (empty) empty.style.display = 'none';
-        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => {
-            const suratText = s.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
-            const jLabel = jenisMap[s.jenis] || s.jenis;
-            return `<div class="result-card">
-                <div class="rc-left">
-                    <div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div>
-                    <div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${s.tanggal.split('-').reverse().join('/')}</div>
-                    <div class="rc-surat">${suratText}</div>
-                </div>
-                <div class="rc-actions">
-                    <button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button>
-                    <button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button>
-                </div>
-            </div>`;
-        }).join('');
-    }
-    function updateStatus(id, newStatus) {
-        const item = state.dataSetoran.find(i => i.id === id);
-        if (item) { item.status = newStatus; saveAllData(); renderResult(); }
-    }
-
-    /* ─── STORAGE ─── */
-    function saveAllData() {
-        localStorage.setItem('setoranData', JSON.stringify(state.dataSetoran));
-        localStorage.setItem('SiswaData', JSON.stringify(state.dataSiswa));
-    }
-    function loadAllData() {
-        const s1 = localStorage.getItem('setoranData'); if (s1) state.dataSetoran = JSON.parse(s1);
-        const s2 = localStorage.getItem('SiswaData'); if (s2) state.dataSiswa = JSON.parse(s2);
-    }
-
-    /* ─── IMPORT CSV / EXCEL ─── */
-    function importSiswaFromFile(input) {
-        const file = input.files[0];
-        if (!file) return;
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (!['csv', 'xlsx', 'xls'].includes(ext)) {
-            showToast('⚠️ Format tidak didukung. Gunakan CSV atau Excel (.xlsx/.xls)');
-            document.getElementById('fileInput').value = '';
-            return;
-        }
-        const reader = new FileReader();
-        if (ext === 'csv') {
-            reader.onload = e => parseCSVAndImport(e.target.result);
-            reader.readAsText(file, 'UTF-8');
-        } else {
-            reader.onload = e => parseExcelAndImport(e.target.result);
-            reader.readAsArrayBuffer(file);
-        }
-    }
-
-    function parseExcelAndImport(arrayBuffer) {
-        if (typeof XLSX === 'undefined') {
-            showToast('⚠️ Library Excel belum siap, coba lagi');
-            document.getElementById('fileInput').value = '';
-            return;
-        }
-        try {
-            const wb = XLSX.read(arrayBuffer, { type: 'array' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-            importRowsFromArray(rows);
-        } catch (err) {
-            showToast('⚠️ Gagal membaca file Excel');
-            console.error(err);
-        }
-        document.getElementById('fileInput').value = '';
-    }
-
-    function parseCSVAndImport(csv) {
-        const rows = csv.split(/\r?\n/).map(line => line.split(','));
-        importRowsFromArray(rows);
-        document.getElementById('fileInput').value = '';
-    }
-
-    function importRowsFromArray(rows) {
-        let added = 0, skipped = 0;
-        rows.forEach((parts, i) => {
-            // Skip header row jika ada kata 'nama' atau 'kelas'
-            if (i === 0) {
-                const first = String(parts[0] || '').toLowerCase();
-                const second = String(parts[1] || '').toLowerCase();
-                if (first.includes('nama') || second.includes('kelas')) return;
-            }
-            const nama = String(parts[0] || '').trim();
-            const kelas = String(parts[1] || '').trim();
-            if (!nama || !kelas) return;
-            const exists = state.dataSiswa.some(s => s.nama.toLowerCase() === nama.toLowerCase() && s.kelas === kelas);
-            if (!exists) { state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas }); added++; }
-            else skipped++;
-        });
-        if (added > 0) {
-            saveAllData(); renderNamaSiswaSelect(); renderFilterKelas(); renderDataSiswa();
-            filterSiswaByKelas();
-            showToast(`✅ Import ${added} Siswa${skipped ? ` (${skipped} duplikat)` : ''}`);
-        } else {
-            showToast(skipped ? `⚠️ ${skipped} data duplikat, tidak ada yang baru` : '⚠️ File kosong/format salah');
-        }
-    }
-    function downloadTemplate() {
-        const csv = "nama,kelas\nAhmad,A\nBudi,B\nCitra,C\nDewi,A\nEka,D";
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-        a.download = 'template_Siswa.csv';
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }
-    function getSuratByJuz(juz) {
-    return ALL_SURAT[juz] || [];
-}
-
-    /* ── RELOAD APP ── */
-    function reloadApp() {
-        // Hapus cache service worker jika ada, lalu reload
-        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.getRegistrations().then(regs => {
-                Promise.all(regs.map(r => r.unregister())).then(() => {
-                    // Hapus cache
-                    if ('caches' in window) {
-                        caches.keys().then(keys => {
-                            Promise.all(keys.map(k => caches.delete(k))).then(() => {
-                                window.location.reload(true);
-                            });
-                        });
-                    } else {
-                        window.location.reload(true);
-                    }
-                });
-            });
-        } else {
-            window.location.reload(true);
-        }
-    }
-
-    /* ══════════════════════════════════════════
-       ── DATABASE AYAT ARAB (Juz 30) ──
-    ══════════════════════════════════════════ */
     const AYAT_ARAB = {
         78: { 1:"عَمَّ يَتَسَاءَلُونَ", 2:"عَنِ ٱلنَّبَإِ ٱلْعَظِيمِ", 3:"ٱلَّذِى هُمْ فِيهِ مُخْتَلِفُونَ", 4:"كَلَّا سَيَعْلَمُونَ", 5:"ثُمَّ كَلَّا سَيَعْلَمُونَ", 6:"أَلَمْ نَجْعَلِ ٱلْأَرْضَ مِهَـٰدًا", 7:"وَٱلْجِبَالَ أَوْتَادًا", 8:"وَخَلَقْنَـٰكُمْ أَزْوَٰجًا", 9:"وَجَعَلْنَا نَوْمَكُمْ سُبَاتًا", 10:"وَجَعَلْنَا ٱلَّيْلَ لِبَاسًا", 11:"وَجَعَلْنَا ٱلنَّهَارَ مَعَاشًا", 12:"وَبَنَيْنَا فَوْقَكُمْ سَبْعًا شِدَادًا", 13:"وَجَعَلْنَا سِرَاجًا وَهَّاجًا", 14:"وَأَنزَلْنَا مِنَ ٱلْمُعْصِرَٰتِ مَاءً ثَجَّاجًا", 15:"لِّنُخْرِجَ بِهِۦ حَبًّا وَنَبَاتًا", 16:"وَجَنَّـٰتٍ أَلْفَافًا", 17:"إِنَّ يَوْمَ ٱلْفَصْلِ كَانَ مِيقَـٰتًا", 18:"يَوْمَ يُنفَخُ فِى ٱلصُّورِ فَتَأْتُونَ أَفْوَاجًا", 19:"وَفُتِحَتِ ٱلسَّمَاءُ فَكَانَتْ أَبْوَٰبًا", 20:"وَسُيِّرَتِ ٱلْجِبَالُ فَكَانَتْ سَرَابًا", 21:"إِنَّ جَهَنَّمَ كَانَتْ مِرْصَادًا", 22:"لِّلطَّـٰغِينَ مَـَٔابًا", 23:"لَّـٰبِثِينَ فِيهَا أَحْقَابًا", 24:"لَّا يَذُوقُونَ فِيهَا بَرْدًا وَلَا شَرَابًا", 25:"إِلَّا حَمِيمًا وَغَسَّاقًا", 26:"جَزَاءً وِفَاقًا", 27:"إِنَّهُمْ كَانُوا۟ لَا يَرْجُونَ حِسَابًا", 28:"وَكَذَّبُوا۟ بِـَٔايَـٰتِنَا كِذَّابًا", 29:"وَكُلَّ شَىْءٍ أَحْصَيْنَـٰهُ كِتَـٰبًا", 30:"فَذُوقُوا۟ فَلَن نَّزِيدَكُمْ إِلَّا عَذَابًا", 31:"إِنَّ لِلْمُتَّقِينَ مَفَازًا", 32:"حَدَاءِقَ وَأَعْنَـٰبًا", 33:"وَكَوَاعِبَ أَتْرَابًا", 34:"وَكَأْسًا دِهَاقًا", 35:"لَّا يَسْمَعُونَ فِيهَا لَغْوًا وَلَا كِذَّٰبًا", 36:"جَزَاءً مِّن رَّبِّكَ عَطَاءً حِسَابًا", 37:"رَّبِّ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضِ وَمَا بَيْنَهُمَا ٱلرَّحْمَـٰنِ لَا يَمْلِكُونَ مِنْهُ خِطَابًا", 38:"يَوْمَ يَقُومُ ٱلرُّوحُ وَٱلْمَلَـٰئِكَةُ صَفًّا لَّا يَتَكَلَّمُونَ إِلَّا مَنْ أَذِنَ لَهُ ٱلرَّحْمَـٰنُ وَقَالَ صَوَابًا", 39:"ذَٰلِكَ ٱلْيَوْمُ ٱلْحَقُّ فَمَن شَاءَ ٱتَّخَذَ إِلَىٰ رَبِّهِۦ مَـَٔابًا", 40:"إِنَّا أَنذَرْنَـٰكُمْ عَذَابًا قَرِيبًا يَوْمَ يَنظُرُ ٱلْمَرْءُ مَا قَدَّمَتْ يَدَاهُ وَيَقُولُ ٱلْكَافِرُ يَـٰلَيْتَنِى كُنتُ تُرَٰبًۢا" },
         79: { 1:"وَٱلنَّـٰزِعَـٰتِ غَرْقًا", 2:"وَٱلنَّـٰشِطَـٰتِ نَشْطًا", 3:"وَٱلسَّـٰبِحَـٰتِ سَبْحًا", 4:"فَٱلسَّـٰبِقَـٰتِ سَبْقًا", 5:"فَٱلْمُدَبِّرَٰتِ أَمْرًا", 6:"يَوْمَ تَرْجُفُ ٱلرَّاجِفَةُ", 7:"تَتْبَعُهَا ٱلرَّادِفَةُ", 8:"قُلُوبٌ يَوْمَئِذٍ وَاجِفَةٌ", 9:"أَبْصَـٰرُهَا خَـٰشِعَةٌ", 10:"يَقُولُونَ أَءِنَّا لَمَرْدُودُونَ فِى ٱلْحَافِرَةِ", 11:"أَءِذَا كُنَّا عِظَـٰمًا نَّخِرَةً", 12:"قَالُوا۟ تِلْكَ إِذًا كَرَّةٌ خَاسِرَةٌ", 13:"فَإِنَّمَا هِىَ زَجْرَةٌ وَٰحِدَةٌ", 14:"فَإِذَا هُم بِٱلسَّاهِرَةِ", 15:"هَلْ أَتَىٰكَ حَدِيثُ مُوسَىٰ", 16:"إِذْ نَادَىٰهُ رَبُّهُۥ بِٱلْوَادِ ٱلْمُقَدَّسِ طُوًى", 17:"ٱذْهَبْ إِلَىٰ فِرْعَوْنَ إِنَّهُۥ طَغَىٰ", 18:"فَقُلْ هَل لَّكَ إِلَىٰٓ أَن تَزَكَّىٰ", 19:"وَأَهْدِيَكَ إِلَىٰ رَبِّكَ فَتَخْشَىٰ", 20:"فَأَرَىٰهُ ٱلْءَايَةَ ٱلْكُبْرَىٰ", 21:"فَكَذَّبَ وَعَصَىٰ", 22:"ثُمَّ أَدْبَرَ يَسْعَىٰ", 23:"فَحَشَرَ فَنَادَىٰ", 24:"فَقَالَ أَنَا۠ رَبُّكُمُ ٱلْأَعْلَىٰ", 25:"فَأَخَذَهُ ٱللَّهُ نَكَالَ ٱلْءَاخِرَةِ وَٱلْأُولَىٰٓ", 26:"إِنَّ فِى ذَٰلِكَ لَعِبْرَةً لِّمَن يَخْشَىٰٓ", 27:"ءَأَنتُمْ أَشَدُّ خَلْقًا أَمِ ٱلسَّمَاءُ بَنَىٰهَا", 28:"رَفَعَ سَمْكَهَا فَسَوَّىٰهَا", 29:"وَأَغْطَشَ لَيْلَهَا وَأَخْرَجَ ضُحَىٰهَا", 30:"وَٱلْأَرْضَ بَعْدَ ذَٰلِكَ دَحَىٰهَا", 31:"أَخْرَجَ مِنْهَا مَاءَهَا وَمَرْعَىٰهَا", 32:"وَٱلْجِبَالَ أَرْسَىٰهَا", 33:"مَتَـٰعًا لَّكُمْ وَلِأَنْعَـٰمِكُمْ", 34:"فَإِذَا جَاءَتِ ٱلطَّامَّةُ ٱلْكُبْرَىٰ", 35:"يَوْمَ يَتَذَكَّرُ ٱلْإِنسَـٰنُ مَا سَعَىٰ", 36:"وَبُرِّزَتِ ٱلْجَحِيمُ لِمَن يَرَىٰ", 37:"فَأَمَّا مَن طَغَىٰ", 38:"وَءَاثَرَ ٱلْحَيَوٰةَ ٱلدُّنْيَا", 39:"فَإِنَّ ٱلْجَحِيمَ هِىَ ٱلْمَأْوَىٰ", 40:"وَأَمَّا مَنْ خَافَ مَقَامَ رَبِّهِۦ وَنَهَى ٱلنَّفْسَ عَنِ ٱلْهَوَىٰ", 41:"فَإِنَّ ٱلْجَنَّةَ هِىَ ٱلْمَأْوَىٰ", 42:"يَسْـَٔلُونَكَ عَنِ ٱلسَّاعَةِ أَيَّانَ مُرْسَىٰهَا", 43:"فِيمَ أَنتَ مِن ذِكْرَىٰهَا", 44:"إِلَىٰ رَبِّكَ مُنتَهَىٰهَآ", 45:"إِنَّمَآ أَنتَ مُنذِرُ مَن يَخْشَىٰهَا", 46:"كَأَنَّهُمْ يَوْمَ يَرَوْنَهَا لَمْ يَلْبَثُوٓا۟ إِلَّا عَشِيَّةً أَوْ ضُحَىٰهَا" },
@@ -2156,273 +1343,392 @@ function tambahSiswa() {
         114: { 1:"قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ", 2:"مَلِكِ ٱلنَّاسِ", 3:"إِلَـٰهِ ٱلنَّاسِ", 4:"مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ", 5:"ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ", 6:"مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ" }
     };
 
-    /* ══════════════════════════════════════════
-       ── FUNGSI KOREKSI AYAT ──
-    ══════════════════════════════════════════ */
+    let state = {
+        currentJenis: 'tasmi',
+        selectedSurah: [],
+        dataSetoran: [],
+        dataSiswa: [],
+        currentAyatSurat: null,
+        currentStatus: 'lancar'
+    };
 
-    function openKoreksi() {
-        if (!state.selectedSurah.length) {
-            showToast('⚠️ Pilih surat terlebih dahulu');
-            return;
-        }
-        renderKoreksiPanel();
-        document.getElementById('koreksiOverlay').classList.add('active');
+    let selectedAyatStart = null;
+    let selectedAyatEnd = null;
+    let ayatPickerContext = null;
+    let tasmiSiswaId = null;
+    let tasmiNilaiSelected = null;
+
+    function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+    function showToast(msg, duration=2200) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), duration); }
+    function saveAllData() { localStorage.setItem('setoranData', JSON.stringify(state.dataSetoran)); localStorage.setItem('SiswaData', JSON.stringify(state.dataSiswa)); }
+    function loadAllData() { const s1 = localStorage.getItem('setoranData'); if (s1) state.dataSetoran = JSON.parse(s1); const s2 = localStorage.getItem('SiswaData'); if (s2) state.dataSiswa = JSON.parse(s2); }
+
+    function switchTab(name) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+        if (name === 'monitoring') { renderMonFilterKelas(); renderMonitoring(); }
     }
-
-    function closeKoreksi() {
-        document.getElementById('koreksiOverlay').classList.remove('active');
-        updateKoreksiButton();
+    function switchSubTab(name) {
+        document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('sub-' + name).classList.add('active');
+        document.getElementById('subBtn-' + name).classList.add('active');
     }
-
-    function closeKoreksiOnOverlay(e) {
-        if (e.target === e.currentTarget) closeKoreksi();
+    function changeJenis(btn) {
+        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.currentJenis = btn.getAttribute('data-jenis');
+        renderSuratList();
     }
-
-    function toggleAyatSalah(suratNum, ayatNum) {
+    function pilihStatus(status) {
+        state.currentStatus = status;
+        document.querySelectorAll('.status-opt').forEach(opt => {
+            opt.classList.remove('sel-l', 'sel-kl');
+            if (opt.getAttribute('data-status') === 'lancar' && status === 'lancar') opt.classList.add('sel-l');
+            if (opt.getAttribute('data-status') === 'kurang' && status === 'kurang') opt.classList.add('sel-kl');
+        });
+    }
+    function openSuratModal() {
+        const juzVal = document.getElementById('juz').value || '30';
+        document.getElementById('juzNumber').innerText = juzVal;
+        const grid = document.getElementById('gridContainer');
+        grid.innerHTML = '';
+        (ALL_SURAT[juzVal] || []).forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            div.innerHTML = `<div class="grid-item-num">${s.num}</div><div class="grid-item-name">${s.name}</div>`;
+            div.onclick = () => selectSurat(s);
+            grid.appendChild(div);
+        });
+        document.getElementById('suratModal').classList.add('active');
+    }
+    function closeSuratModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('suratModal').classList.remove('active'); }
+    function selectSurat(surat) {
+        state.currentAyatSurat = surat;
+        const idx = state.selectedSurah.findIndex(s => s.num === surat.num);
+        if (idx === -1) state.selectedSurah.push({ ...surat, dari: 1, sampai: surat.ayat, ayatSalah: [] });
+        closeSuratModal();
+        renderSuratList();
+    }
+    function openDariModal(suratNum) {
         const surat = state.selectedSurah.find(s => s.num === suratNum);
         if (!surat) return;
-        if (!surat.ayatSalah) surat.ayatSalah = [];
-        const idx = surat.ayatSalah.indexOf(ayatNum);
-        if (idx === -1) {
-            surat.ayatSalah.push(ayatNum);
+        ayatPickerContext = { num: suratNum, mode: 'dari' };
+        selectedAyatStart = surat.dari || 1;
+        selectedAyatEnd = surat.sampai || surat.ayat;
+        document.getElementById('ayatModalSurat').innerText = surat.name;
+        document.getElementById('dariGrid').style.display = 'grid';
+        document.getElementById('sampaiGrid').style.display = 'none';
+        buildSingleGrid('dari', surat.ayat);
+        document.getElementById('ayatModal').classList.add('active');
+        setTimeout(() => { const el = document.querySelector(`#dariGrid .ayat-item[data-dari="${selectedAyatStart}"]`); if (el) el.scrollIntoView({ block: 'center' }); }, 60);
+    }
+    function openSampaiModal(suratNum) {
+        const surat = state.selectedSurah.find(s => s.num === suratNum);
+        if (!surat) return;
+        ayatPickerContext = { num: suratNum, mode: 'sampai' };
+        selectedAyatStart = surat.dari || 1;
+        selectedAyatEnd = surat.sampai || surat.ayat;
+        document.getElementById('ayatModalSurat').innerText = surat.name;
+        document.getElementById('dariGrid').style.display = 'none';
+        document.getElementById('sampaiGrid').style.display = 'grid';
+        buildSingleGrid('sampai', surat.ayat);
+        document.getElementById('ayatModal').classList.add('active');
+        setTimeout(() => { const el = document.querySelector(`#sampaiGrid .ayat-item[data-sampai="${selectedAyatEnd}"]`); if (el) el.scrollIntoView({ block: 'center' }); }, 60);
+    }
+    function buildSingleGrid(mode, total) {
+        const grid = document.getElementById(mode === 'dari' ? 'dariGrid' : 'sampaiGrid');
+        grid.innerHTML = '';
+        const cur = mode === 'dari' ? selectedAyatStart : selectedAyatEnd;
+        for (let i = 1; i <= total; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'ayat-item' + (i === cur ? (mode === 'dari' ? ' sel-dari' : ' sel-sampai') : '');
+            btn.textContent = i;
+            btn.setAttribute('data-' + mode, i);
+            btn.onclick = mode === 'dari' ? (n => () => { selectedAyatStart = n; document.querySelectorAll('#dariGrid .ayat-item').forEach(el => el.classList.toggle('sel-dari', +el.getAttribute('data-dari') === n)); })(i) : (n => () => { selectedAyatEnd = n; document.querySelectorAll('#sampaiGrid .ayat-item').forEach(el => el.classList.toggle('sel-sampai', +el.getAttribute('data-sampai') === n)); })(i);
+            grid.appendChild(btn);
+        }
+    }
+    function closeAyatModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('ayatModal').classList.remove('active'); }
+    function confirmAyatGrid() {
+        if (!ayatPickerContext) return;
+        const { num, mode } = ayatPickerContext;
+        const idx = state.selectedSurah.findIndex(s => s.num === num);
+        if (idx === -1) return;
+        if (mode === 'dari') {
+            if (selectedAyatStart === null) { showToast('⚠️ Pilih ayat Dari'); return; }
+            state.selectedSurah[idx].dari = selectedAyatStart;
+            if (state.selectedSurah[idx].sampai < selectedAyatStart) state.selectedSurah[idx].sampai = selectedAyatStart;
         } else {
-            surat.ayatSalah.splice(idx, 1);
+            if (selectedAyatEnd === null) { showToast('⚠️ Pilih ayat Sampai'); return; }
+            state.selectedSurah[idx].sampai = selectedAyatEnd;
+            if (state.selectedSurah[idx].dari > selectedAyatEnd) state.selectedSurah[idx].dari = selectedAyatEnd;
         }
-        // Update UI item
-        const itemEl = document.getElementById(`koreksi-ayat-${suratNum}-${ayatNum}`);
-        if (itemEl) {
-            itemEl.classList.toggle('salah', surat.ayatSalah.includes(ayatNum));
-        }
-        // Update count badge per surat
-        updateKoreksiSuratCount(suratNum);
-        updateKoreksiSummary();
+        renderSuratList();
+        closeAyatModal();
+        selectedAyatStart = null; selectedAyatEnd = null; ayatPickerContext = null;
+    }
+    function renderSuratList() {
+        const c = document.getElementById('suratList');
+        c.innerHTML = '';
+        state.selectedSurah.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'surat-item';
+            div.innerHTML = `<div class="surat-item-top"><div class="surat-item-name">${s.name}</div><button class="btn-rm" onclick="removeSurat(${s.num})">✕</button></div><div class="surat-ayat-pickers"><div class="ayat-picker-col" onclick="openDariModal(${s.num})"><span class="ayat-picker-label">Dari</span><span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span></div><span class="ayat-picker-arrow">→</span><div class="ayat-picker-col" onclick="openSampaiModal(${s.num})"><span class="ayat-picker-label">Sampai</span><span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span></div></div>`;
+            c.appendChild(div);
+        });
+        document.getElementById('btnAddSurat').style.display = state.selectedSurah.length ? 'block' : 'none';
+        const sd = document.getElementById('selectSurat');
+        if (state.selectedSurah.length) { sd.classList.remove('empty'); sd.innerHTML = `<span>${state.selectedSurah.length} surat dipilih</span><span class="clickable-ico">▼</span>`; }
+        else { sd.classList.add('empty'); sd.innerHTML = `<span>Pilih surat...</span><span class="clickable-ico">▼</span>`; }
         updateKoreksiButton();
     }
-
-    function updateKoreksiSuratCount(suratNum) {
-        const surat = state.selectedSurah.find(s => s.num === suratNum);
-        if (!surat) return;
-        const count = (surat.ayatSalah || []).length;
-        const badge = document.getElementById(`koreksi-count-${suratNum}`);
-        if (badge) {
-            badge.textContent = count + ' salah';
-            badge.classList.toggle('show', count > 0);
+    function removeSurat(num) { state.selectedSurah = state.selectedSurah.filter(s => s.num !== num); renderSuratList(); }
+    function openKelasModal() {
+        const cur = document.getElementById('filterKelas').value;
+        const kelas = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+        const container = document.getElementById('kelasGridContainer');
+        container.innerHTML = '';
+        const allPill = document.createElement('div');
+        allPill.className = 'pill-item pill-all' + (!cur ? ' active' : '');
+        allPill.textContent = 'Semua Kelas';
+        allPill.onclick = () => { selectKelas(''); closeKelasModal(); };
+        container.appendChild(allPill);
+        kelas.forEach(k => { const pill = document.createElement('div'); pill.className = 'pill-item' + (cur === k ? ' active' : ''); pill.textContent = 'Kelas ' + k; pill.onclick = () => { selectKelas(k); closeKelasModal(); }; container.appendChild(pill); });
+        document.getElementById('kelasModal').classList.add('active');
+    }
+    function closeKelasModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('kelasModal').classList.remove('active'); }
+    function selectKelas(k) {
+        document.getElementById('filterKelas').value = k;
+        const txt = document.getElementById('filterKelasText');
+        if (k) { txt.textContent = 'Kelas ' + k; document.getElementById('filterKelasDisplay').classList.remove('empty'); }
+        else { txt.textContent = 'Semua Kelas'; document.getElementById('filterKelasDisplay').classList.add('empty'); }
+        const curSiswaId = document.getElementById('namaSiswa').value;
+        if (curSiswaId) { const siswa = state.dataSiswa.find(s => s.id === curSiswaId); if (siswa && k && siswa.kelas !== k) resetSiswaSelection(); }
+    }
+    function openJuzModal() {
+        const cur = document.getElementById('juz').value;
+        const container = document.getElementById('juzGridContainer');
+        container.innerHTML = '';
+        for (let i = 1; i <= 30; i++) { const div = document.createElement('div'); div.className = 'juz-item' + (String(i) === cur ? ' active' : ''); div.textContent = i; div.onclick = () => { selectJuz(i); closeJuzModal(); }; container.appendChild(div); }
+        document.getElementById('juzModal').classList.add('active');
+    }
+    function closeJuzModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('juzModal').classList.remove('active'); }
+    function selectJuz(num) {
+        const prevJuz = document.getElementById('juz').value;
+        document.getElementById('juz').value = String(num);
+        document.getElementById('juzText').textContent = 'Juz ' + num;
+        if (String(num) !== prevJuz && state.selectedSurah.length) { state.selectedSurah = []; renderSuratList(); }
+    }
+    function openSiswaModal() {
+        const cur = document.getElementById('namaSiswa').value;
+        const kelasFilter = document.getElementById('filterKelas').value;
+        const list = kelasFilter ? state.dataSiswa.filter(s => s.kelas === kelasFilter) : state.dataSiswa;
+        const container = document.getElementById('siswaListContainer');
+        container.innerHTML = '';
+        if (!list.length) container.innerHTML = '<div class="empty-state">👥 Belum ada siswa</div>';
+        else list.forEach(s => { const div = document.createElement('div'); div.className = 'siswa-modal-item' + (cur === s.id ? ' active' : ''); div.innerHTML = `<span class="smi-name">${s.nama}</span><span class="smi-kelas">Kelas ${s.kelas}</span>`; div.onclick = () => { selectSiswa(s.id); closeSiswaModal(); }; container.appendChild(div); });
+        document.getElementById('siswaModal').classList.add('active');
+    }
+    function closeSiswaModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('siswaModal').classList.remove('active'); }
+    function selectSiswa(id) {
+        document.getElementById('namaSiswa').value = id;
+        const siswa = state.dataSiswa.find(s => s.id === id);
+        if (siswa) {
+            document.getElementById('namaSiswaText').textContent = siswa.nama;
+            document.getElementById('kelas').value = siswa.kelas;
+            document.getElementById('namaSiswaDisplay').classList.remove('empty');
+            loadSetoranTerakhir(id);
         }
     }
-
-    function updateKoreksiSummary() {
-        const total = state.selectedSurah.reduce((acc, s) => acc + (s.ayatSalah ? s.ayatSalah.length : 0), 0);
-        const summaryEl = document.getElementById('koreksiSummary');
-        if (summaryEl) {
-            summaryEl.innerHTML = total > 0
-                ? `Total <strong>${total} ayat</strong> ditandai salah`
-                : 'Belum ada ayat yang ditandai salah';
-        }
+    function resetSiswaSelection() {
+        document.getElementById('namaSiswa').value = '';
+        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
+        document.getElementById('namaSiswaDisplay').classList.add('empty');
+        document.getElementById('kelas').value = '';
+        document.getElementById('lastSetoranBar').classList.remove('show');
     }
-
-    function updateKoreksiButton() {
-        const total = state.selectedSurah.reduce((acc, s) => acc + (s.ayatSalah ? s.ayatSalah.length : 0), 0);
-        const badge = document.getElementById('koreksiTotalBadge');
-        if (badge) badge.textContent = total;
-        const area = document.getElementById('koreksiTriggerArea');
-        if (area) area.style.display = state.selectedSurah.length ? 'block' : 'none';
+    function loadSetoranTerakhir(siswaId) {
+        const bar = document.getElementById('lastSetoranBar');
+        const txt = document.getElementById('lastSetoranText');
+        const last = state.dataSetoran.find(s => s.SiswaId === siswaId);
+        if (!last) { bar.classList.remove('show'); return; }
+        if (last.juz) { document.getElementById('juz').value = String(last.juz); document.getElementById('juzText').textContent = 'Juz ' + last.juz; }
+        state.currentJenis = last.jenis || 'tasmi';
+        document.querySelectorAll('.seg-btn').forEach(b => { b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); });
+        pilihStatus(last.status || 'lancar');
+        if (last.surah && last.surah.length) { state.selectedSurah = last.surah.map(sr => ({ ...sr })); renderSuratList(); }
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+        const suratNames = last.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
+        const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
+        txt.textContent = `${tgl} · ${jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
+        bar.classList.add('show');
     }
-
+    function tambahSiswa() {
+        const nama = document.getElementById('inputNamaSiswa').value.trim();
+        const kelas = document.getElementById('inputKelas').value.trim();
+        if (!nama) { showToast('⚠️ Isi nama siswa'); return; }
+        if (!kelas) { showToast('⚠️ Isi kelas'); return; }
+        state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas, hafalanAwal: [] });
+        saveAllData();
+        renderDataSiswa();
+        document.getElementById('inputNamaSiswa').value = '';
+        document.getElementById('inputKelas').value = '';
+        showToast('✓ Siswa ditambahkan');
+    }
+    function deleteSiswa(id) {
+        if (!confirm('Hapus Siswa ini?')) return;
+        state.dataSiswa = state.dataSiswa.filter(s => s.id !== id);
+        saveAllData();
+        renderDataSiswa();
+        showToast('🗑 Siswa dihapus');
+    }
+    function renderDataSiswa() {
+        const list = document.getElementById('dataList');
+        if (!state.dataSiswa.length) { list.innerHTML = '<div class="empty-state">👥 Belum ada Siswa</div>'; return; }
+        list.innerHTML = state.dataSiswa.map(s => `<div class="data-card"><div><div class="data-name">${s.nama}</div><span class="data-kelas">Kelas ${s.kelas}</span></div><button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button></div>`).join('');
+    }
+    function simpanSetoran() {
+        const SiswaId = document.getElementById('namaSiswa').value;
+        const tgl = document.getElementById('tanggal').value;
+        if (!SiswaId) { showToast('⚠️ Pilih Siswa terlebih dahulu'); return; }
+        if (!tgl) { showToast('⚠️ Isi tanggal'); return; }
+        if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
+        const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
+        if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
+        state.dataSetoran.unshift({ id: Date.now(), SiswaId, nama: Siswa.nama, kelas: Siswa.kelas, tanggal: tgl, jenis: state.currentJenis, juz: document.getElementById('juz').value, surah: [...state.selectedSurah], status: state.currentStatus });
+        saveAllData();
+        showToast('✅ Setoran tersimpan!');
+        renderResult();
+        resetForm();
+    }
+    function resetForm() {
+        document.getElementById('namaSiswa').value = '';
+        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
+        document.getElementById('namaSiswaDisplay').classList.add('empty');
+        document.getElementById('kelas').value = '';
+        document.getElementById('lastSetoranBar').classList.remove('show');
+        state.selectedSurah = [];
+        state.currentJenis = 'tasmi';
+        state.currentStatus = 'lancar';
+        pilihStatus('lancar');
+        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+        const tb = document.querySelector('[data-jenis="tasmi"]');
+        if (tb) tb.classList.add('active');
+        renderSuratList();
+        document.getElementById('tanggal').value = todayStr();
+    }
+    function renderResult() {
+        const section = document.getElementById('resultSection');
+        const container = document.getElementById('resultList');
+        const empty = document.getElementById('riwayatEmpty');
+        if (!state.dataSetoran.length) { section.style.display = 'none'; if (empty) empty.style.display = 'block'; return; }
+        section.style.display = 'block';
+        if (empty) empty.style.display = 'none';
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
+        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => { const suratText = s.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', '); const jLabel = jenisMap[s.jenis] || s.jenis; return `<div class="result-card"><div class="rc-left"><div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div><div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${s.tanggal.split('-').reverse().join('/')}</div><div class="rc-surat">${suratText}</div></div><div class="rc-actions"><button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button><button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button></div></div>`; }).join('');
+    }
+    function updateStatus(id, newStatus) { const item = state.dataSetoran.find(i => i.id === id); if (item) { item.status = newStatus; saveAllData(); renderResult(); } }
+    function importSiswaFromFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!['csv', 'xlsx', 'xls'].includes(ext)) { showToast('⚠️ Format tidak didukung'); document.getElementById('fileInput').value = ''; return; }
+        const reader = new FileReader();
+        if (ext === 'csv') reader.onload = e => parseCSVAndImport(e.target.result);
+        else reader.onload = e => parseExcelAndImport(e.target.result);
+        if (ext === 'csv') reader.readAsText(file, 'UTF-8');
+        else reader.readAsArrayBuffer(file);
+    }
+    function parseExcelAndImport(arrayBuffer) { if (typeof XLSX === 'undefined') { showToast('⚠️ Library Excel belum siap'); document.getElementById('fileInput').value = ''; return; } try { const wb = XLSX.read(arrayBuffer, { type: 'array' }); const ws = wb.Sheets[wb.SheetNames[0]]; const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }); importRowsFromArray(rows); } catch(err) { showToast('⚠️ Gagal membaca file Excel'); } document.getElementById('fileInput').value = ''; }
+    function parseCSVAndImport(csv) { const rows = csv.split(/\r?\n/).map(line => line.split(',')); importRowsFromArray(rows); document.getElementById('fileInput').value = ''; }
+    function importRowsFromArray(rows) { let added = 0, skipped = 0; rows.forEach((parts, i) => { if (i === 0) { const first = String(parts[0] || '').toLowerCase(); const second = String(parts[1] || '').toLowerCase(); if (first.includes('nama') || second.includes('kelas')) return; } const nama = String(parts[0] || '').trim(); const kelas = String(parts[1] || '').trim(); if (!nama || !kelas) return; const exists = state.dataSiswa.some(s => s.nama.toLowerCase() === nama.toLowerCase() && s.kelas === kelas); if (!exists) { state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas, hafalanAwal: [] }); added++; } else skipped++; }); if (added > 0) { saveAllData(); renderDataSiswa(); showToast(`✅ Import ${added} Siswa${skipped ? ` (${skipped} duplikat)` : ''}`); } else { showToast(skipped ? `⚠️ ${skipped} data duplikat` : '⚠️ File kosong/format salah'); } }
+    function downloadTemplate() { const csv = "nama,kelas\nAhmad,A\nBudi,B\nCitra,C\nDewi,A\nEka,D"; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = 'template_Siswa.csv'; a.click(); URL.revokeObjectURL(a.href); }
+    function reloadApp() { if ('serviceWorker' in navigator && navigator.serviceWorker.controller) { navigator.serviceWorker.getRegistrations().then(regs => { Promise.all(regs.map(r => r.unregister())).then(() => { if ('caches' in window) caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => window.location.reload(true)); else window.location.reload(true); }); }); } else { window.location.reload(true); } }
+    function openKoreksi() { if (!state.selectedSurah.length) { showToast('⚠️ Pilih surat terlebih dahulu'); return; } renderKoreksiPanel(); document.getElementById('koreksiOverlay').classList.add('active'); }
+    function closeKoreksi() { document.getElementById('koreksiOverlay').classList.remove('active'); updateKoreksiButton(); }
+    function closeKoreksiOnOverlay(e) { if (e.target === e.currentTarget) closeKoreksi(); }
+    function toggleAyatSalah(suratNum, ayatNum) { const surat = state.selectedSurah.find(s => s.num === suratNum); if (!surat) return; if (!surat.ayatSalah) surat.ayatSalah = []; const idx = surat.ayatSalah.indexOf(ayatNum); if (idx === -1) surat.ayatSalah.push(ayatNum); else surat.ayatSalah.splice(idx, 1); const itemEl = document.getElementById(`koreksi-ayat-${suratNum}-${ayatNum}`); if (itemEl) itemEl.classList.toggle('salah', surat.ayatSalah.includes(ayatNum)); updateKoreksiSuratCount(suratNum); updateKoreksiSummary(); updateKoreksiButton(); }
+    function updateKoreksiSuratCount(suratNum) { const surat = state.selectedSurah.find(s => s.num === suratNum); if (!surat) return; const count = (surat.ayatSalah || []).length; const badge = document.getElementById(`koreksi-count-${suratNum}`); if (badge) { badge.textContent = count + ' salah'; badge.classList.toggle('show', count > 0); } }
+    function updateKoreksiSummary() { const total = state.selectedSurah.reduce((acc, s) => acc + (s.ayatSalah ? s.ayatSalah.length : 0), 0); const summaryEl = document.getElementById('koreksiSummary'); if (summaryEl) summaryEl.innerHTML = total > 0 ? `Total <strong>${total} ayat</strong> ditandai salah` : 'Belum ada ayat yang ditandai salah'; }
+    function updateKoreksiButton() { const total = state.selectedSurah.reduce((acc, s) => acc + (s.ayatSalah ? s.ayatSalah.length : 0), 0); const badge = document.getElementById('koreksiTotalBadge'); if (badge) badge.textContent = total; const area = document.getElementById('koreksiTriggerArea'); if (area) area.style.display = state.selectedSurah.length ? 'block' : 'none'; }
     function renderKoreksiPanel() {
         const body = document.getElementById('koreksiBody');
         const empty = document.getElementById('koreksiEmpty');
-
-        // Selalu hapus konten lama KECUALI element koreksiEmpty, lalu tambah kembali
-        // Ini mencegah bug di mana koreksiEmpty hilang dari DOM setelah innerHTML = ''
-        Array.from(body.children).forEach(child => {
-            if (child.id !== 'koreksiEmpty') child.remove();
-        });
-
-        if (!state.selectedSurah.length) {
-            empty.style.display = 'block';
-            updateKoreksiSummary();
-            return;
-        }
-
+        Array.from(body.children).forEach(child => { if (child.id !== 'koreksiEmpty') child.remove(); });
+        if (!state.selectedSurah.length) { empty.style.display = 'block'; updateKoreksiSummary(); return; }
         empty.style.display = 'none';
-
         state.selectedSurah.forEach((surat, suratIndex) => {
             if (!surat.ayatSalah) surat.ayatSalah = [];
             const suratAyatArab = AYAT_ARAB[surat.num] || null;
-            const hasArab = !!suratAyatArab;
-
-            const block = document.createElement('div');
-            block.className = 'koreksi-surat-block';
-
-            // Header surat
-            const header = document.createElement('div');
-            header.className = 'koreksi-surat-header';
-            header.innerHTML = `
-                <div>
-                    <div class="koreksi-surat-name">${surat.num}. ${surat.name}</div>
-                    <div class="koreksi-surat-range">Ayat ${surat.dari} – ${surat.sampai}</div>
-                </div>
-                <span class="koreksi-salah-count ${surat.ayatSalah.length > 0 ? 'show' : ''}"
-                      id="koreksi-count-${surat.num}">${surat.ayatSalah.length} salah</span>`;
+            const block = document.createElement('div'); block.className = 'koreksi-surat-block';
+            const header = document.createElement('div'); header.className = 'koreksi-surat-header';
+            header.innerHTML = `<div><div class="koreksi-surat-name">${surat.num}. ${surat.name}</div><div class="koreksi-surat-range">Ayat ${surat.dari} – ${surat.sampai}</div></div><span class="koreksi-salah-count ${surat.ayatSalah.length > 0 ? 'show' : ''}" id="koreksi-count-${surat.num}">${surat.ayatSalah.length} salah</span>`;
             block.appendChild(header);
-
-            // Render ayat sesuai range dari–sampai
             for (let a = surat.dari; a <= surat.sampai; a++) {
                 const isSalah = surat.ayatSalah.includes(a);
-                const arabText = hasArab ? (suratAyatArab[a] || null) : null;
-
+                const arabText = suratAyatArab ? (suratAyatArab[a] || null) : null;
                 const item = document.createElement('div');
                 item.className = 'koreksi-ayat-item' + (isSalah ? ' salah' : '');
                 item.id = `koreksi-ayat-${surat.num}-${a}`;
                 item.onclick = () => toggleAyatSalah(surat.num, a);
-
-                if (arabText) {
-                    item.innerHTML = `
-                        <div class="koreksi-ayat-arab">${arabText}</div>
-                        <div class="koreksi-ayat-footer">
-                            <span class="koreksi-ayat-nomor">Ayat ${a}</span>
-                            <span class="koreksi-salah-tag">✕ Salah</span>
-                        </div>`;
-                } else {
-                    // Tampilan tanpa teks Arab — tetap bisa diklik untuk menandai salah
-                    item.innerHTML = `
-                        <div class="koreksi-ayat-footer" style="padding:0;">
-                            <span class="koreksi-ayat-nomor" style="font-size:13px;font-weight:800;">Ayat ${a}</span>
-                            <span class="koreksi-salah-tag">✕ Salah</span>
-                        </div>`;
-                }
-
+                if (arabText) item.innerHTML = `<div class="koreksi-ayat-arab">${arabText}</div><div class="koreksi-ayat-footer"><span class="koreksi-ayat-nomor">Ayat ${a}</span><span class="koreksi-salah-tag">✕ Salah</span></div>`;
+                else item.innerHTML = `<div class="koreksi-ayat-footer" style="padding:0;"><span class="koreksi-ayat-nomor" style="font-size:13px;font-weight:800;">Ayat ${a}</span><span class="koreksi-salah-tag">✕ Salah</span></div>`;
                 block.appendChild(item);
             }
-
-            // Divider antar surat (kecuali surat terakhir)
-            if (suratIndex < state.selectedSurah.length - 1) {
-                const div = document.createElement('div');
-                div.className = 'divider';
-                block.appendChild(div);
-            }
-
+            if (suratIndex < state.selectedSurah.length - 1) { const div = document.createElement('div'); div.className = 'divider'; block.appendChild(div); }
             body.appendChild(block);
         });
-
         updateKoreksiSummary();
     }
-
-    init();
-
-    /* ══════════════════════════════════════════
-       ── MONITORING TAHFIDZ ──
-    ══════════════════════════════════════════ */
-
-    // Surat Juz 30 urutan setoran: An-Nas (114) → An-Naba (78)
-    const JUZ30_SURAT = (ALL_SURAT[30] || []).map(s => s.num);
-    // Total surat Juz 30
-    const JUZ30_TOTAL = JUZ30_SURAT.length; // 37
-
-    let monFilterKelas = '';
-    let tasmiSiswaId = null;
-    let tasmiNilaiSelected = null;
-
-    /* ── Hitung progress Juz 30 dari dataSetoran ── */
     function hitungProgressJuz30(siswaId) {
         const setoranSiswa = state.dataSetoran.filter(s => s.SiswaId === siswaId && String(s.juz) === '30');
         const suratDihafalSet = new Set();
-        setoranSiswa.forEach(s => {
-            (s.surah || []).forEach(sr => {
-                if (JUZ30_SURAT.includes(sr.num)) suratDihafalSet.add(sr.num);
-            });
-        });
+        setoranSiswa.forEach(s => { (s.surah || []).forEach(sr => { if (JUZ30_SURAT.includes(sr.num)) suratDihafalSet.add(sr.num); }); });
+        const siswa = state.dataSiswa.find(s => s.id === siswaId);
+        const hafalanAwal = (siswa && siswa.hafalanAwal) || [];
+        hafalanAwal.forEach(num => { if (JUZ30_SURAT.includes(num)) suratDihafalSet.add(num); });
         return suratDihafalSet.size;
     }
-
-    /* ── Cek apakah sudah khatam Juz 30 ── */
-    function isKhatamJuz30(siswaId) {
-        return hitungProgressJuz30(siswaId) >= JUZ30_TOTAL;
-    }
-
-    /* ── Hitung progress muroja'ah ──
-       Muroja'ah = setoran dengan jenis='muroja' di Juz 30
-    */
+    function isKhatamJuz30(siswaId) { return hitungProgressJuz30(siswaId) >= JUZ30_TOTAL; }
     function hitungProgressMuroja(siswaId) {
-        const setoranMuroja = state.dataSetoran.filter(
-            s => s.SiswaId === siswaId && String(s.juz) === '30' && s.jenis === 'muroja'
-        );
+        const setoranMuroja = state.dataSetoran.filter(s => s.SiswaId === siswaId && String(s.juz) === '30' && s.jenis === 'muroja');
         const suratMurojaSet = new Set();
-        setoranMuroja.forEach(s => {
-            (s.surah || []).forEach(sr => {
-                if (JUZ30_SURAT.includes(sr.num)) suratMurojaSet.add(sr.num);
-            });
-        });
+        setoranMuroja.forEach(s => { (s.surah || []).forEach(sr => { if (JUZ30_SURAT.includes(sr.num)) suratMurojaSet.add(sr.num); }); });
         return suratMurojaSet.size;
     }
-
-    /* ── Ambil data tasmi' siswa dari localStorage ── */
-    function getTasmiData() {
-        const raw = localStorage.getItem('dataTasmi');
-        return raw ? JSON.parse(raw) : [];
-    }
-    function saveTasmiData(data) {
-        localStorage.setItem('dataTasmi', JSON.stringify(data));
-    }
-    function getTasmiSiswa(siswaId) {
-        return getTasmiData().find(t => t.siswaId === siswaId) || null;
-    }
-
-    /* ── Tentukan status utama siswa ── */
+    function getTasmiData() { const raw = localStorage.getItem('dataTasmi'); return raw ? JSON.parse(raw) : []; }
+    function saveTasmiData(data) { localStorage.setItem('dataTasmi', JSON.stringify(data)); }
+    function getTasmiSiswa(siswaId) { return getTasmiData().find(t => t.siswaId === siswaId) || null; }
     function getStatusUtama(siswaId) {
         const khatam = isKhatamJuz30(siswaId);
         const murojaCount = hitungProgressMuroja(siswaId);
         const tasmi = getTasmiSiswa(siswaId);
-
         if (tasmi) return 'selesai';
         if (khatam && murojaCount >= JUZ30_TOTAL) return 'siap';
         if (khatam) return 'muroja';
         return 'setoran';
     }
-
-    /* ── Ambil setoran terakhir siswa ── */
-    function getSetoranTerakhir(siswaId) {
-        return state.dataSetoran.find(s => s.SiswaId === siswaId) || null;
-    }
-
-    /* ── Render filter kelas di toolbar monitoring ── */
+    function getSetoranTerakhir(siswaId) { return state.dataSetoran.find(s => s.SiswaId === siswaId) || null; }
     function renderMonFilterKelas() {
         const container = document.getElementById('monFilterKelas');
         if (!container) return;
         const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
-        container.innerHTML = kelasList.map(k =>
-            `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${k}')">Kelas ${k}</div>`
-        ).join('');
+        container.innerHTML = kelasList.map(k => `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${k}')">Kelas ${k}</div>`).join('');
     }
-
-    function monSetFilter(kelas) {
-        monFilterKelas = kelas;
-        // Update pill aktif
-        document.getElementById('monFilterAll').classList.toggle('active', kelas === '');
-        renderMonFilterKelas();
-        renderMonitoring();
-    }
-
-    /* ── Render card monitoring ── */
+    let monFilterKelas = '';
+    function monSetFilter(kelas) { monFilterKelas = kelas; document.getElementById('monFilterAll').classList.toggle('active', kelas === ''); renderMonFilterKelas(); renderMonitoring(); }
     function renderMonitoring() {
         const container = document.getElementById('monList');
         if (!container) return;
-
         let siswaList = state.dataSiswa;
         if (monFilterKelas) siswaList = siswaList.filter(s => s.kelas === monFilterKelas);
-
-        if (!siswaList.length) {
-            container.innerHTML = `<div class="mon-empty">
-                <div class="mon-empty-icon">📊</div>
-                <div class="mon-empty-text">${state.dataSiswa.length ? 'Tidak ada siswa di kelas ini' : 'Belum ada data siswa'}</div>
-                <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
-            </div>`;
-            return;
-        }
-
+        if (!siswaList.length) { container.innerHTML = `<div class="mon-empty"><div class="mon-empty-icon">📊</div><div class="mon-empty-text">${state.dataSiswa.length ? 'Tidak ada siswa di kelas ini' : 'Belum ada data siswa'}</div><div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div></div>`; return; }
         container.innerHTML = siswaList.map(siswa => buildMonCard(siswa)).join('');
     }
-
     function buildMonCard(siswa) {
         const { id, nama, kelas } = siswa;
         const statusUtama = getStatusUtama(id);
@@ -2431,103 +1737,46 @@ function tambahSiswa() {
         const khatam = progressJuz >= JUZ30_TOTAL;
         const tasmi = getTasmiSiswa(id);
         const last = getSetoranTerakhir(id);
-
-        // Status badge label
-        const statusBadgeMap = {
-            setoran: { cls: 'msb-setoran', label: '📚 Setoran' },
-            muroja:  { cls: 'msb-muroja',  label: '🔄 Muroja\'ah' },
-            siap:    { cls: 'msb-siap',    label: '🔥 Siap Tasmi\'' },
-            selesai: { cls: 'msb-selesai', label: '✅ Tasmi\' Selesai' },
-        };
+        const statusBadgeMap = { setoran: { cls: 'msb-setoran', label: '📚 Setoran' }, muroja: { cls: 'msb-muroja', label: '🔄 Muroja\'ah' }, siap: { cls: 'msb-siap', label: '🔥 Siap Tasmi\'' }, selesai: { cls: 'msb-selesai', label: '✅ Tasmi\' Selesai' } };
         const badge = statusBadgeMap[statusUtama] || { cls: 'msb-kosong', label: '-' };
-
-        // Setoran terakhir
         let lastHtml = '<span style="color:var(--g4);font-size:11px;">Belum ada setoran</span>';
-        if (last) {
-            const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
-            const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-            const suratNames = (last.surah || []).map(sr => `${sr.name} ${sr.dari}–${sr.sampai}`).join(', ');
-            const chipCls = last.status === 'lancar' ? 'chip-l' : 'chip-kl';
-            const chipTxt = last.status === 'lancar' ? 'L' : 'KL';
-            lastHtml = `<span class="mon-last-label">Terakhir:</span>
-                <span>${tgl}</span>
-                <span>·</span>
-                <span>${jenisMap[last.jenis] || last.jenis}</span>
-                <span>·</span>
-                <span style="font-size:11px;color:var(--g7);">${suratNames}</span>
-                <span class="mon-chip ${chipCls}">${chipTxt}</span>`;
-        }
-
-        // Progress Juz 30
+        if (last) { const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-'; const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" }; const suratNames = (last.surah || []).map(sr => `${sr.name} ${sr.dari}–${sr.sampai}`).join(', '); const chipCls = last.status === 'lancar' ? 'chip-l' : 'chip-kl'; const chipTxt = last.status === 'lancar' ? 'L' : 'KL'; lastHtml = `<span class="mon-last-label">Terakhir:</span><span>${tgl}</span><span>·</span><span>${jenisMap[last.jenis] || last.jenis}</span><span>·</span><span style="font-size:11px;color:var(--g7);">${suratNames}</span><span class="mon-chip ${chipCls}">${chipTxt}</span>`; }
         const pct = Math.round((progressJuz / JUZ30_TOTAL) * 100);
-        const progressHtml = khatam
-            ? `<div class="mon-progress-label">
-                <span class="mon-progress-title">📖 Progress Juz 30</span>
-                <span class="mon-progress-count khatam">Khatam 🎉</span>
-               </div>
-               <div class="mon-bar-bg"><div class="mon-bar-fill khatam" style="width:100%"></div></div>`
-            : `<div class="mon-progress-label">
-                <span class="mon-progress-title">📖 Progress Juz 30</span>
-                <span class="mon-progress-count">${progressJuz} / ${JUZ30_TOTAL} surat</span>
-               </div>
-               <div class="mon-bar-bg"><div class="mon-bar-fill" style="width:${pct}%"></div></div>
-               <div class="mon-sisa">Sisa ${JUZ30_TOTAL - progressJuz} surat</div>`;
-
-        // Status muroja'ah
+        const progressHtml = khatam ? `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count khatam">Khatam 🎉</span></div><div class="mon-bar-bg"><div class="mon-bar-fill khatam" style="width:100%"></div></div>` : `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count">${progressJuz} / ${JUZ30_TOTAL} surat</span></div><div class="mon-bar-bg"><div class="mon-bar-fill" style="width:${pct}%"></div></div><div class="mon-sisa">Sisa ${JUZ30_TOTAL - progressJuz} surat</div>`;
         let murojaHtml, murojaValCls;
-        if (!khatam) {
-            murojaHtml = 'Belum'; murojaValCls = 'miv-belum';
-        } else if (murojaCount >= JUZ30_TOTAL) {
-            murojaHtml = 'Selesai ✅'; murojaValCls = 'miv-selesai';
-        } else if (murojaCount > 0) {
-            murojaHtml = `${murojaCount} / ${JUZ30_TOTAL}`; murojaValCls = 'miv-proses';
-        } else {
-            murojaHtml = 'Belum'; murojaValCls = 'miv-belum';
-        }
-
-        // Status tasmi'
+        if (!khatam) { murojaHtml = 'Belum'; murojaValCls = 'miv-belum'; }
+        else if (murojaCount >= JUZ30_TOTAL) { murojaHtml = 'Selesai ✅'; murojaValCls = 'miv-selesai'; }
+        else if (murojaCount > 0) { murojaHtml = `${murojaCount} / ${JUZ30_TOTAL}`; murojaValCls = 'miv-proses'; }
+        else { murojaHtml = 'Belum'; murojaValCls = 'miv-belum'; }
         let tasmiHtml, tasmiValCls;
-        if (tasmi) {
-            tasmiHtml = `Sudah ✅<br><span style="font-size:10px;font-weight:600;">${tasmi.nilai} · ${tasmi.tanggal ? tasmi.tanggal.split('-').reverse().join('/') : ''}</span>`;
-            tasmiValCls = 'miv-selesai';
-        } else if (statusUtama === 'siap') {
-            tasmiHtml = 'Siap 🔥'; tasmiValCls = 'miv-siap';
-        } else {
-            tasmiHtml = 'Belum'; tasmiValCls = 'miv-belum';
-        }
-
-        // Tombol tasmi' hanya jika siap
-        const tasmiBtn = statusUtama === 'siap'
-            ? `<div class="mon-card-foot"><button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Input Tasmi'</button></div>`
-            : '';
-
-        return `<div class="mon-card">
-            <div class="mon-card-head">
-                <div class="mon-card-identity">
-                    <div class="mon-card-name">${nama}</div>
-                    <span class="mon-badge-kelas">Kelas ${kelas}</span>
-                </div>
-                <span class="mon-status-badge ${badge.cls}">${badge.label}</span>
-            </div>
-            <div class="mon-card-body">
-                <div class="mon-last-row">${lastHtml}</div>
-                <div class="mon-progress-wrap">${progressHtml}</div>
-                <div class="mon-info-row">
-                    <div class="mon-info-box">
-                        <div class="mon-info-lbl">Muroja'ah</div>
-                        <div class="mon-info-val ${murojaValCls}">${murojaHtml}</div>
-                    </div>
-                    <div class="mon-info-box">
-                        <div class="mon-info-lbl">Tasmi'</div>
-                        <div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div>
-                    </div>
-                </div>
-            </div>
-            ${tasmiBtn}
-        </div>`;
+        if (tasmi) { tasmiHtml = `Sudah ✅<br><span style="font-size:10px;font-weight:600;">${tasmi.nilai} · ${tasmi.tanggal ? tasmi.tanggal.split('-').reverse().join('/') : ''}</span>`; tasmiValCls = 'miv-selesai'; }
+        else if (statusUtama === 'siap') { tasmiHtml = 'Siap 🔥'; tasmiValCls = 'miv-siap'; }
+        else { tasmiHtml = 'Belum'; tasmiValCls = 'miv-belum'; }
+        const tasmiBtn = statusUtama === 'siap' ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Input Tasmi'</button>` : '';
+        const hafalanAwalCount = (siswa.hafalanAwal || []).length;
+        const hafalanAwalLabel = hafalanAwalCount > 0 ? `📝 Hafalan Awal (${hafalanAwalCount})` : `📝 Hafalan Awal`;
+        const hafalanAwalBtn = `<button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">${hafalanAwalLabel}</button>`;
+        const cardFoot = (tasmiBtn || hafalanAwalBtn) ? `<div class="mon-card-foot">${tasmiBtn}${hafalanAwalBtn}</div>` : '';
+        return `<div class="mon-card"><div class="mon-card-head"><div class="mon-card-identity"><div class="mon-card-name">${nama}</div><span class="mon-badge-kelas">Kelas ${kelas}</span></div><span class="mon-status-badge ${badge.cls}">${badge.label}</span></div><div class="mon-card-body"><div class="mon-last-row">${lastHtml}</div><div class="mon-progress-wrap">${progressHtml}</div><div class="mon-info-row"><div class="mon-info-box"><div class="mon-info-lbl">Muroja'ah</div><div class="mon-info-val ${murojaValCls}">${murojaHtml}</div></div><div class="mon-info-box"><div class="mon-info-lbl">Tasmi'</div><div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div></div></div></div>${cardFoot}</div>`;
     }
-
-    /* ── Modal Tasmi' ── */
+    function inputHafalanAwal(siswaId) {
+        const siswa = state.dataSiswa.find(s => s.id === siswaId);
+        if (!siswa) return;
+        const sudahAda = (siswa.hafalanAwal || []);
+        const suratJuz30 = ALL_SURAT[30] || [];
+        const namaMap = {};
+        suratJuz30.forEach(s => { namaMap[s.num] = s.name; });
+        const infoAda = sudahAda.length ? `Hafalan awal saat ini: ${sudahAda.map(n => `${n}(${namaMap[n]||n})`).join(', ')}\n\n` : '';
+        const input = prompt(`${infoAda}Masukkan nomor surat Juz 30 yang sudah dihafal sebelum memakai aplikasi.\nPisahkan dengan koma. Contoh: 114,113,112\n\n(Kosongkan dan OK untuk hapus semua hafalan awal)`);
+        if (input === null) return;
+        if (input.trim() === '') { siswa.hafalanAwal = []; saveAllData(); showToast('🗑 Hafalan awal dihapus'); renderMonitoring(); return; }
+        const suratList = input.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) && JUZ30_SURAT.includes(n));
+        if (!suratList.length) { showToast('⚠️ Nomor surat tidak valid atau tidak ada di Juz 30'); return; }
+        siswa.hafalanAwal = [...new Set([...(siswa.hafalanAwal || []), ...suratList])];
+        saveAllData();
+        showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
+        renderMonitoring();
+    }
     function openTasmiModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
@@ -2541,20 +1790,8 @@ function tambahSiswa() {
         document.querySelectorAll('.tasmi-nilai-opt').forEach(el => el.classList.remove('sel-l','sel-kl'));
         document.getElementById('tasmiModal').classList.add('active');
     }
-    function closeTasmiModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('tasmiModal').classList.remove('active');
-        tasmiSiswaId = null;
-    }
-    function pilihTasmiNilai(val) {
-        tasmiNilaiSelected = val;
-        document.querySelectorAll('.tasmi-nilai-opt').forEach(el => {
-            el.classList.remove('sel-l','sel-kl');
-            if (el.getAttribute('data-nilai') === val) {
-                el.classList.add(val === 'L' ? 'sel-l' : 'sel-kl');
-            }
-        });
-    }
+    function closeTasmiModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('tasmiModal').classList.remove('active'); tasmiSiswaId = null; }
+    function pilihTasmiNilai(val) { tasmiNilaiSelected = val; document.querySelectorAll('.tasmi-nilai-opt').forEach(el => { el.classList.remove('sel-l','sel-kl'); if (el.getAttribute('data-nilai') === val) el.classList.add(val === 'L' ? 'sel-l' : 'sel-kl'); }); }
     function simpanTasmi() {
         if (!tasmiSiswaId) return;
         if (!tasmiNilaiSelected) { showToast('⚠️ Pilih penilaian L atau KL'); return; }
@@ -2562,120 +1799,61 @@ function tambahSiswa() {
         if (!tgl) { showToast('⚠️ Isi tanggal tasmi\''); return; }
         const penguji = document.getElementById('tasmiPenguji').value.trim();
         const catatan = document.getElementById('tasmiCatatan').value.trim();
-
         const allTasmi = getTasmiData();
         const existing = allTasmi.findIndex(t => t.siswaId === tasmiSiswaId);
         const record = { siswaId: tasmiSiswaId, juz: 30, tanggal: tgl, nilai: tasmiNilaiSelected, penguji, catatan };
         if (existing !== -1) allTasmi[existing] = record;
         else allTasmi.push(record);
         saveTasmiData(allTasmi);
-
         showToast('✅ Data Tasmi\' tersimpan!');
         closeTasmiModal();
         renderMonitoring();
     }
-
-    /* ── Export Bulanan ── */
     function exportMonitoringBulanan() {
         if (!state.dataSiswa.length) { showToast('⚠️ Belum ada data siswa'); return; }
         const now = new Date();
         const bulanIni = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-
         const rows = state.dataSiswa.map(siswa => {
             const { id, nama, kelas } = siswa;
             const statusUtama = getStatusUtama(id);
             const progJuz = hitungProgressJuz30(id);
             const khatam = progJuz >= JUZ30_TOTAL;
             const tasmi = getTasmiSiswa(id);
-
-            // Setoran bulan ini
-            const setoranBulanIni = state.dataSetoran.filter(s =>
-                s.SiswaId === id && s.tanggal && s.tanggal.startsWith(bulanIni)
-            );
-
+            const setoranBulanIni = state.dataSetoran.filter(s => s.SiswaId === id && s.tanggal && s.tanggal.startsWith(bulanIni));
             const last = getSetoranTerakhir(id);
             const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-            const lastText = last
-                ? `${last.tanggal} · ${jenisMap[last.jenis]||last.jenis} · ${(last.surah||[]).map(sr=>sr.name).join(', ')}`
-                : '-';
-
+            const lastText = last ? `${last.tanggal} · ${jenisMap[last.jenis]||last.jenis} · ${(last.surah||[]).map(sr=>sr.name).join(', ')}` : '-';
             const statusMap = { setoran:'Setoran', muroja:"Muroja'ah", siap:"Siap Tasmi'", selesai:'Tasmi\' Selesai' };
             const progressText = khatam ? 'Khatam (37/37)' : `${progJuz} / ${JUZ30_TOTAL} surat`;
             const tasmiText = tasmi ? `${tasmi.nilai} · ${tasmi.tanggal}` : 'Belum';
-
-            return {
-                'Nama': nama,
-                'Kelas': kelas,
-                'Total Setoran Bulan Ini': setoranBulanIni.length,
-                'Setoran Terakhir': lastText,
-                'Status': statusMap[statusUtama] || statusUtama,
-                'Progress Juz 30': progressText,
-                'Tasmi\'': tasmiText
-            };
+            return { 'Nama': nama, 'Kelas': kelas, 'Total Setoran Bulan Ini': setoranBulanIni.length, 'Setoran Terakhir': lastText, 'Status': statusMap[statusUtama] || statusUtama, 'Progress Juz 30': progressText, 'Tasmi\'': tasmiText };
         });
-
         const ws = XLSX.utils.json_to_sheet(rows);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Monitoring');
-
-        // Set column widths
-        ws['!cols'] = [
-            { wch: 24 }, { wch: 8 }, { wch: 22 }, { wch: 50 },
-            { wch: 18 }, { wch: 20 }, { wch: 20 }
-        ];
-
-        const bulanLabel = now.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+        ws['!cols'] = [{ wch: 24 }, { wch: 8 }, { wch: 22 }, { wch: 50 }, { wch: 18 }, { wch: 20 }, { wch: 20 }];
         XLSX.writeFile(wb, `Monitoring_Tahfidz_${bulanIni}.xlsx`);
-        showToast(`✅ Export ${bulanLabel} berhasil!`);
+        showToast(`✅ Export ${now.toLocaleString('id-ID', { month: 'long', year: 'numeric' })} berhasil!`);
     }
-</script>
 
-<script>
-  // ── OFFLINE BANNER ──
-  const offlineBanner = document.getElementById('offlineBanner');
-
-  function updateOnlineStatus() {
-    if (!navigator.onLine) {
-      offlineBanner.classList.add('show');
-    } else {
-      offlineBanner.classList.remove('show');
+    function init() {
+        document.getElementById('tanggal').value = todayStr();
+        loadAllData();
+        renderDataSiswa();
+        renderResult();
+        pilihStatus('lancar');
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) document.getElementById('tanggal').value = todayStr(); });
+        window.addEventListener('focus', () => { document.getElementById('tanggal').value = todayStr(); });
     }
-  }
 
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  updateOnlineStatus(); // cek status awal
+    init();
 
-  // ── SERVICE WORKER REGISTRATION ──
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => {
-          console.log('[PWA] SW terdaftar:', reg.scope);
-
-          // Deteksi update SW baru
-          reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Ada versi baru — minta SW baru langsung aktif
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-              }
-            });
-          });
-        })
-        .catch(err => console.warn('[PWA] SW gagal:', err));
-
-      // Reload otomatis saat SW baru aktif (tanpa perlu refresh manual)
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-          refreshing = true;
-          window.location.reload();
-        }
-      });
-    });
-  }
+    const offlineBanner = document.getElementById('offlineBanner');
+    function updateOnlineStatus() { if (!navigator.onLine) offlineBanner.classList.add('show'); else offlineBanner.classList.remove('show'); }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.warn('[PWA] SW gagal:', err)); let refreshing = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!refreshing) { refreshing = true; window.location.reload(); } }); }); }
 </script>
 </body>
 </html>
