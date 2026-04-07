@@ -992,6 +992,172 @@
         .mon-empty-icon { font-size: 40px; margin-bottom: 8px; }
         .mon-empty-text { font-size: 13px; font-weight: 600; }
         .mon-empty-sub { font-size: 11px; margin-top: 4px; color: var(--g4); }
+
+        /* ══════════════════════════════════════════
+           ── HAFALAN AWAL MODAL ──
+        ══════════════════════════════════════════ */
+        #hafalanAwalModal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 400;
+            display: none; align-items: flex-end;
+        }
+        #hafalanAwalModal.active { display: flex; }
+        .ha-sheet {
+            background: white; width: 100%;
+            border-radius: 20px 20px 0 0;
+            max-height: 92vh;
+            display: flex; flex-direction: column;
+            animation: sheetUp .28s cubic-bezier(0.32,0.72,0,1);
+            overflow: hidden;
+        }
+        .ha-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px 10px;
+            border-bottom: 1px solid var(--g2); flex-shrink: 0;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        }
+        .ha-header-left { display: flex; flex-direction: column; }
+        .ha-title { font-size: 15px; font-weight: 800; color: var(--g9); }
+        .ha-sub { font-size: 10px; color: #1e40af; font-weight: 600; margin-top: 1px; }
+        .ha-body { flex: 1; overflow-y: auto; padding: 12px 14px 8px; -webkit-overflow-scrolling: touch; }
+        .ha-body::-webkit-scrollbar { width: 3px; }
+        .ha-body::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+
+        /* range inputs */
+        .ha-range-row {
+            display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px;
+        }
+        .ha-range-row > div { flex: 1; }
+        .ha-range-arrow {
+            font-size: 18px; color: var(--g4); padding-bottom: 9px; flex-shrink: 0;
+        }
+        .ha-input-trigger {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 9px 11px;
+            background: white; border: 1.5px solid var(--g2);
+            border-radius: var(--r); cursor: pointer; font-size: 13px;
+            font-weight: 700; color: var(--g9);
+            transition: border-color .15s, background .15s;
+            position: relative;
+        }
+        .ha-input-trigger.has-val { border-color: #3b82f6; background: #eff6ff; color: #1d4ed8; }
+        .ha-input-trigger:active { border-color: var(--p); background: var(--p4); }
+        .ha-input-trigger .trig-sub { font-size: 9px; font-weight: 500; color: var(--g5); }
+        .ha-input-trigger.has-val .trig-sub { color: #3b82f6; }
+
+        /* surat dropdown grid */
+        .ha-dropdown-wrap {
+            position: relative; margin-bottom: 6px;
+        }
+        .ha-dropdown {
+            display: none;
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: white; border: 1.5px solid var(--g2);
+            border-radius: var(--r2); box-shadow: var(--sh2);
+            z-index: 10; padding: 8px;
+            max-height: 240px; overflow-y: auto;
+        }
+        .ha-dropdown.open { display: block; }
+        .ha-dropdown::-webkit-scrollbar { width: 3px; }
+        .ha-dropdown::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+        .ha-surat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 6px;
+        }
+        .ha-surat-item {
+            background: var(--g1); border: 1.5px solid var(--g2);
+            border-radius: 9px; padding: 8px 4px;
+            text-align: center; cursor: pointer;
+            transition: all .1s; min-height: 52px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 2px;
+        }
+        .ha-surat-item:active { transform: scale(.94); }
+        .ha-surat-item.selected { background: #dbeafe; border-color: #3b82f6; }
+        .ha-surat-item .si-num { font-size: 12px; font-weight: 800; color: var(--g8); line-height: 1; }
+        .ha-surat-item .si-name { font-size: 9px; font-weight: 600; color: var(--g5); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70px; }
+        .ha-surat-item.selected .si-num { color: #1d4ed8; }
+        .ha-surat-item.selected .si-name { color: #3b82f6; }
+
+        /* preview */
+        .ha-preview {
+            background: var(--g1); border-radius: var(--r);
+            border: 1.5px solid var(--g2);
+            padding: 10px 12px; margin-bottom: 10px;
+        }
+        .ha-preview-title {
+            font-size: 10px; font-weight: 700; color: var(--g5);
+            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px;
+        }
+        .ha-preview-list {
+            display: flex; flex-direction: column; gap: 3px;
+        }
+        .ha-preview-item {
+            font-size: 12px; color: var(--g7); font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ha-preview-item::before {
+            content: ''; width: 5px; height: 5px;
+            border-radius: 50%; background: var(--p); flex-shrink: 0;
+        }
+        .ha-preview-warn {
+            font-size: 11px; color: var(--danger);
+            font-weight: 600; text-align: center; padding: 4px 0;
+        }
+        .ha-preview-empty {
+            font-size: 11px; color: var(--g4); text-align: center; padding: 4px 0;
+        }
+
+        /* tasmi info banner */
+        .ha-tasmi-info {
+            background: #f0fdf4; border: 1.5px solid #bbf7d0;
+            border-radius: var(--r); padding: 10px 12px;
+            font-size: 12px; color: #15803d; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+        .ha-tasmi-info-icon { font-size: 18px; flex-shrink: 0; }
+
+        /* badge hafalan status in mon card */
+        .ha-status-badges {
+            display: flex; gap: 5px; flex-wrap: wrap; margin-top: 3px;
+        }
+        .ha-badge {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px;
+            white-space: nowrap;
+        }
+        .ha-badge-muroja  { background: #dbeafe; color: #1e40af; }
+        .ha-badge-tasmi   { background: #dcfce7; color: #166534; }
+
+        .ha-footer {
+            padding: 10px 14px 14px; border-top: 1px solid var(--g2);
+            flex-shrink: 0; display: flex; gap: 8px;
+        }
+        .btn-ha-hapus {
+            flex: 0 0 auto; padding: 11px 14px;
+            background: #fee2e2; color: var(--danger);
+            border: none; border-radius: var(--r2);
+            font-size: 13px; font-weight: 700; cursor: pointer;
+        }
+        .btn-ha-hapus:active { opacity: .8; }
+        .btn-ha-simpan {
+            flex: 1; padding: 11px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white; border: none; border-radius: var(--r2);
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59,130,246,.3);
+        }
+        .btn-ha-simpan:active { transform: scale(.98); box-shadow: none; }
+        .ha-existing-bar {
+            background: #eff6ff; border: 1.5px solid #bfdbfe;
+            border-radius: var(--r); padding: 8px 11px;
+            margin-bottom: 10px; font-size: 11px; color: #1e40af;
+            font-weight: 600; display: flex; align-items: flex-start; gap: 6px;
+        }
+        .ha-existing-bar-icon { flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -1756,26 +1922,16 @@
         const hafalanAwalCount = (siswa.hafalanAwal || []).length;
         const hafalanAwalLabel = hafalanAwalCount > 0 ? `📝 Hafalan Awal (${hafalanAwalCount})` : `📝 Hafalan Awal`;
         const hafalanAwalBtn = `<button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">${hafalanAwalLabel}</button>`;
+        // Status badges (hanya di kartu, bukan input)
+        let statusBadgesHtml = '';
+        if (tasmi) statusBadgesHtml += `<span class="ha-badge ha-badge-tasmi">🔵 Sudah Tasmi'</span>`;
+        else if (khatam) statusBadgesHtml += `<span class="ha-badge ha-badge-muroja">🟡 Muroja'ah</span>`;
+        const statusBadgesRow = statusBadgesHtml ? `<div class="ha-status-badges" style="padding:0 12px 8px;">${statusBadgesHtml}</div>` : '';
         const cardFoot = (tasmiBtn || hafalanAwalBtn) ? `<div class="mon-card-foot">${tasmiBtn}${hafalanAwalBtn}</div>` : '';
-        return `<div class="mon-card"><div class="mon-card-head"><div class="mon-card-identity"><div class="mon-card-name">${nama}</div><span class="mon-badge-kelas">Kelas ${kelas}</span></div><span class="mon-status-badge ${badge.cls}">${badge.label}</span></div><div class="mon-card-body"><div class="mon-last-row">${lastHtml}</div><div class="mon-progress-wrap">${progressHtml}</div><div class="mon-info-row"><div class="mon-info-box"><div class="mon-info-lbl">Muroja'ah</div><div class="mon-info-val ${murojaValCls}">${murojaHtml}</div></div><div class="mon-info-box"><div class="mon-info-lbl">Tasmi'</div><div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div></div></div></div>${cardFoot}</div>`;
+        return `<div class="mon-card"><div class="mon-card-head"><div class="mon-card-identity"><div class="mon-card-name">${nama}</div><span class="mon-badge-kelas">Kelas ${kelas}</span></div><span class="mon-status-badge ${badge.cls}">${badge.label}</span></div><div class="mon-card-body"><div class="mon-last-row">${lastHtml}</div><div class="mon-progress-wrap">${progressHtml}</div><div class="mon-info-row"><div class="mon-info-box"><div class="mon-info-lbl">Muroja'ah</div><div class="mon-info-val ${murojaValCls}">${murojaHtml}</div></div><div class="mon-info-box"><div class="mon-info-lbl">Tasmi'</div><div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div></div></div></div>${statusBadgesRow}${cardFoot}</div>`;
     }
     function inputHafalanAwal(siswaId) {
-        const siswa = state.dataSiswa.find(s => s.id === siswaId);
-        if (!siswa) return;
-        const sudahAda = (siswa.hafalanAwal || []);
-        const suratJuz30 = ALL_SURAT[30] || [];
-        const namaMap = {};
-        suratJuz30.forEach(s => { namaMap[s.num] = s.name; });
-        const infoAda = sudahAda.length ? `Hafalan awal saat ini: ${sudahAda.map(n => `${n}(${namaMap[n]||n})`).join(', ')}\n\n` : '';
-        const input = prompt(`${infoAda}Masukkan nomor surat Juz 30 yang sudah dihafal sebelum memakai aplikasi.\nPisahkan dengan koma. Contoh: 114,113,112\n\n(Kosongkan dan OK untuk hapus semua hafalan awal)`);
-        if (input === null) return;
-        if (input.trim() === '') { siswa.hafalanAwal = []; saveAllData(); showToast('🗑 Hafalan awal dihapus'); renderMonitoring(); return; }
-        const suratList = input.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) && JUZ30_SURAT.includes(n));
-        if (!suratList.length) { showToast('⚠️ Nomor surat tidak valid atau tidak ada di Juz 30'); return; }
-        siswa.hafalanAwal = [...new Set([...(siswa.hafalanAwal || []), ...suratList])];
-        saveAllData();
-        showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
-        renderMonitoring();
+        openHafalanAwalModal(siswaId);
     }
     function openTasmiModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
@@ -1854,6 +2010,339 @@
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
     if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.warn('[PWA] SW gagal:', err)); let refreshing = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!refreshing) { refreshing = true; window.location.reload(); } }); }); }
+
+    /* ══════════════════════════════════════════
+       ── HAFALAN AWAL MODULE ──
+    ══════════════════════════════════════════ */
+
+    let hafalanAwalSiswaId = null;
+    let haDropdownOpen = null; // 'dari' | 'sampai' | null
+
+    const JUZ30_LIST = (ALL_SURAT[30] || []).map(s => ({ num: s.num, name: s.name }));
+    // sorted 78–114 for maju, 114–78 for mundur
+    const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
+    const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
+
+    function openHafalanAwalModal(siswaId) {
+        const siswa = state.dataSiswa.find(s => s.id === siswaId);
+        if (!siswa) return;
+        hafalanAwalSiswaId = siswaId;
+
+        const tasmi = getTasmiSiswa(siswaId);
+        const khatam = isKhatamJuz30(siswaId);
+
+        // Set header siswa
+        document.getElementById('haNamaSiswa').textContent = siswa.nama;
+        document.getElementById('haKelasSiswa').textContent = 'Kelas ' + siswa.kelas;
+
+        // Tampilkan/sembunyikan area input vs info tasmi
+        const tasmiInfoEl = document.getElementById('haTasmiInfo');
+        const inputArea    = document.getElementById('haInputArea');
+        if (tasmi) {
+            tasmiInfoEl.style.display = 'flex';
+            inputArea.style.display = 'none';
+        } else {
+            tasmiInfoEl.style.display = 'none';
+            inputArea.style.display = 'block';
+        }
+
+        // Status badge di header modal
+        const badgeEl = document.getElementById('haStatusBadges');
+        badgeEl.innerHTML = '';
+        if (khatam) {
+            const b1 = document.createElement('span');
+            b1.className = 'ha-badge ha-badge-muroja';
+            b1.textContent = '🟡 Muroja\'ah';
+            badgeEl.appendChild(b1);
+        }
+        if (tasmi) {
+            const b2 = document.createElement('span');
+            b2.className = 'ha-badge ha-badge-tasmi';
+            b2.textContent = '🔵 Sudah Tasmi\'';
+            badgeEl.appendChild(b2);
+        }
+
+        // Info hafalan yang sudah ada
+        const existing = siswa.hafalanAwal || [];
+        const existingBar = document.getElementById('haExistingBar');
+        if (existing.length) {
+            existingBar.style.display = 'flex';
+            const namaMap = {};
+            JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+            existingBar.querySelector('.ha-existing-text').textContent =
+                `Tersimpan ${existing.length} surat: ` + existing.map(n => namaMap[n] || n).join(', ');
+        } else {
+            existingBar.style.display = 'none';
+        }
+
+        // Default nilai
+        const isMuroja = khatam; // jika sudah khatam, arah maju default
+        const defaultDari   = isMuroja ? 78  : 114;
+        const defaultSampai = isMuroja ? 114 : 78;
+
+        document.getElementById('haDariNum').textContent  = defaultDari;
+        document.getElementById('haDariName').textContent = (JUZ30_LIST.find(s=>s.num===defaultDari)||{name:''}).name;
+        document.getElementById('haSampaiNum').textContent  = defaultSampai;
+        document.getElementById('haSampaiName').textContent = (JUZ30_LIST.find(s=>s.num===defaultSampai)||{name:''}).name;
+        document.getElementById('haDariTrigger').dataset.val  = defaultDari;
+        document.getElementById('haSampaiTrigger').dataset.val = defaultSampai;
+        document.getElementById('haDariTrigger').classList.add('has-val');
+        document.getElementById('haSampaiTrigger').classList.add('has-val');
+
+        // Build grids
+        buildHaSuratGrid('dari',   defaultDari);
+        buildHaSuratGrid('sampai', defaultSampai);
+
+        // Preview
+        updateHaPreview();
+
+        document.getElementById('hafalanAwalModal').classList.add('active');
+        haDropdownOpen = null;
+    }
+
+    function closeHafalanAwalModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('hafalanAwalModal').classList.remove('active');
+        hafalanAwalSiswaId = null;
+        haDropdownOpen = null;
+        closeAllHaDropdowns();
+    }
+
+    function buildHaSuratGrid(type, selectedNum) {
+        const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
+        grid.innerHTML = '';
+        JUZ30_ASC.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'ha-surat-item' + (s.num === selectedNum ? ' selected' : '');
+            div.innerHTML = `<span class="si-num">${s.num}</span><span class="si-name">${s.name}</span>`;
+            div.onclick = () => selectHaSurat(type, s.num, s.name);
+            grid.appendChild(div);
+        });
+    }
+
+    function selectHaSurat(type, num, name) {
+        if (type === 'dari') {
+            document.getElementById('haDariNum').textContent  = num;
+            document.getElementById('haDariName').textContent = name;
+            document.getElementById('haDariTrigger').dataset.val = num;
+            document.getElementById('haDariTrigger').classList.add('has-val');
+            // re-highlight grid
+            document.querySelectorAll('#haDariGrid .ha-surat-item').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
+            });
+            closeHaDropdown('dari');
+        } else {
+            document.getElementById('haSampaiNum').textContent  = num;
+            document.getElementById('haSampaiName').textContent = name;
+            document.getElementById('haSampaiTrigger').dataset.val = num;
+            document.getElementById('haSampaiTrigger').classList.add('has-val');
+            document.querySelectorAll('#haSampaiGrid .ha-surat-item').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
+            });
+            closeHaDropdown('sampai');
+        }
+        updateHaPreview();
+    }
+
+    function toggleHaDropdown(type) {
+        const dd = document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown');
+        const other = document.getElementById(type === 'dari' ? 'haSampaiDropdown' : 'haDariDropdown');
+        const isOpen = dd.classList.contains('open');
+        other.classList.remove('open');
+        dd.classList.toggle('open', !isOpen);
+        haDropdownOpen = !isOpen ? type : null;
+        // scroll selected item into view
+        if (!isOpen) {
+            setTimeout(() => {
+                const sel = dd.querySelector('.ha-surat-item.selected');
+                if (sel) sel.scrollIntoView({ block: 'nearest' });
+            }, 50);
+        }
+    }
+
+    function closeHaDropdown(type) {
+        document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown').classList.remove('open');
+        if (haDropdownOpen === type) haDropdownOpen = null;
+    }
+
+    function closeAllHaDropdowns() {
+        document.querySelectorAll('.ha-dropdown').forEach(el => el.classList.remove('open'));
+        haDropdownOpen = null;
+    }
+
+    function getHaRange() {
+        const dariVal   = parseInt(document.getElementById('haDariTrigger').dataset.val);
+        const sampaiVal = parseInt(document.getElementById('haSampaiTrigger').dataset.val);
+        return { dari: dariVal, sampai: sampaiVal };
+    }
+
+    function generateHaSuratArray(dari, sampai) {
+        // Arah otomatis: mundur jika dari >= sampai, maju jika dari < sampai
+        const result = [];
+        if (isNaN(dari) || isNaN(sampai)) return result;
+        if (dari >= sampai) {
+            // mundur: 114 → 78
+            for (let n = dari; n >= sampai; n--) {
+                if (JUZ30_SURAT.includes(n)) result.push(n);
+            }
+        } else {
+            // maju: 78 → 114
+            for (let n = dari; n <= sampai; n++) {
+                if (JUZ30_SURAT.includes(n)) result.push(n);
+            }
+        }
+        return result;
+    }
+
+    function updateHaPreview() {
+        const { dari, sampai } = getHaRange();
+        const previewList = document.getElementById('haPreviewList');
+        const previewWarn = document.getElementById('haPreviewWarn');
+        previewList.innerHTML = '';
+        previewWarn.textContent = '';
+
+        if (isNaN(dari) || isNaN(sampai)) {
+            previewWarn.textContent = '⚠️ Pilih surat Dari dan Sampai';
+            return;
+        }
+
+        const arr = generateHaSuratArray(dari, sampai);
+        if (!arr.length) {
+            previewWarn.textContent = '⚠️ Rentang tidak valid';
+            return;
+        }
+
+        const namaMap = {};
+        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+        const MAX_SHOW = 6;
+        arr.slice(0, MAX_SHOW).forEach(n => {
+            const div = document.createElement('div');
+            div.className = 'ha-preview-item';
+            div.textContent = `${n} – ${namaMap[n] || ''}`;
+            previewList.appendChild(div);
+        });
+        if (arr.length > MAX_SHOW) {
+            const div = document.createElement('div');
+            div.className = 'ha-preview-item';
+            div.textContent = `... dan ${arr.length - MAX_SHOW} surat lainnya`;
+            div.style.color = 'var(--g5)';
+            previewList.appendChild(div);
+        }
+        const totalEl = document.getElementById('haPreviewTotal');
+        totalEl.textContent = `${arr.length} surat`;
+    }
+
+    function simpanHafalanAwal() {
+        if (!hafalanAwalSiswaId) return;
+        const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
+        if (!siswa) return;
+        const { dari, sampai } = getHaRange();
+        const arr = generateHaSuratArray(dari, sampai);
+        if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
+        siswa.hafalanAwal = [...new Set([...(siswa.hafalanAwal || []), ...arr])];
+        saveAllData();
+        showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
+        closeHafalanAwalModal();
+        renderMonitoring();
+    }
+
+    function hapusHafalanAwal() {
+        if (!hafalanAwalSiswaId) return;
+        const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
+        if (!siswa) return;
+        if (!(siswa.hafalanAwal || []).length) { showToast('ℹ️ Belum ada hafalan awal'); return; }
+        siswa.hafalanAwal = [];
+        saveAllData();
+        showToast('🗑 Hafalan awal dihapus');
+        closeHafalanAwalModal();
+        renderMonitoring();
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.ha-dropdown-wrap')) {
+            closeAllHaDropdowns();
+        }
+    });
+
 </script>
+
+<!-- ══════════════ HAFALAN AWAL MODAL ══════════════ -->
+<div id="hafalanAwalModal" onclick="closeHafalanAwalModal(event)">
+    <div class="ha-sheet">
+        <div class="ha-header">
+            <div class="ha-header-left">
+                <div class="ha-title">📝 Hafalan Awal <span id="haNamaSiswa"></span></div>
+                <div class="ha-sub">Input hafalan sebelum pakai aplikasi · <span id="haKelasSiswa"></span></div>
+                <div class="ha-status-badges" id="haStatusBadges"></div>
+            </div>
+            <button class="btn-close" onclick="closeHafalanAwalModal()">✕</button>
+        </div>
+        <div class="ha-body">
+
+            <!-- Info tasmi (muncul jika sudah tasmi) -->
+            <div id="haTasmiInfo" class="ha-tasmi-info" style="display:none;">
+                <span class="ha-tasmi-info-icon">🎤</span>
+                <div>Siswa ini sudah <strong>Tasmi'</strong>. Input hafalan Juz Amma dilakukan di luar aplikasi.</div>
+            </div>
+
+            <!-- Area input (tersembunyi jika sudah tasmi) -->
+            <div id="haInputArea">
+
+                <!-- Info hafalan yang sudah tersimpan -->
+                <div id="haExistingBar" class="ha-existing-bar" style="display:none;">
+                    <span class="ha-existing-bar-icon">ℹ️</span>
+                    <span class="ha-existing-text"></span>
+                </div>
+
+                <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
+
+                <!-- DARI -->
+                <div class="ha-dropdown-wrap" style="margin-bottom:8px;">
+                    <label class="lbl">Dari</label>
+                    <div class="ha-input-trigger" id="haDariTrigger" data-val="" onclick="toggleHaDropdown('dari')">
+                        <div>
+                            <div id="haDariNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                            <div id="haDariName" class="trig-sub"></div>
+                        </div>
+                        <span style="color:var(--g4);font-size:12px;">▼</span>
+                    </div>
+                    <div class="ha-dropdown" id="haDariDropdown">
+                        <div class="ha-surat-grid" id="haDariGrid"></div>
+                    </div>
+                </div>
+
+                <!-- SAMPAI -->
+                <div class="ha-dropdown-wrap" style="margin-bottom:12px;">
+                    <label class="lbl">Sampai</label>
+                    <div class="ha-input-trigger" id="haSampaiTrigger" data-val="" onclick="toggleHaDropdown('sampai')">
+                        <div>
+                            <div id="haSampaiNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                            <div id="haSampaiName" class="trig-sub"></div>
+                        </div>
+                        <span style="color:var(--g4);font-size:12px;">▼</span>
+                    </div>
+                    <div class="ha-dropdown" id="haSampaiDropdown">
+                        <div class="ha-surat-grid" id="haSampaiGrid"></div>
+                    </div>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="ha-preview">
+                    <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
+                    <div id="haPreviewWarn" class="ha-preview-warn"></div>
+                    <div id="haPreviewList" class="ha-preview-list"></div>
+                </div>
+
+            </div><!-- /haInputArea -->
+        </div><!-- /ha-body -->
+
+        <div class="ha-footer">
+            <button class="btn-ha-hapus" onclick="hapusHafalanAwal()">🗑 Hapus</button>
+            <button class="btn-ha-simpan" id="btnHaSimpan" onclick="simpanHafalanAwal()">✅ Simpan Hafalan Awal</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
