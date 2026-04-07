@@ -1798,20 +1798,53 @@
         document.getElementById('tanggal').value = todayStr();
     }
     function renderResult() {
-        const section = document.getElementById('resultSection');
-        const container = document.getElementById('resultList');
-        const empty = document.getElementById('riwayatEmpty');
-        if (!state.dataSetoran.length) { section.style.display = 'none'; if (empty) empty.style.display = 'block'; return; }
-        section.style.display = 'block';
-        if (empty) empty.style.display = 'none';
-        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam", setoran:"Setoran" };
-        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => {
-            const suratText = (s.surah || []).map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
-            const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
-            return `<div class="result-card"><div class="rc-left"><div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div><div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${(s.tanggal||'').split('-').reverse().join('/')}</div><div class="rc-surat">${suratText || 'Belum ada detail surat'}</div></div><div class="rc-actions"><button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button><button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button></div></div>`;
-        }).join('');
+    const section = document.getElementById('resultSection');
+    const container = document.getElementById('resultList');
+    const empty = document.getElementById('riwayatEmpty');
+    
+    if (!state.dataSetoran.length) { 
+        section.style.display = 'none'; 
+        if (empty) empty.style.display = 'block'; 
+        return; 
     }
-    function updateStatus(id, newStatus) { const item = state.dataSetoran.find(i => i.id === id); if (item) { item.status = newStatus; saveAllData(); renderResult(); } }
+    
+    section.style.display = 'block';
+    if (empty) empty.style.display = 'none';
+    
+    // Ambil hanya 1 setoran TERAKHIR per siswa
+    const lastPerSiswa = new Map();
+    state.dataSetoran.forEach(s => {
+        const existing = lastPerSiswa.get(s.SiswaId);
+        if (!existing || s.tanggal > existing.tanggal) {
+            lastPerSiswa.set(s.SiswaId, s);
+        }
+    });
+    
+    const lastSetoranList = Array.from(lastPerSiswa.values())
+        .sort((a,b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
+    
+    const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam", setoran:"Setoran" };
+    
+    container.innerHTML = lastSetoranList.map(s => {
+        const surahArr = s.surah || [];
+        const lastSurat = surahArr.length ? surahArr[surahArr.length - 1] : null;
+        const suratText = lastSurat ? `${lastSurat.name} (${lastSurat.dari}–${lastSurat.sampai})` : 'Belum ada detail surat';
+        const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
+        return `<div class="result-card">
+            <div class="rc-left">
+                <div class="rc-name">${s.nama} 
+                    <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span>
+                </div>
+                <div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${(s.tanggal||'').split('-').reverse().join('/')}</div>
+                <div class="rc-surat">${suratText || 'Belum ada detail surat'}</div>
+            </div>
+            <div class="rc-actions">
+                <button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button>
+                <button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button>
+            </div>
+        </div>`;
+    }).join('');
+}    function updateStatus(id, newStatus) { const item = state.dataSetoran.find(i => i.id === id); if (item) { item.status = newStatus; saveAllData(); renderResult(); } }
     function importSiswaFromFile(input) {
         const file = input.files[0];
         if (!file) return;
