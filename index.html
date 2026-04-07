@@ -1719,18 +1719,18 @@
     function loadSetoranTerakhir(siswaId) {
         const bar = document.getElementById('lastSetoranBar');
         const txt = document.getElementById('lastSetoranText');
-        const last = state.dataSetoran.find(s => s.SiswaId === siswaId);
+        const last = getSetoranTerakhir(siswaId);
         if (!last) { bar.classList.remove('show'); return; }
         if (last.juz) { document.getElementById('juz').value = String(last.juz); document.getElementById('juzText').textContent = 'Juz ' + last.juz; }
-        state.currentJenis = last.jenis || 'tasmi';
+        state.currentJenis = last.jenis || 'setoran';
         document.querySelectorAll('.seg-btn').forEach(b => { b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); });
         pilihStatus(last.status || 'lancar');
         if (last.surah && last.surah.length) { state.selectedSurah = last.surah.map(sr => ({ ...sr })); renderSuratList(); }
-        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-        const suratNames = last.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
+        const suratNames = (last.surah||[]).map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
         const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
-        txt.textContent = `${tgl} · ${jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
+        txt.textContent = `${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
         bar.classList.add('show');
     }
     function tambahSiswa() {
@@ -1765,10 +1765,20 @@
         if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
         const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
         if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
+
+        // Validasi fase: muroja hanya jika sudah khatam
+        if (state.currentJenis === 'muroja' && !isKhatamJuz30(SiswaId)) {
+            alert('⚠️ Siswa belum khatam Juz 30.\nInput Muroja\'ah hanya bisa dilakukan setelah setoran khatam.');
+            return;
+        }
+        // Validasi fase: tasmi hanya via tombol khusus (jenis tasmi tidak dipakai di sini)
+        // (Tasmi' diinput lewat modal tersendiri, bukan form setoran biasa)
+
         state.dataSetoran.unshift({ id: Date.now(), SiswaId, nama: Siswa.nama, kelas: Siswa.kelas, tanggal: tgl, jenis: state.currentJenis, juz: document.getElementById('juz').value, surah: [...state.selectedSurah], status: state.currentStatus });
         saveAllData();
         showToast('✅ Setoran tersimpan!');
         renderResult();
+        renderMonitoring();
         resetForm();
     }
     function resetForm() {
@@ -1794,8 +1804,12 @@
         if (!state.dataSetoran.length) { section.style.display = 'none'; if (empty) empty.style.display = 'block'; return; }
         section.style.display = 'block';
         if (empty) empty.style.display = 'none';
-        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" };
-        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => { const suratText = s.surah.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', '); const jLabel = jenisMap[s.jenis] || s.jenis; return `<div class="result-card"><div class="rc-left"><div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div><div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${s.tanggal.split('-').reverse().join('/')}</div><div class="rc-surat">${suratText}</div></div><div class="rc-actions"><button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button><button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button></div></div>`; }).join('');
+        const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam", setoran:"Setoran" };
+        container.innerHTML = state.dataSetoran.slice(0, 7).map(s => {
+            const suratText = (s.surah || []).map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+            const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
+            return `<div class="result-card"><div class="rc-left"><div class="rc-name">${s.nama} <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${jLabel}</span></div><div class="rc-meta">Kelas ${s.kelas} &nbsp;·&nbsp; ${(s.tanggal||'').split('-').reverse().join('/')}</div><div class="rc-surat">${suratText || 'Belum ada detail surat'}</div></div><div class="rc-actions"><button class="btn-stat ${s.status==='lancar'?'al':''}" onclick="updateStatus(${s.id},'lancar')">L</button><button class="btn-stat ${s.status==='kurang'?'akl':''}" onclick="updateStatus(${s.id},'kurang')">KL</button></div></div>`;
+        }).join('');
     }
     function updateStatus(id, newStatus) { const item = state.dataSetoran.find(i => i.id === id); if (item) { item.status = newStatus; saveAllData(); renderResult(); } }
     function importSiswaFromFile(input) {
@@ -1870,15 +1884,33 @@
     function saveTasmiData(data) { localStorage.setItem('dataTasmi', JSON.stringify(data)); }
     function getTasmiSiswa(siswaId) { return getTasmiData().find(t => t.siswaId === siswaId) || null; }
     function getStatusUtama(siswaId) {
-        const khatam = isKhatamJuz30(siswaId);
-        const murojaCount = hitungProgressMuroja(siswaId);
         const tasmi = getTasmiSiswa(siswaId);
         if (tasmi) return 'selesai';
+        const khatam = isKhatamJuz30(siswaId);
+        const murojaCount = hitungProgressMuroja(siswaId);
+        // Cek apakah ada setoran muroja sama sekali
+        const sudahMuroja = state.dataSetoran.some(s => s.SiswaId === siswaId && s.jenis === 'muroja');
         if (khatam && murojaCount >= JUZ30_TOTAL) return 'siap';
-        if (khatam) return 'muroja';
+        if (khatam && sudahMuroja) return 'muroja';
+        if (khatam) return 'siap_muroja'; // khatam tapi belum mulai muroja
+        // Cek apakah ada setoran sama sekali (termasuk hafalan awal)
+        const siswa = state.dataSiswa.find(s => s.id === siswaId);
+        const adaHafalanAwal = (siswa && (siswa.hafalanAwal || []).length > 0);
+        const adaSetoran = state.dataSetoran.some(s => s.SiswaId === siswaId);
+        if (!adaSetoran && !adaHafalanAwal) return 'belum';
         return 'setoran';
     }
-    function getSetoranTerakhir(siswaId) { return state.dataSetoran.find(s => s.SiswaId === siswaId) || null; }
+    function getSetoranTerakhir(siswaId) {
+        const list = state.dataSetoran.filter(s => s.SiswaId === siswaId);
+        if (!list.length) return null;
+        list.sort((a, b) => {
+            const da = a.tanggal || '';
+            const db = b.tanggal || '';
+            if (db !== da) return db.localeCompare(da);
+            return (b.id || 0) - (a.id || 0);
+        });
+        return list[0];
+    }
     function renderMonFilterKelas() {
         const container = document.getElementById('monFilterKelas');
         if (!container) return;
@@ -1899,36 +1931,66 @@
         const { id, nama, kelas } = siswa;
         const statusUtama = getStatusUtama(id);
         const progressJuz = hitungProgressJuz30(id);
-        const murojaCount = hitungProgressMuroja(id);
         const khatam = progressJuz >= JUZ30_TOTAL;
         const tasmi = getTasmiSiswa(id);
         const last = getSetoranTerakhir(id);
-        const statusBadgeMap = { setoran: { cls: 'msb-setoran', label: '📚 Setoran' }, muroja: { cls: 'msb-muroja', label: '🔄 Muroja\'ah' }, siap: { cls: 'msb-siap', label: '🔥 Siap Tasmi\'' }, selesai: { cls: 'msb-selesai', label: '✅ Tasmi\' Selesai' } };
-        const badge = statusBadgeMap[statusUtama] || { cls: 'msb-kosong', label: '-' };
-        let lastHtml = '<span style="color:var(--g4);font-size:11px;">Belum ada setoran</span>';
-        if (last) { const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-'; const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", belum:"Blm Khatam" }; const suratNames = (last.surah || []).map(sr => `${sr.name} ${sr.dari}–${sr.sampai}`).join(', '); const chipCls = last.status === 'lancar' ? 'chip-l' : 'chip-kl'; const chipTxt = last.status === 'lancar' ? 'L' : 'KL'; lastHtml = `<span class="mon-last-label">Terakhir:</span><span>${tgl}</span><span>·</span><span>${jenisMap[last.jenis] || last.jenis}</span><span>·</span><span style="font-size:11px;color:var(--g7);">${suratNames}</span><span class="mon-chip ${chipCls}">${chipTxt}</span>`; }
+
+        // --- Badge utama (1 badge saja) ---
+        const statusBadgeMap = {
+            belum:      { cls: 'msb-kosong',  label: '⚪ Belum Mulai' },
+            setoran:    { cls: 'msb-setoran', label: '📚 Setoran' },
+            siap_muroja:{ cls: 'msb-siap',    label: "🟡 Siap Muroja'ah" },
+            muroja:     { cls: 'msb-muroja',  label: "🔁 Muroja'ah" },
+            siap:       { cls: 'msb-muroja',  label: "🎤 Siap Tasmi'" },
+            selesai:    { cls: 'msb-selesai', label: "🎤 Tasmi'" }
+        };
+        const badge = statusBadgeMap[statusUtama] || { cls: 'msb-kosong', label: '⚪ Belum Mulai' };
+
+        // --- Aktivitas terakhir ---
+        let lastHtml;
+        if (last) {
+            const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
+            const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: 'Hafalan Awal', belum: 'Blm Khatam' };
+            const jenisLabel = jenisMap[last.jenis] || last.jenis || 'Setoran';
+            const suratNames = (last.surah || []).map(sr => sr.name).join(', ') || '';
+            const keterangan = last.keterangan || '';
+            const chipCls = last.status === 'lancar' ? 'chip-l' : 'chip-kl';
+            const chipTxt = last.status === 'lancar' ? 'L' : 'KL';
+            const aktivitasLabel = keterangan ? keterangan : (suratNames ? `${jenisLabel} · ${suratNames}` : jenisLabel);
+            lastHtml = `<span class="mon-last-label">Terakhir:</span><span>${tgl}</span><span>·</span><span style="font-size:11px;color:var(--g7);">${aktivitasLabel}</span>${last.status ? `<span class="mon-chip ${chipCls}">${chipTxt}</span>` : ''}`;
+        } else {
+            lastHtml = '<span style="color:var(--g4);font-size:11px;">Belum ada setoran</span>';
+        }
+
+        // --- Progress bar ---
         const pct = Math.round((progressJuz / JUZ30_TOTAL) * 100);
-        const progressHtml = khatam ? `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count khatam">Khatam 🎉</span></div><div class="mon-bar-bg"><div class="mon-bar-fill khatam" style="width:100%"></div></div>` : `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count">${progressJuz} / ${JUZ30_TOTAL} surat</span></div><div class="mon-bar-bg"><div class="mon-bar-fill" style="width:${pct}%"></div></div><div class="mon-sisa">Sisa ${JUZ30_TOTAL - progressJuz} surat</div>`;
-        let murojaHtml, murojaValCls;
-        if (!khatam) { murojaHtml = 'Belum'; murojaValCls = 'miv-belum'; }
-        else if (murojaCount >= JUZ30_TOTAL) { murojaHtml = 'Selesai ✅'; murojaValCls = 'miv-selesai'; }
-        else if (murojaCount > 0) { murojaHtml = `${murojaCount} / ${JUZ30_TOTAL}`; murojaValCls = 'miv-proses'; }
-        else { murojaHtml = 'Belum'; murojaValCls = 'miv-belum'; }
-        let tasmiHtml, tasmiValCls;
-        if (tasmi) { tasmiHtml = `Sudah ✅<br><span style="font-size:10px;font-weight:600;">${tasmi.nilai} · ${tasmi.tanggal ? tasmi.tanggal.split('-').reverse().join('/') : ''}</span>`; tasmiValCls = 'miv-selesai'; }
-        else if (statusUtama === 'siap') { tasmiHtml = 'Siap 🔥'; tasmiValCls = 'miv-siap'; }
-        else { tasmiHtml = 'Belum'; tasmiValCls = 'miv-belum'; }
-        const tasmiBtn = statusUtama === 'siap' ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Input Tasmi'</button>` : '';
+        const progressHtml = khatam
+            ? `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count khatam">Khatam 🎉</span></div><div class="mon-bar-bg"><div class="mon-bar-fill khatam" style="width:100%"></div></div>`
+            : progressJuz > 0
+                ? `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count">${progressJuz} / ${JUZ30_TOTAL} surat</span></div><div class="mon-bar-bg"><div class="mon-bar-fill" style="width:${pct}%"></div></div><div class="mon-sisa">Sisa ${JUZ30_TOTAL - progressJuz} surat</div>`
+                : `<div class="mon-progress-label"><span class="mon-progress-title">📖 Progress Juz 30</span><span class="mon-progress-count" style="color:var(--g4);">Belum mulai</span></div><div class="mon-bar-bg"><div class="mon-bar-fill" style="width:0%"></div></div>`;
+
+        // --- Tombol aksi ---
         const hafalanAwalCount = (siswa.hafalanAwal || []).length;
         const hafalanAwalLabel = hafalanAwalCount > 0 ? `📝 Hafalan Awal (${hafalanAwalCount})` : `📝 Hafalan Awal`;
         const hafalanAwalBtn = `<button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">${hafalanAwalLabel}</button>`;
-        // Status badges (hanya di kartu, bukan input)
-        let statusBadgesHtml = '';
-        if (tasmi) statusBadgesHtml += `<span class="ha-badge ha-badge-tasmi">🔵 Sudah Tasmi'</span>`;
-        else if (khatam) statusBadgesHtml += `<span class="ha-badge ha-badge-muroja">🟡 Muroja'ah</span>`;
-        const statusBadgesRow = statusBadgesHtml ? `<div class="ha-status-badges" style="padding:0 12px 8px;">${statusBadgesHtml}</div>` : '';
+        const tasmiBtn = (statusUtama === 'siap') ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Input Tasmi'</button>` : '';
         const cardFoot = (tasmiBtn || hafalanAwalBtn) ? `<div class="mon-card-foot">${tasmiBtn}${hafalanAwalBtn}</div>` : '';
-        return `<div class="mon-card"><div class="mon-card-head"><div class="mon-card-identity"><div class="mon-card-name">${nama}</div><span class="mon-badge-kelas">Kelas ${kelas}</span></div><span class="mon-status-badge ${badge.cls}">${badge.label}</span></div><div class="mon-card-body"><div class="mon-last-row">${lastHtml}</div><div class="mon-progress-wrap">${progressHtml}</div><div class="mon-info-row"><div class="mon-info-box"><div class="mon-info-lbl">Muroja'ah</div><div class="mon-info-val ${murojaValCls}">${murojaHtml}</div></div><div class="mon-info-box"><div class="mon-info-lbl">Tasmi'</div><div class="mon-info-val ${tasmiValCls}">${tasmiHtml}</div></div></div></div>${statusBadgesRow}${cardFoot}</div>`;
+
+        return `<div class="mon-card">
+            <div class="mon-card-head">
+                <div class="mon-card-identity">
+                    <div class="mon-card-name">${nama}</div>
+                    <span class="mon-badge-kelas">Kelas ${kelas}</span>
+                </div>
+                <span class="mon-status-badge ${badge.cls}">${badge.label}</span>
+            </div>
+            <div class="mon-card-body">
+                <div class="mon-last-row">${lastHtml}</div>
+                <div class="mon-progress-wrap">${progressHtml}</div>
+            </div>
+            ${cardFoot}
+        </div>`;
     }
     function inputHafalanAwal(siswaId) {
         openHafalanAwalModal(siswaId);
@@ -1963,6 +2025,7 @@
         saveTasmiData(allTasmi);
         showToast('✅ Data Tasmi\' tersimpan!');
         closeTasmiModal();
+        renderResult();
         renderMonitoring();
     }
     function exportMonitoringBulanan() {
@@ -2239,10 +2302,38 @@
         const { dari, sampai } = getHaRange();
         const arr = generateHaSuratArray(dari, sampai);
         if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
-        siswa.hafalanAwal = [...new Set([...(siswa.hafalanAwal || []), ...arr])];
+
+        const namaMap = {};
+        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+
+        // Tambahkan ke hafalanAwal siswa
+        const sudahAda = new Set(siswa.hafalanAwal || []);
+        arr.forEach(n => sudahAda.add(n));
+        siswa.hafalanAwal = [...sudahAda];
+
+        // Tambahkan ke dataSetoran sebagai entri "Hafalan Awal"
+        // Hindari duplikat: hapus entri hafalan awal lama untuk siswa ini
+        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan === 'Hafalan Awal'));
+
+        // Buat entri baru
+        const surahEntry = arr.map(n => ({ num: n, name: namaMap[n] || `Surat ${n}`, dari: 1, sampai: 1, ayatSalah: [] }));
+        state.dataSetoran.unshift({
+            id: Date.now(),
+            SiswaId: hafalanAwalSiswaId,
+            nama: siswa.nama,
+            kelas: siswa.kelas,
+            tanggal: todayStr(),
+            jenis: 'setoran',
+            keterangan: 'Hafalan Awal',
+            juz: '30',
+            surah: surahEntry,
+            status: 'lancar'
+        });
+
         saveAllData();
         showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
         closeHafalanAwalModal();
+        renderResult();
         renderMonitoring();
     }
 
@@ -2252,9 +2343,12 @@
         if (!siswa) return;
         if (!(siswa.hafalanAwal || []).length) { showToast('ℹ️ Belum ada hafalan awal'); return; }
         siswa.hafalanAwal = [];
+        // Hapus juga entri setoran hafalan awal
+        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan === 'Hafalan Awal'));
         saveAllData();
         showToast('🗑 Hafalan awal dihapus');
         closeHafalanAwalModal();
+        renderResult();
         renderMonitoring();
     }
 
