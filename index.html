@@ -1610,11 +1610,10 @@
     </div>
 
     <div class="tab-nav">
-        <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
-        <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
-        <button class="tab-btn" onclick="switchTab('monitoring')">📊 Monitoring</button>
-    </div>
-
+    <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
+    <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
+    <button class="tab-btn" onclick="switchTab('monitoring')">📊 Monitoring</button>
+</div>
     <div class="container">
 
         <div id="tab-setoran" class="tab-content active">
@@ -2215,31 +2214,187 @@
     function showToast(msg, duration=2200) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), duration); }
     function saveAllData() { localStorage.setItem('setoranData', JSON.stringify(state.dataSetoran)); localStorage.setItem('SiswaData', JSON.stringify(state.dataSiswa)); }
     function loadAllData() { const s1 = localStorage.getItem('setoranData'); if (s1) state.dataSetoran = JSON.parse(s1); const s2 = localStorage.getItem('SiswaData'); if (s2) state.dataSiswa = JSON.parse(s2); }
-
+// ========== FUNGSI SWITCH SUB TAB (INFO TAB) ==========
     function switchSubTab(name) {
     // Scope ke tab-keterangan saja agar tidak menganggu sub-tab monitoring
     const parent = document.getElementById('tab-keterangan');
-    parent.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
-    parent.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('sub-' + name).classList.add('active');
-    document.getElementById('subBtn-' + name).classList.add('active');
+    if (!parent) return;
+    
+    const subContents = parent.querySelectorAll('.sub-tab-content');
+    const subBtns = parent.querySelectorAll('.sub-tab-btn');
+    
+    subContents.forEach(el => el.classList.remove('active'));
+    subBtns.forEach(el => el.classList.remove('active'));
+    
+    const targetContent = document.getElementById('sub-' + name);
+    const targetBtn = document.getElementById('subBtn-' + name);
+    
+    if (targetContent) targetContent.classList.add('active');
+    if (targetBtn) targetBtn.classList.add('active');
+    
     if (name === 'riwayat') { 
         renderAllRiwayat(); 
     }
+    // Optional: jika name === 'siswa', bisa refresh data siswa
+    if (name === 'siswa') {
+        renderDataSiswa();
+    }
+}
+
+// ========== FUNGSI SWITCH TAB UTAMA (Setoran, Info, Monitoring) ==========
+    function switchTab(tabName) {
+    // Sembunyikan semua tab content
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Tampilkan tab yang dipilih
+    const activeTab = document.getElementById('tab-' + tabName);
+    if (activeTab) activeTab.classList.add('active');
+    
+    // Update active class pada tombol tab
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Cari tombol yang sesuai dan aktifkan
+    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(
+        btn => btn.textContent.trim().toLowerCase().includes(tabName.toLowerCase())
+    );
+    if (activeBtn) activeBtn.classList.add('active');
+    
+    // Render ulang konten yang perlu dirender
+    if (tabName === 'monitoring') {
+        renderMonFilterKelas();
+        renderMonitoring();
+    }
+    if (tabName === 'keterangan') {
+        renderDataSiswa();
+        // Pastikan sub-tab yang aktif dirender
+        const activeSub = document.querySelector('#tab-keterangan .sub-tab-content.active');
+        if (activeSub && activeSub.id === 'sub-riwayat') {
+            renderAllRiwayat();
+        }
+    }
+}
+
+// ========== FUNGSI UNTUK MONITORING FILTER ==========
+    function monSetFilter(kelas) {
+    monFilterKelas = kelas;
+    // Update active class pada tombol "Semua"
+    const allBtn = document.getElementById('monFilterAll');
+    if (allBtn) {
+        if (kelas === '') {
+            allBtn.classList.add('active');
+        } else {
+            allBtn.classList.remove('active');
+        }
+    }
+    renderMonFilterKelas();
+    renderMonitoring();
+}
+
+// ========== PASTIKAN FUNGSI changeJenis dan pilihStatus BERADA DI LEVEL ROOT ==========
     function changeJenis(btn) {
-        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        state.currentJenis = btn.getAttribute('data-jenis');
-        renderSuratList();
-    }
+    // Update active class pada tombol
+    document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // Simpan jenis ke state
+    state.currentJenis = btn.getAttribute('data-jenis');
+    
+    // Render ulang list surat
+    renderSuratList();
+    
+    // Optional: reset form surat jika perlu
+    console.log('Jenis setoran:', state.currentJenis);
+}
+
     function pilihStatus(status) {
-        state.currentStatus = status;
-        document.querySelectorAll('.status-opt').forEach(opt => {
-            opt.classList.remove('sel-l', 'sel-kl');
-            if (opt.getAttribute('data-status') === 'lancar' && status === 'lancar') opt.classList.add('sel-l');
-            if (opt.getAttribute('data-status') === 'kurang' && status === 'kurang') opt.classList.add('sel-kl');
-        });
+    state.currentStatus = status;
+    
+    // Update tampilan tombol status
+    document.querySelectorAll('.status-opt').forEach(opt => {
+        opt.classList.remove('sel-l', 'sel-kl');
+        const optStatus = opt.getAttribute('data-status');
+        if (optStatus === 'lancar' && status === 'lancar') {
+            opt.classList.add('sel-l');
+        }
+        if (optStatus === 'kurang' && status === 'kurang') {
+            opt.classList.add('sel-kl');
+        }
+    });
+    
+    console.log('Status hafalan:', status);
+}
+
+// ========== RENDER MONITORING FILTER KELAS ==========
+    function renderMonFilterKelas() {
+       const container = document.getElementById('monFilterKelas');
+       if (!container) return;
+       
+       // Ambil semua kelas unik dari data siswa
+       const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+       
+       if (kelasList.length === 0) {
+           container.innerHTML = '<div style="color:var(--g4); font-size:11px;">Belum ada kelas</div>';
+           return;
+       }
+       
+       container.innerHTML = kelasList.map(k => 
+           `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+       ).join('');
+   }
+
+// ========== RENDER SEMUA RIWAYAT (untuk tab Riwayat) ==========
+    function renderAllRiwayat() {
+    const container = document.getElementById('resultList');
+    const empty = document.getElementById('riwayatEmpty');
+    const section = document.getElementById('resultSection');
+    
+    if (!container) return;
+    
+    if (!state.dataSetoran.length) { 
+        if (container) container.innerHTML = '';
+        if (empty) empty.style.display = 'block'; 
+        if (section) section.style.display = 'none';
+        return; 
     }
+    
+    if (empty) empty.style.display = 'none';
+    if (section) section.style.display = 'block';
+    
+    // Urutkan dari yang terbaru ke terlama
+    const riwayatList = [...state.dataSetoran].sort((a, b) => {
+        const tglA = a.tanggal || '';
+        const tglB = b.tanggal || '';
+        if (tglA !== tglB) return tglB.localeCompare(tglA);
+        return (b.id || 0) - (a.id || 0);
+    });
+    
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", belum: "Blm Khatam", setoran: "Setoran" };
+    
+    container.innerHTML = riwayatList.map(s => {
+        const surahArr = s.surah || [];
+        // Tampilkan semua surat dalam setoran ini
+        const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
+        
+        return `<div class="result-card">
+            <div class="rc-left">
+                <div class="rc-name">${escapeHtml(s.nama)} 
+                    <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${escapeHtml(jLabel)}</span>
+                </div>
+                <div class="rc-meta">Kelas ${escapeHtml(s.kelas)} &nbsp;·&nbsp; ${(s.tanggal || '').split('-').reverse().join('/')}</div>
+                <div class="rc-surat">📖 ${escapeHtml(suratText) || '-'}</div>
+            </div>
+            <div class="rc-actions">
+                <button class="btn-stat ${s.status === 'lancar' ? 'al' : ''}" onclick="updateStatus(${s.id}, 'lancar')">L</button>
+                <button class="btn-stat ${s.status === 'kurang' ? 'akl' : ''}" onclick="updateStatus(${s.id}, 'kurang')">KL</button>
+            </div>
+        </div>`;
+    }).join('');
+}
     function openSuratModal() {
         const juzVal = document.getElementById('juz').value || '30';
         document.getElementById('juzNumber').innerText = juzVal;
@@ -3366,6 +3521,15 @@
         if (!e.target.closest('.ha-dropdown-wrap')) {
             closeAllHaDropdowns();
         }
+    function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
     });
 
 </script>
