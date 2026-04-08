@@ -2408,7 +2408,20 @@
         state.currentJenis = last.jenis || 'tasmi';
         document.querySelectorAll('.seg-btn').forEach(b => { b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); });
         pilihStatus(last.status || 'lancar');
-        if (last.surah && last.surah.length) { state.selectedSurah = last.surah.map(sr => ({ ...sr })); renderSuratList(); }
+        // Isi form: satu surat terakhir dari hafalan awal siswa
+        const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
+        const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
+        state.selectedSurah = [];
+        if (hafalanAwalArr.length) {
+            const lastNum = hafalanAwalArr[hafalanAwalArr.length - 1];
+            const juzVal = Number(document.getElementById('juz').value) || 30;
+            const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastNum)
+                           || Object.values(ALL_SURAT).flat().find(s => s.num === lastNum);
+            if (suratInfo) {
+                state.selectedSurah = [{ ...suratInfo, dari: 1, sampai: suratInfo.ayat, ayatSalah: [] }];
+            }
+        }
+        renderSuratList();
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
         const surahArr = last.surah || [];
         let suratNames;
