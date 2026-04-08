@@ -14,7 +14,7 @@ const ASSETS = [
   './icons/icon-512x512.png',
 ];
 
-// CDN pihak ketiga — di-cache terpisah dengan mode 'no-cors' (opaque response)
+// CDN pihak ketiga
 const CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
 ];
@@ -26,12 +26,17 @@ self.addEventListener('install', e => {
       // Cache aset lokal (same-origin, aman)
       await cache.addAll(ASSETS);
 
-      // Cache CDN dengan no-cors (hasilnya opaque tapi tetap bisa disajikan)
+      // Cache CDN tanpa mode no-cors agar response bisa dibaca
       await Promise.all(
         CDN_ASSETS.map(url =>
-          fetch(url, { mode: 'no-cors' })
-            .then(res => cache.put(url, res))
-            .catch(err => console.warn('[SW] Gagal cache CDN:', url, err))
+          fetch(url)
+            .then(res => {
+              if (res && res.ok) {
+                return cache.put(url, res);
+              }
+              console.warn('[SW] Gagal cache CDN (status tidak OK):', url, res?.status);
+            })
+            .catch(err => console.warn('[SW] Gagal fetch CDN:', url, err))
         )
       );
     })
@@ -69,17 +74,21 @@ self.addEventListener('fetch', e => {
   const isCDN = url.hostname === 'cdnjs.cloudflare.com';
 
   if (isCDN) {
-    // CDN: cache-first → jika tidak ada, fetch no-cors lalu simpan
+    // CDN: cache-first → jika tidak ada, fetch lalu simpan
     e.respondWith(
       caches.match(request).then(cached => {
-        if (cached) return cached;
-        return fetch(request, { mode: 'no-cors' }).then(res => {
-          if (res) {
+        if (cached) {
+          return cached;
+        }
+        return fetch(request).then(res => {
+          if (res && res.ok) {
             caches.open(CACHE_NAME).then(cache => cache.put(request, res.clone()));
           }
           return res;
         }).catch(() => {
           console.warn('[SW] CDN offline dan tidak ada cache:', request.url);
+          // Fallback: coba kembalikan response kosong agar tidak crash
+          return new Response('', { status: 200, statusText: 'OK' });
         });
       })
     );
@@ -97,9 +106,12 @@ self.addEventListener('fetch', e => {
         caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
         return response;
       }).catch(() => {
+        // Jika request adalah navigasi (halaman), kembalikan index.html
         if (request.destination === 'document') {
           return caches.match('./index.html');
         }
+        // Untuk request lain (gambar, css, js) kembalikan 404
+        return new Response('Not Found', { status: 404 });
       });
     })
   );
