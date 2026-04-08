@@ -1613,9 +1613,9 @@
     </div>
 
     <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('setoran')">📝 Setoran</button>
-    <button class="tab-btn" onclick="switchTab('keterangan')">ℹ️ Info</button>
-    <button class="tab-btn" onclick="switchTab('monitoring')">📊 Monitoring</button>
+    <button class="tab-btn active" data-tab="setoran" onclick="switchTab('setoran')">📝 Setoran</button>
+    <button class="tab-btn" data-tab="keterangan" onclick="switchTab('keterangan')">ℹ️ Info</button>
+    <button class="tab-btn" data-tab="monitoring" onclick="switchTab('monitoring')">📊 Monitoring</button>
 </div>
     <div class="container">
 
@@ -2261,9 +2261,7 @@
     });
     
     // Cari tombol yang sesuai dan aktifkan
-    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(
-        btn => btn.textContent.trim().toLowerCase().includes(tabName.toLowerCase())
-    );
+    const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
     if (activeBtn) activeBtn.classList.add('active');
     
     // Render ulang konten yang perlu dirender
