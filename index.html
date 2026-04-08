@@ -2537,8 +2537,8 @@
     
     container.innerHTML = lastSetoranList.map(s => {
         const surahArr = s.surah || [];
-        const lastSurat = surahArr.length ? surahArr[surahArr.length - 1] : null;
-        const suratText = lastSurat ? `${lastSurat.name} (${lastSurat.dari}–${lastSurat.sampai})` : 'Belum ada detail surat';
+        const lastSr = surahArr.length ? surahArr[surahArr.length - 1] : null;
+        const suratText = lastSr ? `${lastSr.name} (${lastSr.dari}–${lastSr.sampai})` : 'Belum ada detail surat';
         const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
         return `<div class="result-card">
             <div class="rc-left">
@@ -3270,7 +3270,7 @@
             state.dataSetoran.unshift({
                 id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
                 tanggal: todayStr(), jenis: 'setoran', keterangan: 'Hafalan Awal · Tasmi\'',
-                juz: '30', surah: JUZ30_SURAT.map(n => ({ num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai:1, ayatSalah:[] })),
+                juz: '30', surah: JUZ30_SURAT.map(n => { const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] }; }),
                 status: 'lancar'
             });
             saveAllData();
@@ -3287,7 +3287,7 @@
 
             const jenisLabel = haJenisSelected === 'muroja' ? "Hafalan Awal · Muroja'ah" : 'Hafalan Awal · Belum Khatam';
             const jenisSetoran = haJenisSelected === 'muroja' ? 'muroja' : 'setoran';
-            const surahEntry = arr.map(n => ({ num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai:1, ayatSalah:[] }));
+            const surahEntry = arr.map(n => { const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] }; });
             state.dataSetoran.unshift({
                 id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
                 tanggal: todayStr(), jenis: jenisSetoran, keterangan: jenisLabel,
