@@ -1308,6 +1308,227 @@
     word-break: break-word;
     flex: 1;
 }
+        /* ── MONITORING SEDERHANA (DIPERBAIKI) ── */
+        .mon-card-sederhana {
+            background: white;
+            border-radius: var(--r2);
+            box-shadow: var(--sh);
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid var(--g2);
+            transition: all 0.2s ease;
+        }
+
+        .mon-card-head-sederhana {
+            padding: 12px 14px 10px;
+            border-bottom: 1px solid var(--g2);
+            background: var(--g0);
+        }
+
+        .mon-card-identity {
+            flex: 1;
+        }
+
+        .mon-card-name {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--g9);
+            margin-bottom: 6px;
+        }
+
+        .mon-badge-kelas {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--p3);
+            color: var(--p2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-right: 6px;
+        }
+
+        .mon-badge-khatam {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            background: #dcfce7;
+            color: #166534;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .mon-card-body-sederhana {
+            padding: 12px 14px;
+        }
+
+        /* Grid info 3 kolom */
+        .mon-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .mon-info-item {
+            background: var(--g1);
+            border-radius: var(--radius-sm);
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid var(--g2);
+        }
+
+        .mon-info-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .mon-info-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--g5);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 3px;
+        }
+
+        .mon-info-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--g8);
+        }
+
+        .mon-info-value.jenis-tasmi { color: var(--purple); }
+        .mon-info-value.jenis-muroja { color: #2563eb; }
+        .mon-info-value.jenis-setoran { color: var(--p); }
+        .mon-info-value.jenis-belum { color: var(--g5); }
+
+        .status-lancar {
+            color: var(--p);
+        }
+        .status-kurang {
+            color: var(--danger);
+        }
+
+        /* Baris surat terakhir */
+        .mon-surat-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--p4);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--p);
+            margin-top: 4px;
+        }
+
+        .mon-surat-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .mon-surat-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--p2);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .mon-surat-value {
+            font-size: 11px;
+            color: var(--g7);
+            font-weight: 500;
+            word-break: break-word;
+            flex: 1;
+        }
+
+        /* Toolbar filter */
+        .mon-toolbar {
+            flex-shrink: 0;
+            padding: 10px 12px;
+            background: white;
+            border-bottom: 1px solid var(--g2);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mon-filter-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background: var(--g1);
+            border: 1.5px solid var(--g2);
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--g7);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .mon-filter-pill.active {
+            background: var(--p);
+            border-color: var(--p);
+            color: white;
+        }
+
+        .mon-filter-pill:active {
+            transform: scale(0.96);
+        }
+
+        .btn-export-mon {
+            margin-left: auto;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-export-mon:active {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .mon-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mon-empty {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--g4);
+        }
+
+        .mon-empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .mon-empty-text {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .mon-empty-sub {
+            font-size: 12px;
+            color: var(--g4);
+        }
+        :root {
+            --radius-sm: 8px;
+        }
     </style>
 </head>
 <body>
@@ -2136,32 +2357,50 @@
     const { id, nama, kelas } = siswa;
     const lastSetoran = getSetoranTerakhir(id);
     
-    // Format tanggal
+    // Format data
     let tanggalText = '-';
     let jenisText = '-';
+    let jenisClass = 'jenis-belum';
     let suratText = '-';
     let statusText = '-';
     let statusClass = '';
     
     if (lastSetoran) {
-        tanggalText = lastSetoran.tanggal ? lastSetoran.tanggal.split('-').reverse().join('/') : '-';
+        // Format tanggal DD/MM/YYYY
+        if (lastSetoran.tanggal) {
+            const parts = lastSetoran.tanggal.split('-');
+            tanggalText = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
         
         // Jenis setoran
-        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+        const jenisMap = { 
+            tasmi: "Tasmi'", 
+            muroja: "Muroja'ah", 
+            setoran: "Setoran", 
+            belum: "Blm Khatam" 
+        };
         jenisText = jenisMap[lastSetoran.jenis] || lastSetoran.jenis || '-';
+        
+        // Warna jenis
+        if (lastSetoran.jenis === 'tasmi') jenisClass = 'jenis-tasmi';
+        else if (lastSetoran.jenis === 'muroja') jenisClass = 'jenis-muroja';
+        else if (lastSetoran.jenis === 'setoran') jenisClass = 'jenis-setoran';
+        else jenisClass = 'jenis-belum';
         
         // Surat yang disetor
         if (lastSetoran.surah && lastSetoran.surah.length) {
-            const suratNama = lastSetoran.surah.map(s => s.name).join(', ');
-            const rangeAyat = lastSetoran.surah.map(s => `${s.dari}-${s.sampai}`).join(', ');
-            suratText = `${suratNama} (${rangeAyat})`;
+            const lastSurat = lastSetoran.surah[lastSetoran.surah.length - 1];
+            suratText = `${lastSurat.name} (${lastSurat.dari}-${lastSurat.sampai})`;
+            if (lastSetoran.surah.length > 1) {
+                suratText = `${lastSetoran.surah.length} surat · ${suratText}`;
+            }
         } else {
             suratText = '-';
         }
         
         // Status L/KL
         statusText = lastSetoran.status === 'lancar' ? 'Lancar' : 'Kurang Lancar';
-        statusClass = lastSetoran.status === 'lancar' ? 'chip-l' : 'chip-kl';
+        statusClass = lastSetoran.status === 'lancar' ? 'status-lancar' : 'status-kurang';
     }
     
     // Cek apakah sudah khatam Juz 30
@@ -2173,26 +2412,28 @@
             <div class="mon-card-head-sederhana">
                 <div class="mon-card-identity">
                     <div class="mon-card-name">${escapeHtml(nama)}</div>
-                    <span class="mon-badge-kelas">Kelas ${escapeHtml(kelas)}</span>
-                    ${khatamBadge}
+                    <div>
+                        <span class="mon-badge-kelas">Kelas ${escapeHtml(kelas)}</span>
+                        ${khatamBadge}
+                    </div>
                 </div>
             </div>
             <div class="mon-card-body-sederhana">
-                <div class="mon-info-row-sederhana">
+                <div class="mon-info-grid">
                     <div class="mon-info-item">
                         <span class="mon-info-icon">📅</span>
-                        <span class="mon-info-label">Tanggal</span>
-                        <span class="mon-info-value">${tanggalText}</span>
+                        <div class="mon-info-label">Tanggal</div>
+                        <div class="mon-info-value">${tanggalText}</div>
                     </div>
                     <div class="mon-info-item">
                         <span class="mon-info-icon">📚</span>
-                        <span class="mon-info-label">Jenis</span>
-                        <span class="mon-info-value jenis-${lastSetoran ? lastSetoran.jenis : 'kosong'}">${escapeHtml(jenisText)}</span>
+                        <div class="mon-info-label">Jenis</div>
+                        <div class="mon-info-value ${jenisClass}">${escapeHtml(jenisText)}</div>
                     </div>
                     <div class="mon-info-item">
                         <span class="mon-info-icon">⭐</span>
-                        <span class="mon-info-label">Status</span>
-                        <span class="mon-info-value ${statusClass}">${statusText}</span>
+                        <div class="mon-info-label">Status</div>
+                        <div class="mon-info-value ${statusClass}">${statusText}</div>
                     </div>
                 </div>
                 <div class="mon-surat-row">
@@ -2203,8 +2444,7 @@
             </div>
         </div>
     `;
-}
-// Fungsi helper untuk escape HTML
+}// Fungsi helper untuk escape HTML
     function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
