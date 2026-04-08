@@ -212,7 +212,7 @@
         .clickable:active { border-color: var(--p); background: var(--p4); }
         .clickable-ico { color: var(--g4); font-size: 13px; }
 
-        .surat-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 5px; max-height: 200px; overflow-y: auto; }
+        .surat-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 5px; overflow-y: auto; }
         .surat-list::-webkit-scrollbar { width: 3px; }
         .surat-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
         .surat-item {
@@ -260,6 +260,15 @@
             cursor: pointer; margin-top: 4px; transition: background .15s;
         }
         .btn-add-surat:active { background: var(--p4); }
+
+        /* ── SETORAN FOOTER (selalu terlihat) ── */
+        .setoran-footer {
+            flex-shrink: 0;
+            padding: 8px 12px 10px;
+            background: white;
+            border-top: 1px solid var(--g2);
+            box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+        }
 
         /* ── BUTTONS ── */
         .btn-primary {
@@ -1666,7 +1675,10 @@
                     </div>
                     <button class="btn-add-surat" id="btnAddSurat" style="display:none;" onclick="openSuratModal()">＋ Tambah Surat</button>
                 </div>
-                <div class="fg">
+            </div>
+            <!-- FOOTER TETAP: selalu terlihat di bawah -->
+            <div class="setoran-footer">
+                <div class="fg" style="margin-bottom:6px;">
                     <label class="lbl">Keterangan Hafalan</label>
                     <div class="status-row" id="statusRow">
                         <div class="status-opt" data-status="lancar" onclick="pilihStatus('lancar')">
@@ -1679,15 +1691,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="fg" id="koreksiTriggerArea" style="display:none;">
+                <div id="koreksiTriggerArea" style="display:none; margin-bottom:6px;">
                     <button class="btn-koreksi" onclick="openKoreksi()">
                         ❗ Koreksi Ayat
                         <span class="btn-koreksi-badge" id="koreksiTotalBadge">0</span>
                     </button>
                 </div>
-                <div class="fg">
-                    <button class="btn-primary" onclick="simpanSetoran()">💾 &nbsp;Submit Setoran</button>
-                </div>
+                <button class="btn-primary" onclick="simpanSetoran()">💾 &nbsp;Submit Setoran</button>
             </div>
         </div>
 
