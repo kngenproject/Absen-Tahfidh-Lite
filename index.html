@@ -15,6 +15,7 @@
     <title>Absensi Tahfidz Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
@@ -742,8 +743,6 @@
             border-top: 1px solid var(--g2);
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
-
         .btn-reload {
             width: 100%;
             display: flex;
@@ -953,18 +952,49 @@
         .miv-selesai { color: #16a34a; }
         .miv-siap { color: var(--purple); }
         .mon-card-foot {
-            padding: 0 12px 10px;
-            display: flex; gap: 6px;
-        }
+    padding: 10px 12px 12px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid var(--g2);
+    background: var(--g0);
+}
+
+        .btn-hafalan-awal {
+    flex: 1;
+    padding: 8px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    border: none;
+    border-radius: var(--r);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(14,165,233,.3);
+    transition: all .15s;
+}
+
+        .btn-hafalan-awal:active {
+    opacity: .85;
+    transform: scale(.98);
+}
+
         .btn-tasmi {
-            flex: 1;
-            padding: 8px;
-            background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
-            color: white; border: none; border-radius: var(--r);
-            font-size: 12px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 2px 6px rgba(124,58,237,.3);
-        }
-        .btn-tasmi:active { opacity: .85; transform: scale(.98); }
+    flex: 1;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--r);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(124,58,237,.3);
+}
+
+        .btn-tasmi:active {
+    opacity: .85;
+    transform: scale(.98);
+}
         .btn-hafalan-awal {
             flex: 1;
             padding: 8px;
@@ -1529,6 +1559,24 @@
         :root {
             --radius-sm: 8px;
         }
+        .jenis-selesai {
+    color: #16a34a !important;
+}
+
+        .jenis-belum {
+    color: var(--g5) !important;
+}
+
+        .mon-badge-khatam {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    background: #dcfce7;
+    color: #166534;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-right: 6px;
+}
     </style>
 </head>
 <body>
@@ -1784,59 +1832,246 @@
 </div>
 
 <script>
+// KODE BARU (BENAR)
     const ALL_SURAT = {
-        1: [{ num:1, name:'Al-Fatihah', ayat:7 }],
-        2: [{ num:2, name:'Al-Baqarah', ayat:286 }],
-        3: [{ num:2, name:'Al-Baqarah', ayat:286 }, { num:3, name:"Ali 'Imran", ayat:200 }],
-        4: [{ num:3, name:"Ali 'Imran", ayat:200 }, { num:4, name:'An-Nisa', ayat:176 }],
-        5: [{ num:4, name:'An-Nisa', ayat:176 }],
-        6: [{ num:4, name:'An-Nisa', ayat:176 }, { num:5, name:'Al-Ma\'idah', ayat:120 }],
-        7: [{ num:5, name:'Al-Ma\'idah', ayat:120 }, { num:6, name:'Al-An\'am', ayat:165 }],
-        8: [{ num:6, name:'Al-An\'am', ayat:165 }, { num:7, name:'Al-A\'raf', ayat:206 }],
-        9: [{ num:7, name:'Al-A\'raf', ayat:206 }, { num:8, name:'Al-Anfal', ayat:75 }],
-        10: [{ num:8, name:'Al-Anfal', ayat:75 }, { num:9, name:'At-Taubah', ayat:129 }],
-        11: [{ num:9, name:'At-Taubah', ayat:129 }, { num:10, name:'Yunus', ayat:109 }, { num:11, name:'Hud', ayat:123 }],
-        12: [{ num:11, name:'Hud', ayat:123 }, { num:12, name:'Yusuf', ayat:111 }],
-        13: [{ num:12, name:'Yusuf', ayat:111 }, { num:13, name:'Ar-Ra\'d', ayat:43 }, { num:14, name:'Ibrahim', ayat:52 }],
-        14: [{ num:15, name:'Al-Hijr', ayat:99 }, { num:16, name:'An-Nahl', ayat:128 }],
-        15: [{ num:17, name:'Al-Isra', ayat:111 }, { num:18, name:'Al-Kahf', ayat:110 }],
-        16: [{ num:18, name:'Al-Kahf', ayat:110 }, { num:19, name:'Maryam', ayat:98 }, { num:20, name:'Taha', ayat:135 }],
-        17: [{ num:21, name:'Al-Anbiya', ayat:112 }, { num:22, name:'Al-Hajj', ayat:78 }],
-        18: [{ num:23, name:'Al-Mu\'minun', ayat:118 }, { num:24, name:'An-Nur', ayat:64 }, { num:25, name:'Al-Furqan', ayat:77 }],
-        19: [{ num:25, name:'Al-Furqan', ayat:77 }, { num:26, name:'Asy-Syu\'ara', ayat:227 }, { num:27, name:'An-Naml', ayat:93 }],
-        20: [{ num:27, name:'An-Naml', ayat:93 }, { num:28, name:'Al-Qasas', ayat:88 }, { num:29, name:'Al-Ankabut', ayat:69 }],
-        21: [{ num:29, name:'Al-Ankabut', ayat:69 }, { num:30, name:'Ar-Rum', ayat:60 }, { num:31, name:'Luqman', ayat:34 }, { num:32, name:'As-Sajdah', ayat:30 }],
-        22: [{ num:33, name:'Al-Ahzab', ayat:73 }, { num:34, name:'Saba', ayat:54 }, { num:35, name:'Fatir', ayat:45 }],
-        23: [{ num:36, name:'Yasin', ayat:83 }, { num:37, name:'As-Saffat', ayat:182 }, { num:38, name:'Sad', ayat:88 }],
-        24: [{ num:39, name:'Az-Zumar', ayat:75 }, { num:40, name:'Ghafir', ayat:85 }],
-        25: [{ num:41, name:'Fussilat', ayat:54 }, { num:42, name:'Asy-Syura', ayat:53 }, { num:43, name:'Az-Zukhruf', ayat:89 }],
-        26: [{ num:44, name:'Ad-Dukhan', ayat:59 }, { num:45, name:'Al-Jasiyah', ayat:37 }, { num:46, name:'Al-Ahqaf', ayat:35 }, { num:47, name:'Muhammad', ayat:38 }],
-        27: [{ num:48, name:'Al-Fath', ayat:29 }, { num:49, name:'Al-Hujurat', ayat:18 }, { num:50, name:'Qaf', ayat:45 }, { num:51, name:'Az-Zariyat', ayat:60 }],
-        28: [{ num:52, name:'At-Tur', ayat:49 }, { num:53, name:'An-Najm', ayat:62 }, { num:54, name:'Al-Qamar', ayat:55 }, { num:55, name:'Ar-Rahman', ayat:78 }],
-        29: [{ num:56, name:'Al-Waqi\'ah', ayat:96 }, { num:57, name:'Al-Hadid', ayat:29 }, { num:58, name:'Al-Mujadilah', ayat:22 }, { num:59, name:'Al-Hasyr', ayat:24 }, { num:60, name:'Al-Mumtahanah', ayat:13 }],
-        30: [
-            { num:78, name:'An-Naba', ayat:40 }, { num:79, name:"An-Nazi'at", ayat:46 },
-            { num:80, name:'Abasa', ayat:42 }, { num:81, name:'At-Takwir', ayat:29 },
-            { num:82, name:'Al-Infithar', ayat:19 }, { num:83, name:'Al-Mutaffifin', ayat:36 },
-            { num:84, name:'Al-Insyiqaq', ayat:25 }, { num:85, name:'Al-Buruj', ayat:22 },
-            { num:86, name:'At-Tariq', ayat:17 }, { num:87, name:"Al-A'la", ayat:19 },
-            { num:88, name:'Al-Ghasyiyah', ayat:26 }, { num:89, name:'Al-Fajr', ayat:30 },
-            { num:90, name:'Al-Balad', ayat:20 }, { num:91, name:'Asy-Syams', ayat:15 },
-            { num:92, name:'Al-Lail', ayat:21 }, { num:93, name:'Ad-Duha', ayat:11 },
-            { num:94, name:'Asy-Syarh', ayat:8 }, { num:95, name:'At-Tin', ayat:8 },
-            { num:96, name:'Al-Alaq', ayat:19 }, { num:97, name:'Al-Qadr', ayat:5 },
-            { num:98, name:'Al-Bayyinah', ayat:8 }, { num:99, name:'Az-Zalzalah', ayat:8 },
-            { num:100, name:"Al-Adiyat", ayat:11 }, { num:101, name:"Al-Qari'ah", ayat:11 },
-            { num:102, name:'At-Takatsur', ayat:8 }, { num:103, name:'Al-Asr', ayat:3 },
-            { num:104, name:'Al-Humazah', ayat:9 }, { num:105, name:'Al-Fil', ayat:5 },
-            { num:106, name:'Quraisy', ayat:4 }, { num:107, name:"Al-Ma'un", ayat:7 },
-            { num:108, name:'Al-Kautsar', ayat:3 }, { num:109, name:'Al-Kafirun', ayat:6 },
-            { num:110, name:'An-Nasr', ayat:3 }, { num:111, name:'Al-Lahab', ayat:5 },
-            { num:112, name:'Al-Ikhlas', ayat:4 }, { num:113, name:'Al-Falaq', ayat:5 },
-            { num:114, name:'An-Nas', ayat:6 }
-        ]
-    };
-
+    // Juz 1: Al-Fatihah 1 - Al-Baqarah 141
+    1: [{ num: 1, name: 'Al-Fatihah', ayat: 7 }],
+    
+    // Juz 2: Al-Baqarah 142 - Al-Baqarah 252
+    2: [{ num: 2, name: 'Al-Baqarah', ayat: 286 }],
+    
+    // Juz 3: Al-Baqarah 253 - Ali 'Imran 92 ✅ DIPERBAIKI
+    3: [
+        { num: 2, name: 'Al-Baqarah', ayat: 286 },
+        { num: 3, name: "Ali 'Imran", ayat: 200 }
+    ],
+    
+    // Juz 4: Ali 'Imran 93 - An-Nisa 23 ✅ DIPERBAIKI
+    4: [
+        { num: 3, name: "Ali 'Imran", ayat: 200 },
+        { num: 4, name: 'An-Nisa', ayat: 176 }
+    ],
+    
+    // Juz 5: An-Nisa 24 - An-Nisa 147
+    5: [{ num: 4, name: 'An-Nisa', ayat: 176 }],
+    
+    // Juz 6: An-Nisa 148 - Al-Ma'idah 81
+    6: [
+        { num: 4, name: 'An-Nisa', ayat: 176 },
+        { num: 5, name: "Al-Ma'idah", ayat: 120 }
+    ],
+    
+    // Juz 7: Al-Ma'idah 82 - Al-An'am 110
+    7: [
+        { num: 5, name: "Al-Ma'idah", ayat: 120 },
+        { num: 6, name: "Al-An'am", ayat: 165 }
+    ],
+    
+    // Juz 8: Al-An'am 111 - Al-A'raf 87
+    8: [
+        { num: 6, name: "Al-An'am", ayat: 165 },
+        { num: 7, name: "Al-A'raf", ayat: 206 }
+    ],
+    
+    // Juz 9: Al-A'raf 88 - Al-Anfal 40
+    9: [
+        { num: 7, name: "Al-A'raf", ayat: 206 },
+        { num: 8, name: "Al-Anfal", ayat: 75 }
+    ],
+    
+    // Juz 10: Al-Anfal 41 - At-Taubah 92
+    10: [
+        { num: 8, name: "Al-Anfal", ayat: 75 },
+        { num: 9, name: "At-Taubah", ayat: 129 }
+    ],
+    
+    // Juz 11: At-Taubah 93 - Hud 5
+    11: [
+        { num: 9, name: "At-Taubah", ayat: 129 },
+        { num: 10, name: "Yunus", ayat: 109 },
+        { num: 11, name: "Hud", ayat: 123 }
+    ],
+    
+    // Juz 12: Hud 6 - Yusuf 52
+    12: [
+        { num: 11, name: "Hud", ayat: 123 },
+        { num: 12, name: "Yusuf", ayat: 111 }
+    ],
+    
+    // Juz 13: Yusuf 53 - Ibrahim 52
+    13: [
+        { num: 12, name: "Yusuf", ayat: 111 },
+        { num: 13, name: "Ar-Ra'd", ayat: 43 },
+        { num: 14, name: "Ibrahim", ayat: 52 }
+    ],
+    
+    // Juz 14: Al-Hijr 1 - An-Nahl 128
+    14: [
+        { num: 15, name: "Al-Hijr", ayat: 99 },
+        { num: 16, name: "An-Nahl", ayat: 128 }
+    ],
+    
+    // Juz 15: Al-Isra 1 - Al-Kahf 74
+    15: [
+        { num: 17, name: "Al-Isra", ayat: 111 },
+        { num: 18, name: "Al-Kahf", ayat: 110 }
+    ],
+    
+    // Juz 16: Al-Kahf 75 - Taha 135
+    16: [
+        { num: 18, name: "Al-Kahf", ayat: 110 },
+        { num: 19, name: "Maryam", ayat: 98 },
+        { num: 20, name: "Taha", ayat: 135 }
+    ],
+    
+    // Juz 17: Al-Anbiya 1 - Al-Hajj 78
+    17: [
+        { num: 21, name: "Al-Anbiya", ayat: 112 },
+        { num: 22, name: "Al-Hajj", ayat: 78 }
+    ],
+    
+    // Juz 18: Al-Mu'minun 1 - Al-Furqan 20
+    18: [
+        { num: 23, name: "Al-Mu'minun", ayat: 118 },
+        { num: 24, name: "An-Nur", ayat: 64 },
+        { num: 25, name: "Al-Furqan", ayat: 77 }
+    ],
+    
+    // Juz 19: Al-Furqan 21 - An-Naml 55
+    19: [
+        { num: 25, name: "Al-Furqan", ayat: 77 },
+        { num: 26, name: "Asy-Syu'ara", ayat: 227 },
+        { num: 27, name: "An-Naml", ayat: 93 }
+    ],
+    
+    // Juz 20: An-Naml 56 - Al-Ankabut 45
+    20: [
+        { num: 27, name: "An-Naml", ayat: 93 },
+        { num: 28, name: "Al-Qasas", ayat: 88 },
+        { num: 29, name: "Al-Ankabut", ayat: 69 }
+    ],
+    
+    // Juz 21: Al-Ankabut 46 - As-Sajdah 30
+    21: [
+        { num: 29, name: "Al-Ankabut", ayat: 69 },
+        { num: 30, name: "Ar-Rum", ayat: 60 },
+        { num: 31, name: "Luqman", ayat: 34 },
+        { num: 32, name: "As-Sajdah", ayat: 30 }
+    ],
+    
+    // Juz 22: Al-Ahzab 1 - Yasin 27
+    22: [
+        { num: 33, name: "Al-Ahzab", ayat: 73 },
+        { num: 34, name: "Saba'", ayat: 54 },
+        { num: 35, name: "Fatir", ayat: 45 }
+    ],
+    
+    // Juz 23: Yasin 28 - Az-Zumar 31
+    23: [
+        { num: 36, name: "Yasin", ayat: 83 },
+        { num: 37, name: "As-Saffat", ayat: 182 },
+        { num: 38, name: "Sad", ayat: 88 }
+    ],
+    
+    // Juz 24: Az-Zumar 32 - Fussilat 46
+    24: [
+        { num: 39, name: "Az-Zumar", ayat: 75 },
+        { num: 40, name: "Ghafir", ayat: 85 }
+    ],
+    
+    // Juz 25: Fussilat 47 - Al-Jasiyah 37
+    25: [
+        { num: 41, name: "Fussilat", ayat: 54 },
+        { num: 42, name: "Asy-Syura", ayat: 53 },
+        { num: 43, name: "Az-Zukhruf", ayat: 89 }
+    ],
+    
+    // Juz 26: Al-Ahqaf 1 - Az-Zariyat 30
+    26: [
+        { num: 46, name: "Al-Ahqaf", ayat: 35 },
+        { num: 47, name: "Muhammad", ayat: 38 },
+        { num: 48, name: "Al-Fath", ayat: 29 },
+        { num: 49, name: "Al-Hujurat", ayat: 18 }
+    ],
+    
+    // Juz 27: Az-Zariyat 31 - Al-Hadid 29
+    27: [
+        { num: 51, name: "Az-Zariyat", ayat: 60 },
+        { num: 52, name: "At-Tur", ayat: 49 },
+        { num: 53, name: "An-Najm", ayat: 62 },
+        { num: 54, name: "Al-Qamar", ayat: 55 },
+        { num: 55, name: "Ar-Rahman", ayat: 78 }
+    ],
+    
+    // Juz 28: Al-Mujadilah 1 - At-Tahrim 12
+    28: [
+        { num: 58, name: "Al-Mujadilah", ayat: 22 },
+        { num: 59, name: "Al-Hasyr", ayat: 24 },
+        { num: 60, name: "Al-Mumtahanah", ayat: 13 },
+        { num: 61, name: "As-Saff", ayat: 14 },
+        { num: 62, name: "Al-Jumu'ah", ayat: 11 },
+        { num: 63, name: "Al-Munafiqun", ayat: 11 },
+        { num: 64, name: "At-Taghabun", ayat: 18 },
+        { num: 65, name: "At-Talaq", ayat: 12 },
+        { num: 66, name: "At-Tahrim", ayat: 12 }
+    ],
+    
+    // Juz 29: Al-Mulk 1 - Al-Mursalat 50
+    29: [
+        { num: 67, name: "Al-Mulk", ayat: 30 },
+        { num: 68, name: "Al-Qalam", ayat: 52 },
+        { num: 69, name: "Al-Haqqah", ayat: 52 },
+        { num: 70, name: "Al-Ma'arij", ayat: 44 },
+        { num: 71, name: "Nuh", ayat: 28 },
+        { num: 72, name: "Al-Jinn", ayat: 28 },
+        { num: 73, name: "Al-Muzzammil", ayat: 20 },
+        { num: 74, name: "Al-Muddassir", ayat: 56 },
+        { num: 75, name: "Al-Qiyamah", ayat: 40 },
+        { num: 76, name: "Al-Insan", ayat: 31 },
+        { num: 77, name: "Al-Mursalat", ayat: 50 }
+    ],
+    
+    // Juz 30: An-Naba 1 - An-Nas 6
+    30: [
+        { num: 78, name: "An-Naba'", ayat: 40 },
+        { num: 79, name: "An-Nazi'at", ayat: 46 },
+        { num: 80, name: "'Abasa", ayat: 42 },
+        { num: 81, name: "At-Takwir", ayat: 29 },
+        { num: 82, name: "Al-Infitar", ayat: 19 },
+        { num: 83, name: "Al-Mutaffifin", ayat: 36 },
+        { num: 84, name: "Al-Insyiqaq", ayat: 25 },
+        { num: 85, name: "Al-Buruj", ayat: 22 },
+        { num: 86, name: "At-Tariq", ayat: 17 },
+        { num: 87, name: "Al-A'la", ayat: 19 },
+        { num: 88, name: "Al-Ghasyiyah", ayat: 26 },
+        { num: 89, name: "Al-Fajr", ayat: 30 },
+        { num: 90, name: "Al-Balad", ayat: 20 },
+        { num: 91, name: "Asy-Syams", ayat: 15 },
+        { num: 92, name: "Al-Lail", ayat: 21 },
+        { num: 93, name: "Ad-Duha", ayat: 11 },
+        { num: 94, name: "Asy-Syarh", ayat: 8 },
+        { num: 95, name: "At-Tin", ayat: 8 },
+        { num: 96, name: "Al-'Alaq", ayat: 19 },
+        { num: 97, name: "Al-Qadr", ayat: 5 },
+        { num: 98, name: "Al-Bayyinah", ayat: 8 },
+        { num: 99, name: "Az-Zalzalah", ayat: 8 },
+        { num: 100, name: "Al-'Adiyat", ayat: 11 },
+        { num: 101, name: "Al-Qari'ah", ayat: 11 },
+        { num: 102, name: "At-Takatsur", ayat: 8 },
+        { num: 103, name: "Al-'Asr", ayat: 3 },
+        { num: 104, name: "Al-Humazah", ayat: 9 },
+        { num: 105, name: "Al-Fil", ayat: 5 },
+        { num: 106, name: "Quraisy", ayat: 4 },
+        { num: 107, name: "Al-Ma'un", ayat: 7 },
+        { num: 108, name: "Al-Kautsar", ayat: 3 },
+        { num: 109, name: "Al-Kafirun", ayat: 6 },
+        { num: 110, name: "An-Nasr", ayat: 3 },
+        { num: 111, name: "Al-Lahab", ayat: 5 },
+        { num: 112, name: "Al-Ikhlas", ayat: 4 },
+        { num: 113, name: "Al-Falaq", ayat: 5 },
+        { num: 114, name: "An-Nas", ayat: 6 }
+    ]
+};
     const JUZ30_SURAT = (ALL_SURAT[30] || []).map(s => s.num);
     const JUZ30_TOTAL = JUZ30_SURAT.length;
 
@@ -1907,6 +2142,59 @@
     let hafalanAwalSiswaId = null;
     let haDropdownOpen = null;
     let haJenisSelected = null;
+// ── FUNGSI TASMI (dipindahkan ke atas) ──
+
+    function openTasmiModal(siswaId) {
+    const siswa = state.dataSiswa.find(s => s.id === siswaId);
+    if (!siswa) return;
+    tasmiSiswaId = siswaId;
+    tasmiNilaiSelected = null;
+    document.getElementById('tasmiNama').value = siswa.nama;
+    document.getElementById('tasmiJuz').value = 30;
+    document.getElementById('tasmiTanggal').value = todayStr();
+    document.getElementById('tasmiPenguji').value = '';
+    document.getElementById('tasmiCatatan').value = '';
+    document.querySelectorAll('.tasmi-nilai-opt').forEach(el => el.classList.remove('sel-l', 'sel-kl'));
+    document.getElementById('tasmiModal').classList.add('active');
+}
+
+    function closeTasmiModal(e) { 
+    if (e && e.target !== e.currentTarget) return; 
+    document.getElementById('tasmiModal').classList.remove('active'); 
+    tasmiSiswaId = null; 
+}
+
+    function pilihTasmiNilai(val) { 
+    tasmiNilaiSelected = val; 
+    document.querySelectorAll('.tasmi-nilai-opt').forEach(el => { 
+        el.classList.remove('sel-l', 'sel-kl'); 
+        if (el.getAttribute('data-nilai') === val) el.classList.add(val === 'L' ? 'sel-l' : 'sel-kl'); 
+    }); 
+}
+
+    function simpanTasmi() {
+    if (!tasmiSiswaId) return;
+    if (!tasmiNilaiSelected) { showToast('⚠️ Pilih penilaian L atau KL'); return; }
+    const tgl = document.getElementById('tasmiTanggal').value;
+    if (!tgl) { showToast('⚠️ Isi tanggal tasmi\''); return; }
+    const penguji = document.getElementById('tasmiPenguji').value.trim();
+    const catatan = document.getElementById('tasmiCatatan').value.trim();
+    const allTasmi = getTasmiData();
+    const existing = allTasmi.findIndex(t => t.siswaId === tasmiSiswaId);
+    const record = { siswaId: tasmiSiswaId, juz: 30, tanggal: tgl, nilai: tasmiNilaiSelected, penguji, catatan };
+    if (existing !== -1) allTasmi[existing] = record;
+    else allTasmi.push(record);
+    saveTasmiData(allTasmi);
+    showToast('✅ Data Tasmi\' tersimpan!');
+    closeTasmiModal();
+    renderResult();
+    renderMonitoring();
+}
+
+// Fungsi untuk hafalan awal
+    function inputHafalanAwal(siswaId) {
+    openHafalanAwalModal(siswaId);
+}
 
     function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
     function showToast(msg, duration=2200) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), duration); }
@@ -1921,11 +2209,19 @@
         if (name === 'monitoring') { renderMonFilterKelas(); renderMonitoring(); }
     }
     function switchSubTab(name) {
-        document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('sub-' + name).classList.add('active');
-        document.getElementById('subBtn-' + name).classList.add('active');
+    // Sembunyikan semua konten sub-tab
+    document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
+    
+    // Tampilkan konten yang dipilih
+    document.getElementById('sub-' + name).classList.add('active');
+    document.getElementById('subBtn-' + name).classList.add('active');
+    
+    // Perbaikan: panggil fungsi yang tepat berdasarkan tab yang dipilih
+    if (name === 'riwayat') {
+        renderAllRiwayat();  // ← GANTI: dari renderResult() menjadi renderAllRiwayat()
     }
+}
     function changeJenis(btn) {
         document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -2118,17 +2414,49 @@
         bar.classList.add('show');
     }
     function tambahSiswa() {
-        const nama = document.getElementById('inputNamaSiswa').value.trim();
-        const kelas = document.getElementById('inputKelas').value.trim();
-        if (!nama) { showToast('⚠️ Isi nama siswa'); return; }
-        if (!kelas) { showToast('⚠️ Isi kelas'); return; }
-        state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas, hafalanAwal: [] });
-        saveAllData();
-        renderDataSiswa();
-        document.getElementById('inputNamaSiswa').value = '';
-        document.getElementById('inputKelas').value = '';
-        showToast('✓ Siswa ditambahkan');
+    const nama = document.getElementById('inputNamaSiswa').value.trim();
+    const kelas = document.getElementById('inputKelas').value.trim();
+    
+    // Validasi field kosong
+    if (!nama) { 
+        showToast('⚠️ Isi nama siswa'); 
+        return; 
     }
+    if (!kelas) { 
+        showToast('⚠️ Isi kelas'); 
+        return; 
+    }
+    
+    // 🔥 CEK DUPLIKAT: Apakah sudah ada siswa dengan nama dan kelas yang sama?
+    const exists = state.dataSiswa.some(siswa => 
+        siswa.nama.toLowerCase() === nama.toLowerCase() && 
+        siswa.kelas === kelas
+    );
+    
+    if (exists) {
+        showToast(`⚠️ Siswa "${nama}" dengan Kelas "${kelas}" sudah ada!`);
+        return;
+    }
+    
+    // Jika tidak ada duplikat, tambahkan siswa baru
+    state.dataSiswa.push({ 
+        id: String(Date.now() + Math.random()), 
+        nama, 
+        kelas, 
+        hafalanAwal: [] 
+    });
+    
+    saveAllData();
+    renderDataSiswa();
+    renderMonFilterKelas();  // Perbarui filter kelas di monitoring
+    renderMonitoring();       // Perbarui tampilan monitoring
+    
+    // Reset form
+    document.getElementById('inputNamaSiswa').value = '';
+    document.getElementById('inputKelas').value = '';
+    
+    showToast('✓ Siswa ditambahkan');
+}
     function deleteSiswa(id) {
         if (!confirm('Hapus Siswa ini?')) return;
         state.dataSiswa = state.dataSiswa.filter(s => s.id !== id);
@@ -2227,7 +2555,72 @@
         </div>`;
     }).join('');
 }
-    function updateStatus(id, newStatus) { const item = state.dataSetoran.find(i => i.id === id); if (item) { item.status = newStatus; saveAllData(); renderResult(); } }
+// ══════════════════════════════════════════
+// ── RENDER SEMUA RIWAYAT (untuk tab Riwayat) ──
+// ══════════════════════════════════════════
+
+    function renderAllRiwayat() {
+    const container = document.getElementById('resultList');
+    const empty = document.getElementById('riwayatEmpty');
+    
+    if (!state.dataSetoran.length) { 
+        container.innerHTML = '';
+        if (empty) empty.style.display = 'block'; 
+        return; 
+    }
+    
+    if (empty) empty.style.display = 'none';
+    
+    // Urutkan dari yang terbaru ke terlama
+    const riwayatList = [...state.dataSetoran].sort((a, b) => {
+        const tglA = a.tanggal || '';
+        const tglB = b.tanggal || '';
+        if (tglA !== tglB) return tglB.localeCompare(tglA);
+        return (b.id || 0) - (a.id || 0);
+    });
+    
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", belum: "Blm Khatam", setoran: "Setoran" };
+    
+    container.innerHTML = riwayatList.map(s => {
+        const surahArr = s.surah || [];
+        // Tampilkan semua surat dalam setoran ini
+        const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
+        const statusClass = s.status === 'lancar' ? 'al' : (s.status === 'kurang' ? 'akl' : '');
+        
+        return `<div class="result-card">
+            <div class="rc-left">
+                <div class="rc-name">${escapeHtml(s.nama)} 
+                    <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${escapeHtml(jLabel)}</span>
+                </div>
+                <div class="rc-meta">Kelas ${escapeHtml(s.kelas)} &nbsp;·&nbsp; ${(s.tanggal || '').split('-').reverse().join('/')}</div>
+                <div class="rc-surat">📖 ${escapeHtml(suratText) || '-'}</div>
+            </div>
+            <div class="rc-actions">
+                <button class="btn-stat ${s.status === 'lancar' ? 'al' : ''}" onclick="updateStatus(${s.id}, 'lancar')">L</button>
+                <button class="btn-stat ${s.status === 'kurang' ? 'akl' : ''}" onclick="updateStatus(${s.id}, 'kurang')">KL</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+    function updateStatus(setoranId, newStatus) {
+        const item = state.dataSetoran.find(i => i.id === setoranId);
+        if (item) {
+            item.status = newStatus;
+            saveAllData();
+            // Render sesuai sub-tab yang sedang aktif
+            const activeSubTab = document.querySelector('.sub-tab-content.active');
+            if (activeSubTab && activeSubTab.id === 'sub-riwayat') {
+                renderAllRiwayat();
+            } else {
+                renderResult();
+            }
+            renderMonitoring();
+            showToast(`✅ Status ${item.nama} diubah menjadi ${newStatus === 'lancar' ? 'Lancar' : 'Kurang Lancar'}`);
+        } else {
+            console.warn('Setoran dengan ID', setoranId, 'tidak ditemukan');
+        }
+    }
     function importSiswaFromFile(input) {
         const file = input.files[0];
         if (!file) return;
@@ -2356,6 +2749,8 @@
     function buildMonCardSederhana(siswa) {
     const { id, nama, kelas } = siswa;
     const lastSetoran = getSetoranTerakhir(id);
+    const khatam = isKhatamJuz30(id);
+    const tasmi = getTasmiSiswa(id);
     
     // Format data
     let tanggalText = '-';
@@ -2366,13 +2761,11 @@
     let statusClass = '';
     
     if (lastSetoran) {
-        // Format tanggal DD/MM/YYYY
         if (lastSetoran.tanggal) {
             const parts = lastSetoran.tanggal.split('-');
             tanggalText = `${parts[2]}/${parts[1]}/${parts[0]}`;
         }
         
-        // Jenis setoran
         const jenisMap = { 
             tasmi: "Tasmi'", 
             muroja: "Muroja'ah", 
@@ -2381,13 +2774,11 @@
         };
         jenisText = jenisMap[lastSetoran.jenis] || lastSetoran.jenis || '-';
         
-        // Warna jenis
         if (lastSetoran.jenis === 'tasmi') jenisClass = 'jenis-tasmi';
         else if (lastSetoran.jenis === 'muroja') jenisClass = 'jenis-muroja';
         else if (lastSetoran.jenis === 'setoran') jenisClass = 'jenis-setoran';
         else jenisClass = 'jenis-belum';
         
-        // Surat yang disetor
         if (lastSetoran.surah && lastSetoran.surah.length) {
             const lastSurat = lastSetoran.surah[lastSetoran.surah.length - 1];
             suratText = `${lastSurat.name} (${lastSurat.dari}-${lastSurat.sampai})`;
@@ -2398,14 +2789,17 @@
             suratText = '-';
         }
         
-        // Status L/KL
         statusText = lastSetoran.status === 'lancar' ? 'Lancar' : 'Kurang Lancar';
         statusClass = lastSetoran.status === 'lancar' ? 'status-lancar' : 'status-kurang';
     }
     
-    // Cek apakah sudah khatam Juz 30
-    const khatam = isKhatamJuz30(id);
+    // Cek apakah sudah ada hafalan awal
+    const hasHafalanAwal = (siswa.hafalanAwal && siswa.hafalanAwal.length > 0) || siswa.jenisHafalanAwal;
+    const hafalanAwalText = hasHafalanAwal ? '✓ Sudah' : '❌ Belum';
+    const hafalanAwalClass = hasHafalanAwal ? 'jenis-selesai' : 'jenis-belum';
+    
     const khatamBadge = khatam ? '<span class="mon-badge-khatam">🎉 Khatam Juz 30</span>' : '';
+    const tasmiBadge = tasmi ? '<span class="mon-badge-khatam" style="background:#ede9fe;color:#4c1d95;">🎤 Sudah Tasmi\'</span>' : '';
     
     return `
         <div class="mon-card-sederhana">
@@ -2415,6 +2809,7 @@
                     <div>
                         <span class="mon-badge-kelas">Kelas ${escapeHtml(kelas)}</span>
                         ${khatamBadge}
+                        ${tasmiBadge}
                     </div>
                 </div>
             </div>
@@ -2435,6 +2830,11 @@
                         <div class="mon-info-label">Status</div>
                         <div class="mon-info-value ${statusClass}">${statusText}</div>
                     </div>
+                    <div class="mon-info-item">
+                        <span class="mon-info-icon">📝</span>
+                        <div class="mon-info-label">Hafalan Awal</div>
+                        <div class="mon-info-value ${hafalanAwalClass}">${hafalanAwalText}</div>
+                    </div>
                 </div>
                 <div class="mon-surat-row">
                     <span class="mon-surat-icon">📖</span>
@@ -2442,10 +2842,13 @@
                     <span class="mon-surat-value">${escapeHtml(suratText)}</span>
                 </div>
             </div>
+            <div class="mon-card-foot">
+                <button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">📝 Input Hafalan Awal</button>
+                ${!tasmi && khatam ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Tasmi'</button>` : ''}
+            </div>
         </div>
     `;
-}// Fungsi helper untuk escape HTML
-    function escapeHtml(str) {
+}    function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
@@ -2454,42 +2857,9 @@
         return m;
     });
 }
-    function inputHafalanAwal(siswaId) {
-        openHafalanAwalModal(siswaId);
-    }
-    function openTasmiModal(siswaId) {
-        const siswa = state.dataSiswa.find(s => s.id === siswaId);
-        if (!siswa) return;
-        tasmiSiswaId = siswaId;
-        tasmiNilaiSelected = null;
-        document.getElementById('tasmiNama').value = siswa.nama;
-        document.getElementById('tasmiJuz').value = 30;
-        document.getElementById('tasmiTanggal').value = todayStr();
-        document.getElementById('tasmiPenguji').value = '';
-        document.getElementById('tasmiCatatan').value = '';
-        document.querySelectorAll('.tasmi-nilai-opt').forEach(el => el.classList.remove('sel-l','sel-kl'));
-        document.getElementById('tasmiModal').classList.add('active');
-    }
-    function closeTasmiModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('tasmiModal').classList.remove('active'); tasmiSiswaId = null; }
-    function pilihTasmiNilai(val) { tasmiNilaiSelected = val; document.querySelectorAll('.tasmi-nilai-opt').forEach(el => { el.classList.remove('sel-l','sel-kl'); if (el.getAttribute('data-nilai') === val) el.classList.add(val === 'L' ? 'sel-l' : 'sel-kl'); }); }
-    function simpanTasmi() {
-        if (!tasmiSiswaId) return;
-        if (!tasmiNilaiSelected) { showToast('⚠️ Pilih penilaian L atau KL'); return; }
-        const tgl = document.getElementById('tasmiTanggal').value;
-        if (!tgl) { showToast('⚠️ Isi tanggal tasmi\''); return; }
-        const penguji = document.getElementById('tasmiPenguji').value.trim();
-        const catatan = document.getElementById('tasmiCatatan').value.trim();
-        const allTasmi = getTasmiData();
-        const existing = allTasmi.findIndex(t => t.siswaId === tasmiSiswaId);
-        const record = { siswaId: tasmiSiswaId, juz: 30, tanggal: tgl, nilai: tasmiNilaiSelected, penguji, catatan };
-        if (existing !== -1) allTasmi[existing] = record;
-        else allTasmi.push(record);
-        saveTasmiData(allTasmi);
-        showToast('✅ Data Tasmi\' tersimpan!');
-        closeTasmiModal();
-        renderResult();
-        renderMonitoring();
-    }
+      function inputHafalanAwal(siswaId) {
+    openHafalanAwalModal(siswaId);
+}
     function exportMonitoringBulanan() {
     if (!state.dataSiswa.length) { 
         showToast('⚠️ Belum ada data siswa'); 
