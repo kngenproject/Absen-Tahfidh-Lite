@@ -2410,19 +2410,31 @@
         state.currentJenis = last.jenis || 'tasmi';
         document.querySelectorAll('.seg-btn').forEach(b => { b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); });
         pilihStatus(last.status || 'lancar');
-        // Isi form: satu surat terakhir dari hafalan awal siswa
+        // Isi form: gabungkan surat dari setoran terakhir + satu surat terakhir hafalan awal
         const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
         const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
+        const juzVal = Number(document.getElementById('juz').value) || 30;
         state.selectedSurah = [];
+
+        // 1. Load surat dari setoran terakhir (beserta range ayat & ayatSalah-nya)
+        const lastSurahArr = last.surah || [];
+        lastSurahArr.forEach(sr => {
+            state.selectedSurah.push({ ...sr, ayatSalah: sr.ayatSalah || [] });
+        });
+
+        // 2. Tambahkan satu surat terakhir dari hafalan awal (jika belum ada di list)
         if (hafalanAwalArr.length) {
             const lastNum = hafalanAwalArr[hafalanAwalArr.length - 1];
-            const juzVal = Number(document.getElementById('juz').value) || 30;
-            const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastNum)
-                           || Object.values(ALL_SURAT).flat().find(s => s.num === lastNum);
-            if (suratInfo) {
-                state.selectedSurah = [{ ...suratInfo, dari: 1, sampai: suratInfo.ayat, ayatSalah: [] }];
+            const sudahAda = state.selectedSurah.some(s => s.num === lastNum);
+            if (!sudahAda) {
+                const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastNum)
+                               || Object.values(ALL_SURAT).flat().find(s => s.num === lastNum);
+                if (suratInfo) {
+                    state.selectedSurah.push({ ...suratInfo, dari: 1, sampai: suratInfo.ayat, ayatSalah: [] });
+                }
             }
         }
+
         renderSuratList();
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
         const surahArr = last.surah || [];
