@@ -2216,27 +2216,16 @@
     function saveAllData() { localStorage.setItem('setoranData', JSON.stringify(state.dataSetoran)); localStorage.setItem('SiswaData', JSON.stringify(state.dataSiswa)); }
     function loadAllData() { const s1 = localStorage.getItem('setoranData'); if (s1) state.dataSetoran = JSON.parse(s1); const s2 = localStorage.getItem('SiswaData'); if (s2) state.dataSiswa = JSON.parse(s2); }
 
-    function switchTab(name) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
-        if (name === 'monitoring') { renderMonFilterKelas(); renderMonitoring(); }
-    }
     function switchSubTab(name) {
-    // Sembunyikan semua konten sub-tab
-    document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-    
-    // Tampilkan konten yang dipilih
+    // Scope ke tab-keterangan saja agar tidak menganggu sub-tab monitoring
+    const parent = document.getElementById('tab-keterangan');
+    parent.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+    parent.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById('sub-' + name).classList.add('active');
     document.getElementById('subBtn-' + name).classList.add('active');
-    
-    // Perbaikan: panggil fungsi yang tepat berdasarkan tab yang dipilih
-    if (name === 'riwayat') {
-        renderAllRiwayat();  // ← GANTI: dari renderResult() menjadi renderAllRiwayat()
+    if (name === 'riwayat') { 
+        renderAllRiwayat(); 
     }
-}
     function changeJenis(btn) {
         document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -2563,19 +2552,19 @@
     const empty = document.getElementById('riwayatEmpty');
     
     if (!state.dataSetoran.length) { 
-        section.style.display = 'none'; 
+        if (section) section.style.display = 'none'; 
         if (empty) empty.style.display = 'block'; 
         return; 
     }
     
-    section.style.display = 'block';
+    if (section) section.style.display = 'block';
     if (empty) empty.style.display = 'none';
     
     // Ambil hanya 1 setoran TERAKHIR per siswa
     const lastPerSiswa = new Map();
     state.dataSetoran.forEach(s => {
         const existing = lastPerSiswa.get(s.SiswaId);
-        if (!existing || s.tanggal > existing.tanggal) {
+        if (!existing || (s.tanggal || '') > (existing.tanggal || '')) {
             lastPerSiswa.set(s.SiswaId, s);
         }
     });
@@ -2604,8 +2593,7 @@
             </div>
         </div>`;
     }).join('');
-}
-// ══════════════════════════════════════════
+}// ══════════════════════════════════════════
 // ── RENDER SEMUA RIWAYAT (untuk tab Riwayat) ──
 // ══════════════════════════════════════════
 
@@ -2614,7 +2602,7 @@
     const empty = document.getElementById('riwayatEmpty');
     
     if (!state.dataSetoran.length) { 
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
         if (empty) empty.style.display = 'block'; 
         return; 
     }
@@ -2636,7 +2624,6 @@
         // Tampilkan semua surat dalam setoran ini
         const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
         const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
-        const statusClass = s.status === 'lancar' ? 'al' : (s.status === 'kurang' ? 'akl' : '');
         
         return `<div class="result-card">
             <div class="rc-left">
@@ -2654,23 +2641,23 @@
     }).join('');
 }
     function updateStatus(setoranId, newStatus) {
-        const item = state.dataSetoran.find(i => i.id === setoranId);
-        if (item) {
-            item.status = newStatus;
-            saveAllData();
-            // Render sesuai sub-tab yang sedang aktif
-            const activeSubTab = document.querySelector('.sub-tab-content.active');
-            if (activeSubTab && activeSubTab.id === 'sub-riwayat') {
-                renderAllRiwayat();
-            } else {
-                renderResult();
-            }
-            renderMonitoring();
-            showToast(`✅ Status ${item.nama} diubah menjadi ${newStatus === 'lancar' ? 'Lancar' : 'Kurang Lancar'}`);
+    const item = state.dataSetoran.find(i => i.id === setoranId);
+    if (item) {
+        item.status = newStatus;
+        saveAllData();
+        // Render sesuai sub-tab yang sedang aktif
+        const activeSubTab = document.querySelector('#tab-keterangan .sub-tab-content.active');
+        if (activeSubTab && activeSubTab.id === 'sub-riwayat') {
+            renderAllRiwayat();
         } else {
-            console.warn('Setoran dengan ID', setoranId, 'tidak ditemukan');
+            renderResult();
         }
+        renderMonitoring();
+        showToast(`✅ Status ${item.nama} diubah menjadi ${newStatus === 'lancar' ? 'Lancar' : 'Kurang Lancar'}`);
+    } else {
+        console.warn('Setoran dengan ID', setoranId, 'tidak ditemukan');
     }
+}
     function importSiswaFromFile(input) {
         const file = input.files[0];
         if (!file) return;
@@ -3383,14 +3370,14 @@
 
 </script>
 
-<!-- ══════════════ HAFALAN AWAL MODAL ══════════════ -->
+<!-- HAFALAN AWAL MODAL -->
 <div id="hafalanAwalModal" onclick="closeHafalanAwalModal(event)">
     <div class="ha-sheet">
         <div class="ha-header">
             <div class="ha-header-left">
                 <div class="ha-title">📝 Hafalan Awal <span id="haNamaSiswa"></span></div>
                 <div class="ha-sub">Input hafalan sebelum pakai aplikasi · <span id="haKelasSiswa"></span></div>
-                <div class="ha-status-badges" id="haStatusBadges"></div>
+                <div id="haStatusBadges" class="ha-status-badges"></div>
             </div>
             <button class="btn-close" onclick="closeHafalanAwalModal()">✕</button>
         </div>
@@ -3438,45 +3425,44 @@
                 </div>
 
                 <div id="haRentangArea">
-                <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
+                    <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
 
-                <!-- DARI -->
-                <div class="ha-dropdown-wrap" style="margin-bottom:8px;">
-                    <label class="lbl">Dari</label>
-                    <div class="ha-input-trigger" id="haDariTrigger" data-val="" onclick="toggleHaDropdown('dari')">
-                        <div>
-                            <div id="haDariNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
-                            <div id="haDariName" class="trig-sub"></div>
+                    <!-- DARI -->
+                    <div class="ha-dropdown-wrap" style="margin-bottom:8px;">
+                        <label class="lbl">Dari</label>
+                        <div class="ha-input-trigger" id="haDariTrigger" data-val="" onclick="toggleHaDropdown('dari')">
+                            <div>
+                                <div id="haDariNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                                <div id="haDariName" class="trig-sub"></div>
+                            </div>
+                            <span style="color:var(--g4);font-size:12px;">▼</span>
                         </div>
-                        <span style="color:var(--g4);font-size:12px;">▼</span>
-                    </div>
-                    <div class="ha-dropdown" id="haDariDropdown">
-                        <div class="ha-surat-grid" id="haDariGrid"></div>
-                    </div>
-                </div>
-
-                <!-- SAMPAI -->
-                <div class="ha-dropdown-wrap" style="margin-bottom:12px;">
-                    <label class="lbl">Sampai</label>
-                    <div class="ha-input-trigger" id="haSampaiTrigger" data-val="" onclick="toggleHaDropdown('sampai')">
-                        <div>
-                            <div id="haSampaiNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
-                            <div id="haSampaiName" class="trig-sub"></div>
+                        <div class="ha-dropdown" id="haDariDropdown">
+                            <div class="ha-surat-grid" id="haDariGrid"></div>
                         </div>
-                        <span style="color:var(--g4);font-size:12px;">▼</span>
                     </div>
-                    <div class="ha-dropdown" id="haSampaiDropdown">
-                        <div class="ha-surat-grid" id="haSampaiGrid"></div>
+
+                    <!-- SAMPAI -->
+                    <div class="ha-dropdown-wrap" style="margin-bottom:12px;">
+                        <label class="lbl">Sampai</label>
+                        <div class="ha-input-trigger" id="haSampaiTrigger" data-val="" onclick="toggleHaDropdown('sampai')">
+                            <div>
+                                <div id="haSampaiNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                                <div id="haSampaiName" class="trig-sub"></div>
+                            </div>
+                            <span style="color:var(--g4);font-size:12px;">▼</span>
+                        </div>
+                        <div class="ha-dropdown" id="haSampaiDropdown">
+                            <div class="ha-surat-grid" id="haSampaiGrid"></div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- PREVIEW -->
-                <div class="ha-preview">
-                    <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
-                    <div id="haPreviewWarn" class="ha-preview-warn"></div>
-                    <div id="haPreviewList" class="ha-preview-list"></div>
-                </div>
-
+                    <!-- PREVIEW -->
+                    <div class="ha-preview">
+                        <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
+                        <div id="haPreviewWarn" class="ha-preview-warn"></div>
+                        <div id="haPreviewList" class="ha-preview-list"></div>
+                    </div>
                 </div><!-- /haRentangArea -->
 
             </div><!-- /haInputArea -->
@@ -3488,6 +3474,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
