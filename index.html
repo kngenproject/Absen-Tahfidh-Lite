@@ -1603,7 +1603,7 @@
             <span class="header-icon">📖</span>
             <div>
                 <div class="header-title">Absensi Tahfidz</div>
-                <div class="header-sub">Setoran Hafalan Al-Qur'an</div>
+                <div class="header-sub">Setoran Hafalan Al-Qugitr'an</div>
             </div>
         </div>
         <div class="header-badge">L · KL</div>
@@ -3190,7 +3190,57 @@
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
-    if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.warn('[PWA] SW gagal:', err)); let refreshing = false; navigator.serviceWorker.addEventListener('controllerchange', () => { if (!refreshing) { refreshing = true; window.location.reload(); } }); }); }
+    function showUpdateNotification() {
+    // Buat elemen notifikasi jika belum ada
+    let updateBtn = document.getElementById('updateNotification');
+    if (!updateBtn) {
+        updateBtn = document.createElement('div');
+        updateBtn.id = 'updateNotification';
+        updateBtn.innerHTML = `
+            <div style="
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--p);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 30px;
+                box-shadow: 0 4px 12px rgba(0,0,0,.2);
+                z-index: 1000;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                font-weight: 600;
+                cursor: pointer;
+            ">
+                <span>🔄</span>
+                <span>Update tersedia! Klik untuk reload</span>
+            </div>
+        `;
+        updateBtn.onclick = () => {
+            window.location.reload();
+        };
+        document.body.appendChild(updateBtn);
+        
+        // Sembunyikan setelah 10 detik jika tidak diklik
+        setTimeout(() => {
+            if (updateBtn.parentNode) updateBtn.remove();
+        }, 10000);
+    }
+}
+// Add this to your init() function:
+    if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('[PWA] SW registered:', reg))
+            .catch(err => {
+                console.error('[PWA] SW registration failed:', err);
+                // Optional: show user-friendly message
+                showToast('⚠️ Aplikasi mungkin tidak berfungsi offline dengan baik');
+            });
+    });
+}
 
     /* ══════════════════════════════════════════
        ── HAFALAN AWAL MODULE ──
@@ -3521,16 +3571,17 @@
         if (!e.target.closest('.ha-dropdown-wrap')) {
             closeAllHaDropdowns();
         }
+    });
+
     function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-    });
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 
 </script>
 
