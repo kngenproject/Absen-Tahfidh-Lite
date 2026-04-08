@@ -358,6 +358,15 @@
             font-size: 13px; display: flex; align-items: center; justify-content: center;
         }
         .btn-del:active { background: #fecaca; }
+        .btn-ha-inline {
+            padding: 6px 10px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white; border: none; border-radius: 7px;
+            font-size: 11px; font-weight: 700; cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(14,165,233,.25);
+        }
+        .btn-ha-inline:active { opacity: .82; transform: scale(.96); }
 
         /* ── KETERANGAN ── */
         .legend-grid { display: flex; gap: 10px; margin-bottom: 12px; }
@@ -1895,7 +1904,20 @@
     function renderDataSiswa() {
         const list = document.getElementById('dataList');
         if (!state.dataSiswa.length) { list.innerHTML = '<div class="empty-state">👥 Belum ada Siswa</div>'; return; }
-        list.innerHTML = state.dataSiswa.map(s => `<div class="data-card"><div><div class="data-name">${s.nama}</div><span class="data-kelas">Kelas ${s.kelas}</span></div><button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button></div>`).join('');
+        list.innerHTML = state.dataSiswa.map(s => {
+            const haCount = (s.hafalanAwal || []).length;
+            const haLabel = haCount > 0 ? `📝 Awal (${haCount})` : `📝 Awal`;
+            return `<div class="data-card">
+                <div style="flex:1;min-width:0;">
+                    <div class="data-name">${escapeHtml(s.nama)}</div>
+                    <span class="data-kelas">Kelas ${escapeHtml(s.kelas)}</span>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                    <button class="btn-ha-inline" onclick="inputHafalanAwal('${s.id}')">${haLabel}</button>
+                    <button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button>
+                </div>
+            </div>`;
+        }).join('');
     }
     function simpanSetoran() {
         const SiswaId = document.getElementById('namaSiswa').value;
