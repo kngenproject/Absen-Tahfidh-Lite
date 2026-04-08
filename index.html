@@ -358,15 +358,6 @@
             font-size: 13px; display: flex; align-items: center; justify-content: center;
         }
         .btn-del:active { background: #fecaca; }
-        .btn-ha-inline {
-            padding: 6px 10px;
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            color: white; border: none; border-radius: 7px;
-            font-size: 11px; font-weight: 700; cursor: pointer;
-            white-space: nowrap;
-            box-shadow: 0 1px 4px rgba(14,165,233,.25);
-        }
-        .btn-ha-inline:active { opacity: .82; transform: scale(.96); }
 
         /* ── KETERANGAN ── */
         .legend-grid { display: flex; gap: 10px; margin-bottom: 12px; }
@@ -1167,6 +1158,28 @@
             font-weight: 600; display: flex; align-items: flex-start; gap: 6px;
         }
         .ha-existing-bar-icon { flex-shrink: 0; }
+
+        /* Jenis Hafalan Awal */
+        .ha-jenis-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .ha-jenis-opt {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px;
+            border: 2px solid var(--g2); border-radius: var(--r);
+            background: white; cursor: pointer; transition: all .15s;
+        }
+        .ha-jenis-opt:active { transform: scale(.98); }
+        .ha-jenis-icon { font-size: 20px; flex-shrink: 0; }
+        .ha-jenis-label { font-size: 13px; font-weight: 700; color: var(--g9); }
+        .ha-jenis-desc  { font-size: 10px; color: var(--g5); font-weight: 500; margin-top: 1px; }
+        .ha-jenis-opt.sel-tasmi   { background: #dcfce7; border-color: #16a34a; }
+        .ha-jenis-opt.sel-tasmi   .ha-jenis-label { color: #14532d; }
+        .ha-jenis-opt.sel-muroja  { background: #ede9fe; border-color: var(--purple); }
+        .ha-jenis-opt.sel-muroja  .ha-jenis-label { color: #4c1d95; }
+        .ha-jenis-opt.sel-belum   { background: #fef9c3; border-color: #ca8a04; }
+        .ha-jenis-opt.sel-belum   .ha-jenis-label { color: #78350f; }
+        /* Sembunyikan rentang surat jika Tasmi' dipilih */
+        #haRentangArea { transition: opacity .2s; }
+        #haRentangArea.hidden { display: none; }
         /* ── MONITORING SEDERHANA ── */
         .mon-card-sederhana {
     background: white;
@@ -1672,6 +1685,7 @@
 // Variabel untuk Hafalan Awal
     let hafalanAwalSiswaId = null;
     let haDropdownOpen = null;
+    let haJenisSelected = null;
 
     function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
     function showToast(msg, duration=2200) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), duration); }
@@ -1904,20 +1918,7 @@
     function renderDataSiswa() {
         const list = document.getElementById('dataList');
         if (!state.dataSiswa.length) { list.innerHTML = '<div class="empty-state">👥 Belum ada Siswa</div>'; return; }
-        list.innerHTML = state.dataSiswa.map(s => {
-            const haCount = (s.hafalanAwal || []).length;
-            const haLabel = haCount > 0 ? `📝 Awal (${haCount})` : `📝 Awal`;
-            return `<div class="data-card">
-                <div style="flex:1;min-width:0;">
-                    <div class="data-name">${escapeHtml(s.nama)}</div>
-                    <span class="data-kelas">Kelas ${escapeHtml(s.kelas)}</span>
-                </div>
-                <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-                    <button class="btn-ha-inline" onclick="inputHafalanAwal('${s.id}')">${haLabel}</button>
-                    <button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button>
-                </div>
-            </div>`;
-        }).join('');
+        list.innerHTML = state.dataSiswa.map(s => `<div class="data-card"><div><div class="data-name">${s.nama}</div><span class="data-kelas">Kelas ${s.kelas}</span></div><button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button></div>`).join('');
     }
     function simpanSetoran() {
         const SiswaId = document.getElementById('namaSiswa').value;
@@ -2517,6 +2518,16 @@
             existingBar.style.display = 'none';
         }
 
+        // Set jenis hafalan default berdasarkan data tersimpan atau status siswa
+        haJenisSelected = null;
+        let defaultJenis = siswa.jenisHafalanAwal || null;
+        if (!defaultJenis) {
+            if (tasmi) defaultJenis = 'tasmi';
+            else if (khatam) defaultJenis = 'muroja';
+            else defaultJenis = 'belum';
+        }
+        pilihHaJenis(defaultJenis);
+
         // Default nilai
         const isMuroja = khatam; // jika sudah khatam, arah maju default
         const defaultDari   = isMuroja ? 78  : 114;
@@ -2612,6 +2623,23 @@
         haDropdownOpen = null;
     }
 
+    function pilihHaJenis(jenis) {
+        haJenisSelected = jenis;
+        document.querySelectorAll('.ha-jenis-opt').forEach(el => {
+            el.classList.remove('sel-tasmi', 'sel-muroja', 'sel-belum');
+            if (el.dataset.jenis === jenis) {
+                el.classList.add('sel-' + jenis);
+            }
+        });
+        // Sembunyikan rentang surat jika Tasmi'
+        const rentangArea = document.getElementById('haRentangArea');
+        if (jenis === 'tasmi') {
+            rentangArea.classList.add('hidden');
+        } else {
+            rentangArea.classList.remove('hidden');
+        }
+    }
+
     function getHaRange() {
         const dariVal   = parseInt(document.getElementById('haDariTrigger').dataset.val);
         const sampaiVal = parseInt(document.getElementById('haSampaiTrigger').dataset.val);
@@ -2678,57 +2706,80 @@
         if (!hafalanAwalSiswaId) return;
         const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
         if (!siswa) return;
-        const { dari, sampai } = getHaRange();
-        const arr = generateHaSuratArray(dari, sampai);
-        if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
+        if (!haJenisSelected) { showToast('⚠️ Pilih status hafalan awal terlebih dahulu'); return; }
 
         const namaMap = {};
         JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
 
-        // Tambahkan ke hafalanAwal siswa
-        const sudahAda = new Set(siswa.hafalanAwal || []);
-        arr.forEach(n => sudahAda.add(n));
-        siswa.hafalanAwal = [...sudahAda];
+        // Simpan jenis hafalan awal ke data siswa
+        siswa.jenisHafalanAwal = haJenisSelected;
 
-        // Tambahkan ke dataSetoran sebagai entri "Hafalan Awal"
-        // Hindari duplikat: hapus entri hafalan awal lama untuk siswa ini
+        // Hapus entri hafalan awal lama
         state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan === 'Hafalan Awal'));
 
-        // Buat entri baru
-        const surahEntry = arr.map(n => ({ num: n, name: namaMap[n] || `Surat ${n}`, dari: 1, sampai: 1, ayatSalah: [] }));
-        state.dataSetoran.unshift({
-            id: Date.now(),
-            SiswaId: hafalanAwalSiswaId,
-            nama: siswa.nama,
-            kelas: siswa.kelas,
-            tanggal: todayStr(),
-            jenis: 'setoran',
-            keterangan: 'Hafalan Awal',
-            juz: '30',
-            surah: surahEntry,
-            status: 'lancar'
-        });
+        if (haJenisSelected === 'tasmi') {
+            // Jika Tasmi': tandai khatam penuh + simpan tasmi
+            siswa.hafalanAwal = [...JUZ30_SURAT];
+            const allTasmi = getTasmiData();
+            const existing = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId);
+            const record = { siswaId: hafalanAwalSiswaId, juz: 30, tanggal: todayStr(), nilai: 'L', penguji: '', catatan: 'Input Hafalan Awal' };
+            if (existing !== -1) allTasmi[existing] = record; else allTasmi.push(record);
+            saveTasmiData(allTasmi);
+            state.dataSetoran.unshift({
+                id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
+                tanggal: todayStr(), jenis: 'setoran', keterangan: 'Hafalan Awal · Tasmi'',
+                juz: '30', surah: JUZ30_SURAT.map(n => ({ num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai:1, ayatSalah:[] })),
+                status: 'lancar'
+            });
+            saveAllData();
+            showToast(`✅ Hafalan awal tersimpan: Tasmi'`);
+        } else {
+            // Belum Khatam / Muroja'ah: pakai rentang surat
+            const { dari, sampai } = getHaRange();
+            const arr = generateHaSuratArray(dari, sampai);
+            if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
 
-        saveAllData();
-        showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
+            const sudahAda = new Set(siswa.hafalanAwal || []);
+            arr.forEach(n => sudahAda.add(n));
+            siswa.hafalanAwal = [...sudahAda];
+
+            const jenisLabel = haJenisSelected === 'muroja' ? "Hafalan Awal · Muroja'ah" : 'Hafalan Awal · Belum Khatam';
+            const jenisSetoran = haJenisSelected === 'muroja' ? 'muroja' : 'setoran';
+            const surahEntry = arr.map(n => ({ num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai:1, ayatSalah:[] }));
+            state.dataSetoran.unshift({
+                id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
+                tanggal: todayStr(), jenis: jenisSetoran, keterangan: jenisLabel,
+                juz: '30', surah: surahEntry, status: 'lancar'
+            });
+            saveAllData();
+            showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
+        }
+
         closeHafalanAwalModal();
         renderResult();
         renderMonitoring();
+        renderDataSiswa();
     }
 
     function hapusHafalanAwal() {
         if (!hafalanAwalSiswaId) return;
         const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
         if (!siswa) return;
-        if (!(siswa.hafalanAwal || []).length) { showToast('ℹ️ Belum ada hafalan awal'); return; }
+        if (!(siswa.hafalanAwal || []).length && !siswa.jenisHafalanAwal) { showToast('ℹ️ Belum ada hafalan awal'); return; }
         siswa.hafalanAwal = [];
-        // Hapus juga entri setoran hafalan awal
-        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan === 'Hafalan Awal'));
+        siswa.jenisHafalanAwal = null;
+        // Hapus entri setoran hafalan awal
+        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && (s.keterangan || '').startsWith('Hafalan Awal')));
+        // Hapus tasmi jika ada (dari hafalan awal)
+        const allTasmi = getTasmiData();
+        const idx = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId && t.catatan === 'Input Hafalan Awal');
+        if (idx !== -1) { allTasmi.splice(idx, 1); saveTasmiData(allTasmi); }
         saveAllData();
         showToast('🗑 Hafalan awal dihapus');
         closeHafalanAwalModal();
         renderResult();
         renderMonitoring();
+        renderDataSiswa();
     }
 
     // Close dropdown when clicking outside
@@ -2768,6 +2819,33 @@
                     <span class="ha-existing-text"></span>
                 </div>
 
+                <!-- JENIS HAFALAN AWAL -->
+                <div class="lbl" style="margin-bottom:6px;">Status Hafalan Awal Siswa</div>
+                <div class="ha-jenis-row" id="haJenisRow">
+                    <div class="ha-jenis-opt" data-jenis="belum" onclick="pilihHaJenis('belum')">
+                        <span class="ha-jenis-icon">📖</span>
+                        <div>
+                            <div class="ha-jenis-label">Belum Khatam</div>
+                            <div class="ha-jenis-desc">Masih dalam proses setoran hafalan</div>
+                        </div>
+                    </div>
+                    <div class="ha-jenis-opt" data-jenis="muroja" onclick="pilihHaJenis('muroja')">
+                        <span class="ha-jenis-icon">🔁</span>
+                        <div>
+                            <div class="ha-jenis-label">Muroja'ah</div>
+                            <div class="ha-jenis-desc">Sudah khatam, sedang muroja'ah</div>
+                        </div>
+                    </div>
+                    <div class="ha-jenis-opt" data-jenis="tasmi" onclick="pilihHaJenis('tasmi')">
+                        <span class="ha-jenis-icon">🎤</span>
+                        <div>
+                            <div class="ha-jenis-label">Tasmi'</div>
+                            <div class="ha-jenis-desc">Sudah tasmi' sebelum pakai aplikasi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="haRentangArea">
                 <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
 
                 <!-- DARI -->
@@ -2806,6 +2884,8 @@
                     <div id="haPreviewWarn" class="ha-preview-warn"></div>
                     <div id="haPreviewList" class="ha-preview-list"></div>
                 </div>
+
+                </div><!-- /haRentangArea -->
 
             </div><!-- /haInputArea -->
         </div><!-- /ha-body -->
