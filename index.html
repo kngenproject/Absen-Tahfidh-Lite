@@ -212,40 +212,43 @@
         .clickable:active { border-color: var(--p); background: var(--p4); }
         .clickable-ico { color: var(--g4); font-size: 13px; }
 
-        .surat-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
+        .surat-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 5px; max-height: 200px; overflow-y: auto; }
+        .surat-list::-webkit-scrollbar { width: 3px; }
+        .surat-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
         .surat-item {
-            background: var(--p4); padding: 8px 10px;
+            background: var(--p4); padding: 5px 8px;
             border-radius: 8px; border-left: 3px solid var(--p);
-            display: flex; flex-direction: column; gap: 6px;
+            display: flex; align-items: center; gap: 6px;
         }
         .surat-item-top {
             display: flex; justify-content: space-between; align-items: center;
         }
-        .surat-item-name { font-weight: 700; font-size: 12px; color: var(--g9); }
+        .surat-item-name { font-weight: 700; font-size: 12px; color: var(--g9); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .surat-ayat-pickers {
-            display: flex; align-items: center; gap: 6px;
+            display: flex; align-items: center; gap: 4px; flex-shrink: 0;
         }
         .ayat-picker-col {
-            flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            display: flex; flex-direction: column; align-items: center; gap: 1px;
             background: white; border: 1.5px solid var(--p3);
-            border-radius: 8px; padding: 6px 8px; cursor: pointer;
+            border-radius: 6px; padding: 3px 7px; cursor: pointer;
             transition: border-color .12s, background .12s;
+            min-width: 36px;
         }
         .ayat-picker-col:active { border-color: var(--p); background: var(--p4); }
         .ayat-picker-label {
-            font-size: 9px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.5px; color: var(--g5);
+            font-size: 8px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.4px; color: var(--g5);
         }
         .ayat-picker-val {
-            font-size: 18px; font-weight: 900; line-height: 1;
+            font-size: 14px; font-weight: 900; line-height: 1;
         }
         .dari-val { color: #1d4ed8; }
         .sampai-val { color: var(--p2); }
-        .ayat-picker-arrow { font-size: 14px; color: var(--g4); flex-shrink: 0; }
+        .ayat-picker-arrow { font-size: 11px; color: var(--g4); flex-shrink: 0; }
         .btn-rm {
             background: none; border: none; color: var(--danger);
-            cursor: pointer; font-size: 14px; padding: 2px 4px;
-            border-radius: 4px; line-height: 1;
+            cursor: pointer; font-size: 13px; padding: 2px 3px;
+            border-radius: 4px; line-height: 1; flex-shrink: 0;
         }
         .btn-rm:active { background: #fee2e2; }
 
@@ -2322,7 +2325,7 @@
         state.selectedSurah.forEach(s => {
             const div = document.createElement('div');
             div.className = 'surat-item';
-            div.innerHTML = `<div class="surat-item-top"><div class="surat-item-name">${s.name}</div><button class="btn-rm" onclick="removeSurat(${s.num})">✕</button></div><div class="surat-ayat-pickers"><div class="ayat-picker-col" onclick="openDariModal(${s.num})"><span class="ayat-picker-label">Dari</span><span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span></div><span class="ayat-picker-arrow">→</span><div class="ayat-picker-col" onclick="openSampaiModal(${s.num})"><span class="ayat-picker-label">Sampai</span><span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span></div></div>`;
+            div.innerHTML = `<div class="surat-item-name">${s.name}</div><div class="surat-ayat-pickers"><div class="ayat-picker-col" onclick="openDariModal(${s.num})"><span class="ayat-picker-label">Dari</span><span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span></div><span class="ayat-picker-arrow">→</span><div class="ayat-picker-col" onclick="openSampaiModal(${s.num})"><span class="ayat-picker-label">Sampai</span><span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span></div></div><button class="btn-rm" onclick="removeSurat(${s.num})">✕</button>`;
             c.appendChild(div);
         });
         document.getElementById('btnAddSurat').style.display = state.selectedSurah.length ? 'block' : 'none';
@@ -2407,8 +2410,17 @@
         pilihStatus(last.status || 'lancar');
         if (last.surah && last.surah.length) { state.selectedSurah = last.surah.map(sr => ({ ...sr })); renderSuratList(); }
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
-        const lastSrBar = (last.surah||[]).length ? last.surah[last.surah.length-1] : null;
-        const suratNames = lastSrBar ? `${lastSrBar.name} (${lastSrBar.dari}–${lastSrBar.sampai})` : '-';
+        const surahArr = last.surah || [];
+        let suratNames;
+        if (surahArr.length === 0) {
+            suratNames = '-';
+        } else if (surahArr.length === 1) {
+            const sr = surahArr[0];
+            suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
+        } else {
+            const lastSr = surahArr[surahArr.length - 1];
+            suratNames = `${surahArr[0].name}–${lastSr.name} (${surahArr.length} surat)`;
+        }
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
         const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
         txt.textContent = `${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
