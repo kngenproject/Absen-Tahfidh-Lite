@@ -2407,7 +2407,8 @@
         pilihStatus(last.status || 'lancar');
         if (last.surah && last.surah.length) { state.selectedSurah = last.surah.map(sr => ({ ...sr })); renderSuratList(); }
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
-        const suratNames = (last.surah||[]).map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const lastSrBar = (last.surah||[]).length ? last.surah[last.surah.length-1] : null;
+        const suratNames = lastSrBar ? `${lastSrBar.name} (${lastSrBar.dari}–${lastSrBar.sampai})` : '-';
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
         const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
         txt.textContent = `${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis} · ${suratNames} · ${status}`;
