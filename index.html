@@ -780,41 +780,44 @@
 
         .sub-tab-nav {
             display: flex;
-            gap: 6px;
-            padding: 10px 12px 0;
-            background: var(--g1);
+            gap: 8px;
+            padding: 12px 12px 0;
+            background: white;
             border-bottom: 1px solid var(--g2);
             flex-shrink: 0;
         }
         .sub-tab-btn {
             flex: 1;
-            padding: 9px 10px;
+            padding: 10px 12px;
             border: none;
-            border-radius: 10px 10px 0 0;
-            font-size: 12px;
+            border-radius: 12px 12px 0 0;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             color: var(--g5);
-            background: transparent;
-            transition: all .2s ease;
-            letter-spacing: 0.1px;
+            background: var(--g1);
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
             white-space: nowrap;
         }
         .sub-tab-btn.active {
             background: white;
             color: var(--p);
-            box-shadow: 0 -2px 8px rgba(0,0,0,.06), 0 1px 0 white;
+            border-bottom: 3px solid var(--p);
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+        }
+        .sub-tab-btn:active {
+            transform: scale(0.97);
+            background: var(--g2);
         }
         .sub-tab-content {
             display: none;
             flex: 1;
             flex-direction: column;
             overflow: hidden;
-            transition: opacity .15s ease;
         }
         .sub-tab-content.active {
             display: flex;
-            opacity: 1;
         }
         .scrollable-list {
             overflow-y: auto;
