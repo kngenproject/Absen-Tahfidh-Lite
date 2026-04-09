@@ -874,45 +874,104 @@
         /* ── MONITORING SUB-TABS ── */
         .mon-subtab-nav {
             display: flex;
+            gap: 8px;
+            padding: 12px 12px 0;
             background: white;
             border-bottom: 1px solid var(--g2);
             flex-shrink: 0;
-            padding: 0 12px;
-            gap: 4px;
         }
         .mon-subtab-btn {
             flex: 1;
-            height: 40px;
+            padding: 10px 12px;
             border: none;
-            background: transparent;
-            color: var(--g5);
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 12px 12px 0 0;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
-            border-bottom: 2.5px solid transparent;
-            transition: color .2s, border-color .2s;
+            color: var(--g5);
+            background: var(--g1);
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
             white-space: nowrap;
         }
-        .mon-subtab-btn.active { color: var(--p); border-bottom-color: var(--p); }
+        .mon-subtab-btn.active {
+            background: white;
+            color: var(--p);
+            border-bottom: 3px solid var(--p);
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+        }
+        .mon-subtab-btn:active {
+            transform: scale(0.97);
+            background: var(--g2);
+        }
         .mon-subtab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
         .mon-subtab-content.active { display: flex; }
 
-        /* Riwayat list di monitoring */
-        .mon-riwayat-list { flex: 1; overflow-y: auto; padding: 8px 12px 12px; -webkit-overflow-scrolling: touch; }
+        /* Riwayat tabel di monitoring */
+        .mon-riwayat-list {
+            flex: 1; overflow-y: auto; overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
         .mon-riwayat-list::-webkit-scrollbar { width: 3px; }
         .mon-riwayat-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
-        .mon-riwayat-card {
-            background: white; border-radius: var(--r);
-            padding: 9px 11px; margin-bottom: 7px;
-            box-shadow: var(--sh); display: flex; gap: 8px; align-items: flex-start;
-        }
-        .mon-riwayat-left { flex: 1; min-width: 0; }
-        .mon-riwayat-name { font-weight: 700; font-size: 12px; color: var(--g9); }
-        .mon-riwayat-meta { font-size: 10px; color: var(--g5); margin-top: 2px; }
-        .mon-riwayat-surat { font-size: 11px; color: var(--g7); margin-top: 3px; font-weight: 500; }
-        .mon-riwayat-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-        .mon-riwayat-date { font-size: 10px; color: var(--g5); }
         .mon-riwayat-empty { text-align: center; padding: 40px 20px; color: var(--g4); font-size: 12px; }
+
+        /* Tabel */
+        .mon-riwayat-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 11px;
+        }
+        .mon-riwayat-table thead {
+            position: sticky; top: 0; z-index: 2;
+        }
+        .mon-riwayat-table th {
+            background: var(--g1);
+            color: var(--g5);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 7px 8px;
+            text-align: left;
+            border-bottom: 1.5px solid var(--g2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mon-riwayat-table td {
+            padding: 7px 8px;
+            border-bottom: 1px solid var(--g2);
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--g9);
+        }
+        .mon-riwayat-table tr:last-child td { border-bottom: none; }
+        .mon-riwayat-table tr:nth-child(even) td { background: var(--g0); }
+        .mon-riwayat-table tr:active td { background: var(--p4); }
+
+        /* Lebar kolom: Tgl | Nama | Kelas | Jenis | L/KL | Surat */
+        .col-tgl   { width: 17%; }
+        .col-nama  { width: 22%; }
+        .col-kelas { width: 12%; }
+        .col-jenis { width: 16%; }
+        .col-stat  { width: 11%; }
+        .col-surat { width: 22%; }
+
+        .badge-jenis {
+            display: inline-block;
+            padding: 2px 5px; border-radius: 4px;
+            font-size: 9px; font-weight: 700; white-space: nowrap;
+        }
+        .badge-tasmi  { background: #ede9fe; color: #4c1d95; }
+        .badge-muroja { background: #fef3c7; color: #92400e; }
+        .badge-setoran{ background: var(--p3); color: var(--p2); }
+        .badge-belum  { background: var(--g2); color: var(--g6); }
+        .badge-l  { background: var(--p3); color: var(--p2); font-weight:800; padding: 2px 6px; border-radius:4px; font-size:9px; }
+        .badge-kl { background: #fee2e2; color: var(--danger); font-weight:800; padding: 2px 6px; border-radius:4px; font-size:9px; }
 
         .mon-toolbar {
             flex-shrink: 0;
@@ -3202,42 +3261,46 @@
             container.innerHTML = '<div class="mon-riwayat-empty">📋 Belum ada riwayat setoran</div>';
             return;
         }
-        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
-        const jenisClassMap = { tasmi: 'jenis-tasmi', muroja: 'jenis-muroja', setoran: 'jenis-setoran', belum: 'jenis-belum' };
-        container.innerHTML = list.map(s => {
-            const jenisLabel = jenisMap[s.jenis] || s.jenis || '-';
-            const jenisClass = jenisClassMap[s.jenis] || '';
-            const statusLabel = s.status === 'lancar' ? 'L' : 'KL';
-            const statusClass = s.status === 'lancar' ? 'status-lancar' : 'status-kurang';
+        const jenisMap  = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
+        const jenisBadge= { tasmi:'badge-tasmi', muroja:'badge-muroja', setoran:'badge-setoran', belum:'badge-belum' };
+        const rows = list.map(s => {
+            const jenisLabel = s.keterangan || jenisMap[s.jenis] || s.jenis || '-';
+            const jBadge = jenisBadge[s.jenis] || 'badge-belum';
+            const statBadge = s.status === 'lancar' ? 'badge-l' : 'badge-kl';
+            const statLabel = s.status === 'lancar' ? 'L' : 'KL';
             let suratText = '-';
             if (s.surah && s.surah.length) {
-                const last = s.surah[s.surah.length - 1];
-                suratText = s.surah.length > 1
-                    ? `${s.surah.length} surat · ${last.name} (${last.dari}-${last.sampai})`
-                    : `${last.name} (${last.dari}-${last.sampai})`;
+                if (s.surah.length === 1) {
+                    suratText = s.surah[0].name;
+                } else {
+                    suratText = s.surah.length + ' surat';
+                }
             }
             let tglText = '-';
             if (s.tanggal) {
                 const p = s.tanggal.split('-');
-                tglText = `${p[2]}/${p[1]}/${p[0]}`;
+                tglText = p[2] + '/' + p[1];
             }
-            return `<div class="mon-riwayat-card">
-                <div class="mon-riwayat-left">
-                    <div class="mon-riwayat-name">${escapeHtml(s.nama || '-')}</div>
-                    <div class="mon-riwayat-meta">
-                        <span class="mon-badge-kelas">Kelas ${escapeHtml(s.kelas || '-')}</span>
-                        &nbsp;·&nbsp;
-                        <span class="${jenisClass}" style="font-weight:700;">${jenisLabel}</span>
-                        &nbsp;·&nbsp;
-                        <span class="${statusClass}" style="font-weight:700;">${statusLabel}</span>
-                    </div>
-                    <div class="mon-riwayat-surat">📖 ${escapeHtml(suratText)}</div>
-                </div>
-                <div class="mon-riwayat-right">
-                    <span class="mon-riwayat-date">${tglText}</span>
-                </div>
-            </div>`;
+            return `<tr>
+                <td class="col-tgl">${tglText}</td>
+                <td class="col-nama" title="${escapeHtml(s.nama||'-')}">${escapeHtml(s.nama||'-')}</td>
+                <td class="col-kelas">${escapeHtml(s.kelas||'-')}</td>
+                <td class="col-jenis"><span class="badge-jenis ${jBadge}">${jenisLabel}</span></td>
+                <td class="col-stat"><span class="${statBadge}">${statLabel}</span></td>
+                <td class="col-surat" title="${escapeHtml(suratText)}">${escapeHtml(suratText)}</td>
+            </tr>`;
         }).join('');
+        container.innerHTML = `<table class="mon-riwayat-table">
+            <thead><tr>
+                <th class="col-tgl">Tgl</th>
+                <th class="col-nama">Nama</th>
+                <th class="col-kelas">Kelas</th>
+                <th class="col-jenis">Jenis</th>
+                <th class="col-stat">Status</th>
+                <th class="col-surat">Surat</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
     }
 
     function exportRiwayatMonitoring() {
