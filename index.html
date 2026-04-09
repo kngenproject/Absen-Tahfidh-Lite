@@ -870,6 +870,50 @@
             overflow: hidden;
         }
         #tab-monitoring.active { display: flex; }
+
+        /* ── MONITORING SUB-TABS ── */
+        .mon-subtab-nav {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid var(--g2);
+            flex-shrink: 0;
+            padding: 0 12px;
+            gap: 4px;
+        }
+        .mon-subtab-btn {
+            flex: 1;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--g5);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2.5px solid transparent;
+            transition: color .2s, border-color .2s;
+            white-space: nowrap;
+        }
+        .mon-subtab-btn.active { color: var(--p); border-bottom-color: var(--p); }
+        .mon-subtab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .mon-subtab-content.active { display: flex; }
+
+        /* Riwayat list di monitoring */
+        .mon-riwayat-list { flex: 1; overflow-y: auto; padding: 8px 12px 12px; -webkit-overflow-scrolling: touch; }
+        .mon-riwayat-list::-webkit-scrollbar { width: 3px; }
+        .mon-riwayat-list::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
+        .mon-riwayat-card {
+            background: white; border-radius: var(--r);
+            padding: 9px 11px; margin-bottom: 7px;
+            box-shadow: var(--sh); display: flex; gap: 8px; align-items: flex-start;
+        }
+        .mon-riwayat-left { flex: 1; min-width: 0; }
+        .mon-riwayat-name { font-weight: 700; font-size: 12px; color: var(--g9); }
+        .mon-riwayat-meta { font-size: 10px; color: var(--g5); margin-top: 2px; }
+        .mon-riwayat-surat { font-size: 11px; color: var(--g7); margin-top: 3px; font-weight: 500; }
+        .mon-riwayat-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+        .mon-riwayat-date { font-size: 10px; color: var(--g5); }
+        .mon-riwayat-empty { text-align: center; padding: 40px 20px; color: var(--g4); font-size: 12px; }
+
         .mon-toolbar {
             flex-shrink: 0;
             padding: 8px 12px;
@@ -1784,16 +1828,39 @@
         </div>
 
         <div id="tab-monitoring" class="tab-content">
-            <div class="mon-toolbar">
-                <div class="mon-filter-pill active" id="monFilterAll" onclick="monSetFilter('')">Semua</div>
-                <div id="monFilterKelas" style="display:contents;"></div>
-                <button class="btn-export-mon" onclick="exportMonitoringBulanan()">📤 Export</button>
+            <!-- Sub-tab Navigation -->
+            <div class="mon-subtab-nav">
+                <button class="mon-subtab-btn active" id="monSubBtn-progress" onclick="switchMonSubTab('progress')">📊 Progress Siswa</button>
+                <button class="mon-subtab-btn" id="monSubBtn-riwayat" onclick="switchMonSubTab('riwayat')">📋 Riwayat Setoran</button>
             </div>
-            <div class="mon-list" id="monList">
-                <div class="mon-empty">
-                    <div class="mon-empty-icon">📊</div>
-                    <div class="mon-empty-text">Belum ada data siswa</div>
-                    <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
+
+            <!-- Sub-tab: Progress -->
+            <div id="mon-sub-progress" class="mon-subtab-content active" style="flex-direction:column;overflow:hidden;">
+                <div class="mon-toolbar">
+                    <div class="mon-filter-pill active" id="monFilterAll" onclick="monSetFilter('')">Semua</div>
+                    <div id="monFilterKelas" style="display:contents;"></div>
+                    <button class="btn-export-mon" onclick="exportMonitoringBulanan()">📤 Export</button>
+                </div>
+                <div class="mon-list" id="monList">
+                    <div class="mon-empty">
+                        <div class="mon-empty-icon">📊</div>
+                        <div class="mon-empty-text">Belum ada data siswa</div>
+                        <div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-tab: Riwayat -->
+            <div id="mon-sub-riwayat" class="mon-subtab-content" style="flex-direction:column;overflow:hidden;">
+                <div class="mon-toolbar" style="justify-content:space-between;">
+                    <div style="display:flex;gap:6px;align-items:center;flex:1;overflow-x:auto;">
+                        <div class="mon-filter-pill active" id="monRiwFilterAll" onclick="monRiwSetFilter('')">Semua</div>
+                        <div id="monRiwFilterKelas" style="display:contents;"></div>
+                    </div>
+                    <button class="btn-export-mon" onclick="exportRiwayatMonitoring()">📤 Export</button>
+                </div>
+                <div class="mon-riwayat-list" id="monRiwList">
+                    <div class="mon-riwayat-empty">📋 Belum ada riwayat setoran</div>
                 </div>
             </div>
         </div>
@@ -3084,6 +3151,134 @@
       function inputHafalanAwal(siswaId) {
     openHafalanAwalModal(siswaId);
 }
+
+    // ── Monitoring Sub-Tab ──
+    let monRiwFilterKelas = '';
+
+    function switchMonSubTab(name) {
+        ['progress', 'riwayat'].forEach(n => {
+            const btn = document.getElementById('monSubBtn-' + n);
+            const panel = document.getElementById('mon-sub-' + n);
+            if (btn) btn.classList.toggle('active', n === name);
+            if (panel) panel.classList.toggle('active', n === name);
+        });
+        if (name === 'riwayat') {
+            renderMonRiwFilterKelas();
+            renderMonRiwayat();
+        }
+    }
+
+    function monRiwSetFilter(kelas) {
+        monRiwFilterKelas = kelas;
+        const allBtn = document.getElementById('monRiwFilterAll');
+        if (allBtn) allBtn.classList.toggle('active', kelas === '');
+        renderMonRiwFilterKelas();
+        renderMonRiwayat();
+    }
+
+    function renderMonRiwFilterKelas() {
+        const container = document.getElementById('monRiwFilterKelas');
+        if (!container) return;
+        const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].sort();
+        container.innerHTML = kelasList.map(k =>
+            `<div class="mon-filter-pill${monRiwFilterKelas === k ? ' active' : ''}" onclick="monRiwSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+        ).join('');
+    }
+
+    function renderMonRiwayat() {
+        const container = document.getElementById('monRiwList');
+        if (!container) return;
+        let list = [...state.dataSetoran].sort((a, b) => {
+            if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
+            return b.id - a.id;
+        });
+        if (monRiwFilterKelas) {
+            list = list.filter(s => {
+                const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
+                return siswa && siswa.kelas === monRiwFilterKelas;
+            });
+        }
+        if (!list.length) {
+            container.innerHTML = '<div class="mon-riwayat-empty">📋 Belum ada riwayat setoran</div>';
+            return;
+        }
+        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+        const jenisClassMap = { tasmi: 'jenis-tasmi', muroja: 'jenis-muroja', setoran: 'jenis-setoran', belum: 'jenis-belum' };
+        container.innerHTML = list.map(s => {
+            const jenisLabel = jenisMap[s.jenis] || s.jenis || '-';
+            const jenisClass = jenisClassMap[s.jenis] || '';
+            const statusLabel = s.status === 'lancar' ? 'L' : 'KL';
+            const statusClass = s.status === 'lancar' ? 'status-lancar' : 'status-kurang';
+            let suratText = '-';
+            if (s.surah && s.surah.length) {
+                const last = s.surah[s.surah.length - 1];
+                suratText = s.surah.length > 1
+                    ? `${s.surah.length} surat · ${last.name} (${last.dari}-${last.sampai})`
+                    : `${last.name} (${last.dari}-${last.sampai})`;
+            }
+            let tglText = '-';
+            if (s.tanggal) {
+                const p = s.tanggal.split('-');
+                tglText = `${p[2]}/${p[1]}/${p[0]}`;
+            }
+            return `<div class="mon-riwayat-card">
+                <div class="mon-riwayat-left">
+                    <div class="mon-riwayat-name">${escapeHtml(s.nama || '-')}</div>
+                    <div class="mon-riwayat-meta">
+                        <span class="mon-badge-kelas">Kelas ${escapeHtml(s.kelas || '-')}</span>
+                        &nbsp;·&nbsp;
+                        <span class="${jenisClass}" style="font-weight:700;">${jenisLabel}</span>
+                        &nbsp;·&nbsp;
+                        <span class="${statusClass}" style="font-weight:700;">${statusLabel}</span>
+                    </div>
+                    <div class="mon-riwayat-surat">📖 ${escapeHtml(suratText)}</div>
+                </div>
+                <div class="mon-riwayat-right">
+                    <span class="mon-riwayat-date">${tglText}</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function exportRiwayatMonitoring() {
+        if (!state.dataSetoran.length) { showToast('⚠️ Belum ada data riwayat'); return; }
+        let list = [...state.dataSetoran].sort((a, b) => {
+            if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
+            return b.id - a.id;
+        });
+        if (monRiwFilterKelas) {
+            list = list.filter(s => {
+                const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
+                return siswa && siswa.kelas === monRiwFilterKelas;
+            });
+        }
+        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+        const rows = list.map((s, i) => {
+            let suratText = '-';
+            if (s.surah && s.surah.length) {
+                suratText = s.surah.map(sr => `${sr.name} (${sr.dari}-${sr.sampai})`).join(', ');
+            }
+            return {
+                'No': i + 1,
+                'Tanggal': s.tanggal || '-',
+                'Nama': s.nama || '-',
+                'Kelas': s.kelas || '-',
+                'Jenis': jenisMap[s.jenis] || s.jenis || '-',
+                'Juz': s.juz || '-',
+                'Surat': suratText,
+                'Status': s.status === 'lancar' ? 'Lancar' : 'Kurang Lancar',
+            };
+        });
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [{wch:5},{wch:12},{wch:25},{wch:8},{wch:14},{wch:6},{wch:50},{wch:14}];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Riwayat_Setoran');
+        const now = new Date();
+        const tgl = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        XLSX.writeFile(wb, `Riwayat_Setoran_${tgl}.xlsx`);
+        showToast('✅ Export riwayat berhasil!');
+    }
+
     function exportMonitoringBulanan() {
     if (!state.dataSiswa.length) { 
         showToast('⚠️ Belum ada data siswa'); 
