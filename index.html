@@ -909,7 +909,7 @@
 
         /* Riwayat tabel di monitoring */
         .mon-riwayat-list {
-            flex: 1; overflow-y: auto; overflow-x: hidden;
+            flex: 1; overflow-y: auto; overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         .mon-riwayat-list::-webkit-scrollbar { width: 3px; }
@@ -918,9 +918,10 @@
 
         /* Tabel */
         .mon-riwayat-table {
-            width: 100%;
+            width: max-content;
+            min-width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
+            table-layout: auto;
             font-size: 11px;
         }
         .mon-riwayat-table thead {
@@ -944,8 +945,6 @@
             padding: 7px 8px;
             border-bottom: 1px solid var(--g2);
             vertical-align: middle;
-            overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
             color: var(--g9);
         }
@@ -953,13 +952,14 @@
         .mon-riwayat-table tr:nth-child(even) td { background: var(--g0); }
         .mon-riwayat-table tr:active td { background: var(--p4); }
 
-        /* Lebar kolom: Tgl | Nama | Kelas | Jenis | L/KL | Surat */
-        .col-tgl   { width: 17%; }
-        .col-nama  { width: 22%; }
-        .col-kelas { width: 12%; }
-        .col-jenis { width: 16%; }
-        .col-stat  { width: 11%; }
-        .col-surat { width: 22%; }
+        /* Lebar kolom: Tgl | Nama | Kelas | Jenis | L/KL | Surat | Surat Terakhir */
+        .col-tgl        { white-space: nowrap; }
+        .col-nama       { white-space: nowrap; }
+        .col-kelas      { white-space: nowrap; text-align: center; }
+        .col-jenis      { white-space: nowrap; }
+        .col-stat       { white-space: nowrap; text-align: center; }
+        .col-surat      { white-space: nowrap; }
+        .col-surat-last { white-space: nowrap; }
 
         .badge-jenis {
             display: inline-block;
@@ -3276,6 +3276,13 @@
                     suratText = s.surah.length + ' surat';
                 }
             }
+            // Surat terakhir = surat paling akhir dalam array surah
+            let suratTerakhir = '-';
+            if (s.surah && s.surah.length) {
+                const last = s.surah[s.surah.length - 1];
+                suratTerakhir = last.name || '-';
+                if (last.sampai) suratTerakhir += ' :' + last.sampai;
+            }
             let tglText = '-';
             if (s.tanggal) {
                 const p = s.tanggal.split('-');
@@ -3288,6 +3295,7 @@
                 <td class="col-jenis"><span class="badge-jenis ${jBadge}">${jenisLabel}</span></td>
                 <td class="col-stat"><span class="${statBadge}">${statLabel}</span></td>
                 <td class="col-surat" title="${escapeHtml(suratText)}">${escapeHtml(suratText)}</td>
+                <td class="col-surat-last" title="${escapeHtml(suratTerakhir)}">${escapeHtml(suratTerakhir)}</td>
             </tr>`;
         }).join('');
         container.innerHTML = `<table class="mon-riwayat-table">
@@ -3298,6 +3306,7 @@
                 <th class="col-jenis">Jenis</th>
                 <th class="col-stat">Status</th>
                 <th class="col-surat">Surat</th>
+                <th class="col-surat-last">Surat Terakhir</th>
             </tr></thead>
             <tbody>${rows}</tbody>
         </table>`;

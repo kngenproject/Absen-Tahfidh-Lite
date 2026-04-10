@@ -1,37 +1,37 @@
-📖 Absensi Tahfidz Pro
+# 📖 Absensi Tahfidz Pro
 
-"GitHub repo size" (https://img.shields.io/github/repo-size/USERNAME/REPO?color=059669&label=Repo%20Size)
-"GitHub stars" (https://img.shields.io/github/stars/USERNAME/REPO?style=social)
-"GitHub forks" (https://img.shields.io/github/forks/USERNAME/REPO?style=social)
-"GitHub last commit" (https://img.shields.io/github/last-commit/USERNAME/REPO?color=047857)
-"GitHub issues" (https://img.shields.io/github/issues/USERNAME/REPO)
-"GitHub license" (https://img.shields.io/github/license/USERNAME/REPO?color=059669)
-"Made with Love" (https://img.shields.io/badge/Made%20with-❤️-red)
-"Mobile First" (https://img.shields.io/badge/Design-Mobile%20First-green)
-"Status" (https://img.shields.io/badge/status-production-ready-brightgreen)
+![GitHub repo size](https://img.shields.io/github/repo-size/USERNAME/REPO?color=059669&label=Repo%20Size)
+![GitHub stars](https://img.shields.io/github/stars/USERNAME/REPO?style=social)
+![GitHub forks](https://img.shields.io/github/forks/USERNAME/REPO?style=social)
+![GitHub last commit](https://img.shields.io/github/last-commit/USERNAME/REPO?color=047857)
+![GitHub issues](https://img.shields.io/github/issues/USERNAME/REPO)
+![GitHub license](https://img.shields.io/github/license/USERNAME/REPO?color=059669)
+![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red)
+![Mobile First](https://img.shields.io/badge/Design-Mobile%20First-green)
+![Status](https://img.shields.io/badge/status-production--ready-brightgreen)
 
 ---
 
-✨ Deskripsi
+## ✨ Deskripsi
 
-Absensi Tahfidz Pro adalah web app modern untuk mencatat setoran hafalan Al-Qur'an secara cepat, rapi, dan mobile-friendly.
+**Absensi Tahfidz Pro** adalah web app modern untuk mencatat setoran hafalan Al-Qur'an secara cepat, rapi, dan mobile-friendly.
 Dirancang khusus untuk digunakan di HP (Android/iOS) dengan tampilan ringan dan responsif.
 
 ---
 
-🚀 Demo
+## 🚀 Demo
 
-🔗 https://USERNAME.github.io/REPO
+🔗 [https://USERNAME.github.io/REPO](https://USERNAME.github.io/REPO)
 
 ---
 
-🧩 Fitur Utama
+## 🧩 Fitur Utama
 
 - 📋 Input setoran hafalan (Tasmi', Muroja'ah, Belum Khatam)
 - 📖 Pilih surat + range ayat (Dari → Sampai)
 - ✅ Status hafalan:
-  - L (Lancar)
-  - KL (Kurang Lancar)
+  - **L** (Lancar)
+  - **KL** (Kurang Lancar)
 - 👥 Manajemen data siswa
 - 📥 Import siswa dari CSV / Excel
 - 📊 Riwayat setoran terbaru
@@ -42,9 +42,9 @@ Dirancang khusus untuk digunakan di HP (Android/iOS) dengan tampilan ringan dan 
 
 ---
 
-🖼 Tampilan
+## 🖼 Tampilan
 
-«UI modern, clean, dan fokus ke kecepatan input»
+> UI modern, clean, dan fokus ke kecepatan input
 
 - Material style
 - Bottom modal (mobile UX)
@@ -53,54 +53,58 @@ Dirancang khusus untuk digunakan di HP (Android/iOS) dengan tampilan ringan dan 
 
 ---
 
-🛠 Tech Stack
+## 🛠 Tech Stack
 
-"HTML5" (https://img.shields.io/badge/HTML5-Structure-orange?logo=html5)
-"CSS3" (https://img.shields.io/badge/CSS3-Styling-blue?logo=css3)
-"JavaScript" (https://img.shields.io/badge/JavaScript-Logic-yellow?logo=javascript)
-"LocalStorage" (https://img.shields.io/badge/Storage-LocalStorage-lightgrey)
-"XLSX" (https://img.shields.io/badge/Library-XLSX.js-purple)
+![HTML5](https://img.shields.io/badge/HTML5-Structure-orange?logo=html5)
+![CSS3](https://img.shields.io/badge/CSS3-Styling-blue?logo=css3)
+![JavaScript](https://img.shields.io/badge/JavaScript-Logic-yellow?logo=javascript)
+![LocalStorage](https://img.shields.io/badge/Storage-LocalStorage-lightgrey)
+![XLSX](https://img.shields.io/badge/Library-XLSX.js-purple)
 
 ---
 
-📂 Struktur Project
+## 📂 Struktur Project
 
+```
 absensi-tahfidz/
 ├── index.html
 ├── README.md
 ├── .gitignore
 └── assets/
+```
 
 ---
 
-⚙️ Cara Menjalankan
+## ⚙️ Cara Menjalankan
 
-🔹 Lokal
+### 🔹 Lokal
 
 1. Download / clone repo
-2. Buka "index.html" di browser
+2. Buka `index.html` di browser
 
-🔹 GitHub Pages
+### 🔹 GitHub Pages
 
 1. Upload ke GitHub
-2. Masuk ke Settings → Pages
-3. Pilih branch "main"
+2. Masuk ke **Settings → Pages**
+3. Pilih branch `main`
 4. Selesai 🎉
 
 ---
 
-📥 Format Import Siswa
+## 📥 Format Import Siswa
 
 Gunakan format CSV / Excel:
 
+```csv
 nama,kelas
 Ahmad,A
 Budi,B
 Citra,C
+```
 
 ---
 
-📌 Roadmap
+## 📌 Roadmap
 
 - [ ] PWA (Install ke HP)
 - [ ] Export ke Excel
@@ -110,7 +114,7 @@ Citra,C
 
 ---
 
-🤝 Kontribusi
+## 🤝 Kontribusi
 
 Kontribusi sangat terbuka!
 
@@ -121,14 +125,13 @@ Kontribusi sangat terbuka!
 
 ---
 
-📜 License
+## 📜 License
 
-Project ini menggunakan lisensi MIT
-Silakan digunakan dan dikembangkan.
+Project ini menggunakan lisensi **MIT** — silakan digunakan dan dikembangkan.
 
 ---
 
-🙌 Dukungan
+## 🙌 Dukungan
 
 Jika project ini bermanfaat:
 
@@ -138,11 +141,11 @@ Jika project ini bermanfaat:
 
 ---
 
-🧠 Author
+## 🧠 Author
 
-Ni'am Creative Media
+**Ni'am Creative Media**
 Web Developer & Islamic App Builder
 
 ---
 
-«✨ “Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya.”»
+> ✨ *"Sebaik-baik kalian adalah yang belajar Al-Qur'an dan mengajarkannya."*
