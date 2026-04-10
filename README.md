@@ -21,7 +21,7 @@ Dirancang khusus untuk digunakan di HP (Android/iOS) dengan tampilan ringan dan 
 
 ## 🚀 Demo
 
-🔗 [https://USERNAME.github.io/REPO](https://USERNAME.github.io/REPO)
+🔗 [https://USERNAME.github.io/REPO](https://kngenproject.github.io/Absen-Tahfidh-Lite/)
 
 ---
 
