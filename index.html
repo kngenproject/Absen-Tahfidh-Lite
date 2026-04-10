@@ -781,33 +781,35 @@
         }
         .btn-koreksi-close:active { opacity: .85; transform: scale(.98); }
 
-        .reload-bar {
-            flex-shrink: 0;
-            padding: 8px 12px 10px;
-            background: white;
-            border-top: 1px solid var(--g2);
-        }
-
-        .btn-reload {
-            width: 100%;
+        /* ── PULL TO REFRESH ── */
+        .ptr-indicator {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            color: white;
-            border: none;
-            border-radius: var(--r2);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(14,165,233,.3);
-            transition: all .15s;
-            text-align: left;
+            justify-content: center;
+            gap: 8px;
+            height: 0;
+            overflow: hidden;
+            transition: height .2s ease;
+            color: var(--p);
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--p4);
+            flex-shrink: 0;
         }
-        .btn-reload:active { transform: scale(.98); box-shadow: none; opacity: .9; }
-        .btn-reload-icon { font-size: 22px; flex-shrink: 0; }
-        .btn-reload-text { display: flex; flex-direction: column; gap: 2px; }
-        .btn-reload-title { font-size: 13px; font-weight: 700; }
-        .btn-reload-sub { font-size: 10px; opacity: .85; font-weight: 500; }
+        .ptr-indicator.ptr-visible { height: 52px; }
+        .ptr-indicator.ptr-releasing { color: var(--p2); }
+        .ptr-spinner {
+            width: 20px; height: 20px;
+            border: 2.5px solid var(--p3);
+            border-top-color: var(--p);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: transform .3s ease;
+        }
+        .ptr-spinner.spinning {
+            animation: ptr-spin .6s linear infinite;
+        }
+        @keyframes ptr-spin { to { transform: rotate(360deg); } }
 
         .sub-tab-nav {
             display: flex;
@@ -1843,6 +1845,10 @@
                 <button class="sub-tab-btn" id="subBtn-riwayat" onclick="switchSubTab('riwayat')">📋 Riwayat Setoran</button>
             </div>
             <div id="sub-siswa" class="sub-tab-content active">
+                <div class="ptr-indicator" id="ptrIndicator">
+                    <div class="ptr-spinner" id="ptrSpinner"></div>
+                    <span id="ptrText">Tarik untuk muat ulang</span>
+                </div>
                 <div class="sub-form-area">
                     <div class="fg row" style="margin-bottom:8px;">
                         <div>
@@ -1864,15 +1870,6 @@
                 <div class="scrollable-list">
                     <div class="section-label" style="padding-top:10px;">Daftar Siswa</div>
                     <div id="dataList" class="data-list"></div>
-                </div>
-                <div class="reload-bar">
-                    <button class="btn-reload" onclick="reloadApp()">
-                        <span class="btn-reload-icon">🔄</span>
-                        <div class="btn-reload-text">
-                            <span class="btn-reload-title">Muat Ulang Aplikasi</span>
-                            <span class="btn-reload-sub">Terapkan pembaruan HTML terbaru</span>
-                        </div>
-                    </button>
                 </div>
             </div>
             <div id="sub-riwayat" class="sub-tab-content">
@@ -2987,6 +2984,85 @@
     function importRowsFromArray(rows) { let added = 0, skipped = 0; rows.forEach((parts, i) => { if (i === 0) { const first = String(parts[0] || '').toLowerCase(); const second = String(parts[1] || '').toLowerCase(); if (first.includes('nama') || second.includes('kelas')) return; } const nama = String(parts[0] || '').trim(); const kelas = String(parts[1] || '').trim(); if (!nama || !kelas) return; const exists = state.dataSiswa.some(s => s.nama.toLowerCase() === nama.toLowerCase() && s.kelas === kelas); if (!exists) { state.dataSiswa.push({ id: String(Date.now() + Math.random()), nama, kelas, hafalanAwal: [] }); added++; } else skipped++; }); if (added > 0) { saveAllData(); renderDataSiswa(); showToast(`✅ Import ${added} Siswa${skipped ? ` (${skipped} duplikat)` : ''}`); } else { showToast(skipped ? `⚠️ ${skipped} data duplikat` : '⚠️ File kosong/format salah'); } }
     function downloadTemplate() { const csv = "nama,kelas\nAhmad,A\nBudi,B\nCitra,C\nDewi,A\nEka,D"; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = 'template_Siswa.csv'; a.click(); URL.revokeObjectURL(a.href); }
     function reloadApp() { if ('serviceWorker' in navigator && navigator.serviceWorker.controller) { navigator.serviceWorker.getRegistrations().then(regs => { Promise.all(regs.map(r => r.unregister())).then(() => { if ('caches' in window) caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => window.location.reload(true)); else window.location.reload(true); }); }); } else { window.location.reload(true); } }
+
+    // ── PULL TO REFRESH ──
+    (function initPullToRefresh() {
+        const THRESHOLD = 72;
+        let startY = 0, currentY = 0, isPulling = false, isRefreshing = false;
+
+        function getScrollEl() {
+            return document.querySelector('#sub-siswa .scrollable-list');
+        }
+
+        function getIndicator() { return document.getElementById('ptrIndicator'); }
+        function getSpinner()   { return document.getElementById('ptrSpinner'); }
+        function getText()      { return document.getElementById('ptrText'); }
+
+        function setHeight(h) {
+            const el = getIndicator();
+            if (el) el.style.height = h + 'px';
+        }
+
+        document.addEventListener('touchstart', function(e) {
+            if (isRefreshing) return;
+            const scrollEl = getScrollEl();
+            if (!scrollEl) return;
+            // Only activate when the scrollable list is at the top
+            if (scrollEl.scrollTop !== 0) return;
+            // Check that the touch started inside sub-siswa
+            if (!e.target.closest('#sub-siswa')) return;
+            startY = e.touches[0].clientY;
+            isPulling = true;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!isPulling || isRefreshing) return;
+            const scrollEl = getScrollEl();
+            if (!scrollEl || scrollEl.scrollTop > 0) { isPulling = false; setHeight(0); return; }
+            currentY = e.touches[0].clientY;
+            const delta = Math.max(0, currentY - startY);
+            if (delta <= 0) return;
+
+            const pull = Math.min(delta * 0.5, THRESHOLD + 16);
+            setHeight(pull);
+
+            const ind = getIndicator();
+            const txt = getText();
+            const spn = getSpinner();
+            if (pull >= THRESHOLD * 0.72) {
+                ind && ind.classList.add('ptr-releasing');
+                spn && (spn.style.transform = 'rotate(180deg)');
+                txt && (txt.textContent = 'Lepas untuk muat ulang');
+            } else {
+                ind && ind.classList.remove('ptr-releasing');
+                spn && (spn.style.transform = `rotate(${(pull / THRESHOLD) * 180}deg)`);
+                txt && (txt.textContent = 'Tarik untuk muat ulang');
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', function() {
+            if (!isPulling || isRefreshing) return;
+            isPulling = false;
+            const delta = Math.max(0, currentY - startY);
+            const pull = Math.min(delta * 0.5, THRESHOLD + 16);
+
+            if (pull >= THRESHOLD * 0.72) {
+                isRefreshing = true;
+                setHeight(52);
+                const ind = getIndicator();
+                const spn = getSpinner();
+                const txt = getText();
+                ind && ind.classList.remove('ptr-releasing');
+                spn && spn.classList.add('spinning');
+                txt && (txt.textContent = 'Memuat ulang...');
+                // Actually reload after short delay for UX
+                setTimeout(function() { reloadApp(); }, 800);
+            } else {
+                setHeight(0);
+                currentY = 0;
+            }
+        }, { passive: true });
+    })();
     function openKoreksi() { if (!state.selectedSurah.length) { showToast('⚠️ Pilih surat terlebih dahulu'); return; } renderKoreksiPanel(); document.getElementById('koreksiOverlay').classList.add('active'); }
     function closeKoreksi() { document.getElementById('koreksiOverlay').classList.remove('active'); updateKoreksiButton(); }
     function closeKoreksiOnOverlay(e) { if (e.target === e.currentTarget) closeKoreksi(); }
