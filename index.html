@@ -461,7 +461,7 @@
         }
         .modal-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
         .modal-body::-webkit-scrollbar { width: 3px; }
-        .modal-body::-webkit-scrollbar-thumb { background: var(--g3); }
+        .modal-body::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 2px; }
 
         /* ── SURAT GRID ── */
         .grid-surat { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 60vh; overflow-y: auto; }
@@ -1730,6 +1730,40 @@
     border-radius: 12px;
     margin-right: 6px;
 }
+        /* Hafalan Awal Ayat Input */
+        .ha-ayat-row {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        .ha-ayat-row .lbl {
+            margin-bottom: 8px;
+        }
+        .ha-ayat-preview {
+            background: var(--p4);
+            border-radius: var(--r);
+            padding: 8px 12px;
+            font-size: 11px;
+            color: var(--p2);
+            font-weight: 500;
+            margin-top: 6px;
+        }
+        .ha-ayat-preview span {
+            font-weight: 700;
+            color: var(--p);
+        }
+        .ha-ayat-input {
+            background: white;
+            border: 1.5px solid var(--g2);
+            border-radius: var(--r);
+            padding: 9px 11px;
+            width: 100%;
+            font-size: 13px;
+            font-family: monospace;
+        }
+        .ha-ayat-input:focus {
+            outline: none;
+            border-color: var(--p);
+        }
     </style>
 </head>
 <body>
@@ -1742,7 +1776,7 @@
             <span class="header-icon">📖</span>
             <div>
                 <div class="header-title">Absensi Tahfidz</div>
-                <div class="header-sub">Setoran Hafalan Al-Qugitr'an</div>
+                <div class="header-sub">Setoran Hafalan Al-Qur'an</div>
             </div>
         </div>
         <div class="header-badge">L · KL</div>
@@ -2258,7 +2292,7 @@
         86: { 1:"وَٱلسَّمَاءِ وَٱلطَّارِقِ", 2:"وَمَاۤ أَدْرَىٰكَ مَا ٱلطَّارِقُ", 3:"ٱلنَّجْمُ ٱلثَّاقِبُ", 4:"إِن كُلُّ نَفْسٍ لَّمَّا عَلَيْهَا حَافِظٌ", 5:"فَلْيَنظُرِ ٱلْإِنسَـٰنُ مِمَّ خُلِقَ", 6:"خُلِقَ مِن مَّاءٍ دَافِقٍ", 7:"يَخْرُجُ مِنۢ بَيْنِ ٱلصُّلْبِ وَٱلتَّرَاءِبِ", 8:"إِنَّهُۥ عَلَىٰ رَجْعِهِۦ لَقَادِرٌ", 9:"يَوْمَ تُبْلَى ٱلسَّرَاءِرُ", 10:"فَمَا لَهُۥ مِن قُوَّةٍ وَلَا نَاصِرٍ", 11:"وَٱلسَّمَاءِ ذَاتِ ٱلرَّجْعِ", 12:"وَٱلْأَرْضِ ذَاتِ ٱلصَّدْعِ", 13:"إِنَّهُۥ لَقَوْلٌ فَصْلٌ", 14:"وَمَا هُوَ بِٱلْهَزْلِ", 15:"إِنَّهُمْ يَكِيدُونَ كَيْدًا", 16:"وَأَكِيدُ كَيْدًا", 17:"فَمَهِّلِ ٱلْكَـٰفِرِينَ أَمْهِلْهُمْ رُوَيْدًا" },
         87: { 1:"سَبِّحِ ٱسْمَ رَبِّكَ ٱلْأَعْلَى", 2:"ٱلَّذِى خَلَقَ فَسَوَّىٰ", 3:"وَٱلَّذِى قَدَّرَ فَهَدَىٰ", 4:"وَٱلَّذِىٓ أَخْرَجَ ٱلْمَرْعَىٰ", 5:"فَجَعَلَهُۥ غُثَاءً أَحْوَىٰ", 6:"سَنُقْرِئُكَ فَلَا تَنسَىٰٓ", 7:"إِلَّا مَا شَاءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ", 8:"وَنُيَسِّرُكَ لِلْيُسْرَىٰ", 9:"فَذَكِّرْ إِن نَّفَعَتِ ٱلذِّكْرَىٰ", 10:"سَيَذَّكَّرُ مَن يَخْشَىٰ", 11:"وَيَتَجَنَّبُهَا ٱلْأَشْقَى", 12:"ٱلَّذِى يَصْلَى ٱلنَّارَ ٱلْكُبْرَىٰ", 13:"ثُمَّ لَا يَمُوتُ فِيهَا وَلَا يَحْيَىٰ", 14:"قَدْ أَفْلَحَ مَن تَزَكَّىٰ", 15:"وَذَكَرَ ٱسْمَ رَبِّهِۦ فَصَلَّىٰ", 16:"بَلْ تُؤْثِرُونَ ٱلْحَيَوٰةَ ٱلدُّنْيَا", 17:"وَٱلْءَاخِرَةُ خَيْرٌ وَأَبْقَىٰ", 18:"إِنَّ هَـٰذَا لَفِى ٱلصُّحُفِ ٱلْأُولَىٰ", 19:"صُحُفِ إِبْرَٰهِيمَ وَمُوسَىٰ" },
         88: { 1:"هَلْ أَتَىٰكَ حَدِيثُ ٱلْغَـٰشِيَةِ", 2:"وُجُوهٌ يَوْمَئِذٍ خَـٰشِعَةٌ", 3:"عَامِلَةٌ نَّاصِبَةٌ", 4:"تَصْلَىٰ نَارًا حَامِيَةً", 5:"تُسْقَىٰ مِنْ عَيْنٍ ءَانِيَةٍ", 6:"لَّيْسَ لَهُمْ طَعَامٌ إِلَّا مِن ضَرِيعٍ", 7:"لَّا يُسْمِنُ وَلَا يُغْنِى مِن جُوعٍ", 8:"وُجُوهٌ يَوْمَئِذٍ نَّاعِمَةٌ", 9:"لِّسَعْيِهَا رَاضِيَةٌ", 10:"فِى جَنَّةٍ عَالِيَةٍ", 11:"لَّا تَسْمَعُ فِيهَا لَـٰغِيَةً", 12:"فِيهَا عَيْنٌ جَارِيَةٌ", 13:"فِيهَا سُرُرٌ مَّرْفُوعَةٌ", 14:"وَأَكْوَابٌ مَّوْضُوعَةٌ", 15:"وَنَمَارِقُ مَصْفُوفَةٌ", 16:"وَزَرَابِىُّ مَبْثُوثَةٌ", 17:"أَفَلَا يَنظُرُونَ إِلَى ٱلْإِبِلِ كَيْفَ خُلِقَتْ", 18:"وَإِلَى ٱلسَّمَاءِ كَيْفَ رُفِعَتْ", 19:"وَإِلَى ٱلْجِبَالِ كَيْفَ نُصِبَتْ", 20:"وَإِلَى ٱلْأَرْضِ كَيْفَ سُطِحَتْ", 21:"فَذَكِّرْ إِنَّمَاۤ أَنتَ مُذَكِّرٌ", 22:"لَّسْتَ عَلَيْهِم بِمُصَيْطِرٍ", 23:"إِلَّا مَن تَوَلَّىٰ وَكَفَرَ", 24:"فَيُعَذِّبُهُ ٱللَّهُ ٱلْعَذَابَ ٱلْأَكْبَرَ", 25:"إِنَّ إِلَيْنَاۤ إِيَابَهُمْ", 26:"ثُمَّ إِنَّ عَلَيْنَا حِسَابَهُم" },
-        89: { 1:"وَٱلْفَجْرِ", 2:"وَلَيَالٍ عَشْرٍ", 3:"وَٱلشَّفْعِ وَٱلْوَتْرِ", 4:"وَٱلَّيْلِ إِذَا يَسْرِ", 5:"هَلْ فِى ذَٰلِكَ قَسَمٌ لِّذِى حِجْرٍ", 6:"أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ", 7:"إِرَمَ ذَاتِ ٱلْعِمَادِ", 8:"ٱلَّتِى لَمْ يُخْلَقْ مِثْلُهَا فِى ٱلْبِلَـٰدِ", 9:"وَثَمُودَ ٱلَّذِينَ جَابُوا۟ ٱلصَّخْرَ بِٱلْوَادِ", 10:"وَفِرْعَوْنَ ذِى ٱلْأَوْتَادِ", 11:"ٱلَّذِينَ طَغَوْا۟ فِى ٱلْبِلَـٰدِ", 12:"فَأَكْثَرُوا۟ فِيهَا ٱلْفَسَادَ", 13:"فَصَبَّ عَلَيْهِمْ رَبُّكَ سَوْطَ عَذَابٍ", 14:"إِنَّ رَبَّكَ لَبِٱلْمِرْصَادِ", 15:"فَأَمَّا ٱلْإِنسَـٰنُ إِذَا مَا ٱبْتَلَىٰهُ رَبُّهُۥ فَأَكْرَمَهُۥ وَنَعَّمَهُۥ فَيَقُولُ رَبِّىٓ أَكْرَمَنِ", 16:"وَأَمَّاۤ إِذَا مَا ٱبْتَلَىٰهُ فَقَدَرَ عَلَيْهِ رِزْقَهُۥ فَيَقُولُ رَبِّىٓ أَهَـٰنَنِ", 17:"كَلَّا بَل لَّا تُكْرِمُونَ ٱلْيَتِيمَ", 18:"وَلَا تَحَـٰٓضُّونَ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ", 19:"وَتَأْكُلُونَ ٱلتُّرَاثَ أَكْلًا لَّمًّا", 20:"وَتُحِبُّونَ ٱلْمَالَ حُبًّا جَمًّا", 21:"كَلَّاۤ إِذَا دُكَّتِ ٱلْأَرْضُ دَكًّا دَكًّا", 22:"وَجَاءَ رَبُّكَ وَٱلْمَلَكُ صَفًّا صَفًّا", 23:"وَجِاْىءَ يَوْمَئِذٍۭ بِجَهَنَّمَ يَوْمَئِذٍ يَتَذَكَّرُ ٱلْإِنسَـٰنُ وَأَنَّىٰ لَهُ ٱلذِّكْرَىٰ", 24:"يَقُولُ يَـٰلَيْتَنِى قَدَّمْتُ لِحَيَاتِى", 25:"فَيَوْمَئِذٍ لَّا يُعَذِّبُ عَذَابَهُۥٓ أَحَدٌ", 26:"وَلَا يُوثِقُ وَثَاقَهُۥٓ أَحَدٌ", 27:"يَـٰٓأَيَّتُهَا ٱلنَّفْسُ ٱلْمُطْمَئِنَّةُ", 28:"ٱرْجِعِىٓ إِلَىٰ رَبِّكِ رَاضِيَةً مَّرْضِيَّةً", 29:"فَٱدْخُلِى فِى عِبَـٰدِى", 30:"وَٱدْخُلِى جَنَّتِى" },
+        89: { 1:"وَٱلْفَجْرِ", 2:"وَلَيَالٍ عَشْرٍ", 3:"وَٱلشَّفْعِ وَٱلْوَتْرِ", 4:"وَٱلَّيْلِ إِذَا يَسْرِ", 5:"هَلْ فِى ذَٰلِكَ قَسَمٌ لِّذِى حِجْرٍ", 6:"أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ", 7:"إِرَمَ ذَاتِ ٱلْعِمَادِ", 8:"ٱلَّتِى لَمْ يُخْلَقْ مِثْلُهَا فِى ٱلْبِلَـٰدِ", 9:"وَثَمُودَ ٱلَّذِينَ جَابُوا۟ ٱلصَّخْرَ بِٱلْوَادِ", 10:"وَفِرْعَوْنَ ذِى ٱلْأَوْتَادِ", 11:"ٱلَّذِينَ طَغَوْا۟ فِى ٱلْبِلَـٰدِ", 12:"فَأَكْثَرُوا۟ فِيهَا ٱلْفَسَادَ", 13:"فَصَبَّ عَلَيْهِمْ رَبُّكَ سَوْطَ عَذَابٍ", 14:"إِنَّ رَبَّكَ لَبِٱلْمِرْصَادِ", 15:"فَأَمَّا ٱلْإِنسَـٰنُ إِذَا مَا ٱبْتَلَىٰهُ رَبُّهُۥ فَأَكْرَمَهُۥ وَنَعَّمَهُۥ فَيَقُولُ رَبِّىٓ أَكْرَمَنِ", 16:"وَأَمَّاۤ إِذَا مَا ٱبْتَلَىٰهُ فَقَدَرَ عَلَيْهِ رِزْقَهُۥ فَيَقُولُ رَبِّىٓ أَهَـٰنَنِ", 17:"كَلَّا بَل لَّا تُكْرِمُونَ ٱلْيَتِيمَ", 18:"وَلَا تَحَـٰٓضُّونَ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ", 19:"وَتَأْكُلُونَ ٱلتُّرَاثَ أَكْلًا لَّمًّا", 20:"وَتُحِبُّونَ ٱلْمَالَ حُبًّا جَمًّا", 21:"كَلَّاۤ إِذَا دُكَّتِ ٱلْأَرْضُ دَكًّا دَكًّا", 22:"وَجَاءَ رَبُّكَ وَٱلْمَلَكُ صَفًّا صَفًّا", 23:"وَجِاْءىَ يَوْمَئِذٍۭ بِجَهَنَّمَ يَوْمَئِذٍ يَتَذَكَّرُ ٱلْإِنسَـٰنُ وَأَنَّىٰ لَهُ ٱلذِّكْرَىٰ", 24:"يَقُولُ يَـٰلَيْتَنِى قَدَّمْتُ لِحَيَاتِى", 25:"فَيَوْمَئِذٍ لَّا يُعَذِّبُ عَذَابَهُۥٓ أَحَدٌ", 26:"وَلَا يُوثِقُ وَثَاقَهُۥٓ أَحَدٌ", 27:"يَـٰٓأَيَّتُهَا ٱلنَّفْسُ ٱلْمُطْمَئِنَّةُ", 28:"ٱرْجِعِىٓ إِلَىٰ رَبِّكِ رَاضِيَةً مَّرْضِيَّةً", 29:"فَٱدْخُلِى فِى عِبَـٰدِى", 30:"وَٱدْخُلِى جَنَّتِى" },
         90: { 1:"لَاۤ أُقْسِمُ بِهَـٰذَا ٱلْبَلَدِ", 2:"وَأَنتَ حِلٌّۢ بِهَـٰذَا ٱلْبَلَدِ", 3:"وَوَالِدٍ وَمَا وَلَدَ", 4:"لَقَدْ خَلَقْنَا ٱلْإِنسَـٰنَ فِى كَبَدٍ", 5:"أَيَحْسَبُ أَن لَّن يَقْدِرَ عَلَيْهِ أَحَدٌ", 6:"يَقُولُ أَهْلَكْتُ مَالًا لُّبَدًا", 7:"أَيَحْسَبُ أَن لَّمْ يَرَهُۥٓ أَحَدٌ", 8:"أَلَمْ نَجْعَل لَّهُۥ عَيْنَيْنِ", 9:"وَلِسَانًا وَشَفَتَيْنِ", 10:"وَهَدَيْنَـٰهُ ٱلنَّجْدَيْنِ", 11:"فَلَا ٱقْتَحَمَ ٱلْعَقَبَةَ", 12:"وَمَاۤ أَدْرَىٰكَ مَا ٱلْعَقَبَةُ", 13:"فَكُّ رَقَبَةٍ", 14:"أَوْ إِطْعَـٰمٌ فِى يَوْمٍ ذِى مَسْغَبَةٍ", 15:"يَتِيمًا ذَا مَقْرَبَةٍ", 16:"أَوْ مِسْكِينًا ذَا مَتْرَبَةٍ", 17:"ثُمَّ كَانَ مِنَ ٱلَّذِينَ ءَامَنُوا۟ وَتَوَاصَوْا۟ بِٱلصَّبْرِ وَتَوَاصَوْا۟ بِٱلْمَرْحَمَةِ", 18:"أُو۟لَـٰٓئِكَ أَصْحَـٰبُ ٱلْمَيْمَنَةِ", 19:"وَٱلَّذِينَ كَفَرُوا۟ بِـَٔايَـٰتِنَا هُمْ أَصْحَـٰبُ ٱلْمَشْـَٔمَةِ", 20:"عَلَيْهِمْ نَارٌ مُّؤْصَدَةٌ" },
         91: { 1:"وَٱلشَّمْسِ وَضُحَىٰهَا", 2:"وَٱلْقَمَرِ إِذَا تَلَىٰهَا", 3:"وَٱلنَّهَارِ إِذَا جَلَّىٰهَا", 4:"وَٱلَّيْلِ إِذَا يَغْشَىٰهَا", 5:"وَٱلسَّمَاءِ وَمَا بَنَىٰهَا", 6:"وَٱلْأَرْضِ وَمَا طَحَىٰهَا", 7:"وَنَفْسٍ وَمَا سَوَّىٰهَا", 8:"فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَىٰهَا", 9:"قَدْ أَفْلَحَ مَن زَكَّىٰهَا", 10:"وَقَدْ خَابَ مَن دَسَّىٰهَا", 11:"كَذَّبَتْ ثَمُودُ بِطَغْوَىٰهَا", 12:"إِذِ ٱنۢبَعَثَ أَشْقَىٰهَا", 13:"فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَـٰهَا", 14:"فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا", 15:"وَلَا يَخَافُ عُقْبَـٰهَا" },
         92: { 1:"وَٱلَّيْلِ إِذَا يَغْشَىٰ", 2:"وَٱلنَّهَارِ إِذَا تَجَلَّىٰ", 3:"وَمَا خَلَقَ ٱلذَّكَرَ وَٱلْأُنثَىٰٓ", 4:"إِنَّ سَعْيَكُمْ لَشَتَّىٰ", 5:"فَأَمَّا مَنْ أَعْطَىٰ وَٱتَّقَىٰ", 6:"وَصَدَّقَ بِٱلْحُسْنَىٰ", 7:"فَسَنُيَسِّرُهُۥ لِلْيُسْرَىٰ", 8:"وَأَمَّا مَنۢ بَخِلَ وَٱسْتَغْنَىٰ", 9:"وَكَذَّبَ بِٱلْحُسْنَىٰ", 10:"فَسَنُيَسِّرُهُۥ لِلْعُسْرَىٰ", 11:"وَمَا يُغْنِى عَنْهُ مَالُهُۥٓ إِذَا تَرَدَّىٰ", 12:"إِنَّ عَلَيْنَا لَلْهُدَىٰ", 13:"وَإِنَّ لَنَا لَلْءَاخِرَةَ وَٱلْأُولَىٰ", 14:"فَأَنذَرْتُكُمْ نَارًا تَلَظَّىٰ", 15:"لَا يَصْلَىٰهَاۤ إِلَّا ٱلْأَشْقَى", 16:"ٱلَّذِى كَذَّبَ وَتَوَلَّىٰ", 17:"وَسَيُجَنَّبُهَا ٱلْأَتْقَى", 18:"ٱلَّذِى يُؤْتِى مَالَهُۥ يَتَزَكَّىٰ", 19:"وَمَا لِأَحَدٍ عِندَهُۥ مِن نِّعْمَةٍ تُجْزَىٰٓ", 20:"إِلَّا ٱبْتِغَاءَ وَجْهِ رَبِّهِ ٱلْأَعْلَىٰ", 21:"وَلَسَوْفَ يَرْضَىٰ" },
@@ -2313,6 +2347,7 @@
     let hafalanAwalSiswaId = null;
     let haDropdownOpen = null;
     let haJenisSelected = null;
+    let haAyatInputs = {}; // Untuk menyimpan ayat yang dihafal per surat
 // ── FUNGSI TASMI (dipindahkan ke atas) ──
 
     function openTasmiModal(siswaId) {
@@ -3748,7 +3783,7 @@ self.addEventListener('message', e => {
     }
 
     /* ══════════════════════════════════════════
-       ── HAFALAN AWAL MODULE ──
+       ── HAFALAN AWAL MODULE (DENGAN INPUT AYAT) ──
     ══════════════════════════════════════════ */
 
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
@@ -3759,6 +3794,7 @@ self.addEventListener('message', e => {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
         hafalanAwalSiswaId = siswaId;
+        haAyatInputs = {};
 
         const tasmi = getTasmiSiswa(siswaId);
         const khatam = isKhatamJuz30(siswaId);
@@ -3794,15 +3830,19 @@ self.addEventListener('message', e => {
             badgeEl.appendChild(b2);
         }
 
+        // Load data hafalan awal yang sudah ada
+        const existingHafalan = siswa.hafalanAwal || [];
+        const existingAyat = siswa.hafalanAwalAyat || {};
+        haAyatInputs = { ...existingAyat };
+        
         // Info hafalan yang sudah ada
-        const existing = siswa.hafalanAwal || [];
         const existingBar = document.getElementById('haExistingBar');
-        if (existing.length) {
+        if (existingHafalan.length) {
             existingBar.style.display = 'flex';
             const namaMap = {};
             JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
-            existingBar.querySelector('.ha-existing-text').textContent =
-                `Tersimpan ${existing.length} surat: ` + existing.map(n => namaMap[n] || n).join(', ');
+            existingBar.querySelector('.ha-existing-text').innerHTML = 
+                `Tersimpan ${existingHafalan.length} surat: ` + existingHafalan.map(n => `${n}. ${namaMap[n] || n}`).join(', ');
         } else {
             existingBar.style.display = 'none';
         }
@@ -3835,6 +3875,9 @@ self.addEventListener('message', e => {
         buildHaSuratGrid('dari',   defaultDari);
         buildHaSuratGrid('sampai', defaultSampai);
 
+        // Build ayat input untuk surat-surat yang dipilih
+        buildHaAyatInputs(defaultDari, defaultSampai);
+
         // Preview
         updateHaPreview();
 
@@ -3842,117 +3885,84 @@ self.addEventListener('message', e => {
         haDropdownOpen = null;
     }
 
-    function closeHafalanAwalModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('hafalanAwalModal').classList.remove('active');
-        hafalanAwalSiswaId = null;
-        haDropdownOpen = null;
-        closeAllHaDropdowns();
-    }
-
-    function buildHaSuratGrid(type, selectedNum) {
-        const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
-        grid.innerHTML = '';
-        JUZ30_ASC.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'ha-surat-item' + (s.num === selectedNum ? ' selected' : '');
-            div.innerHTML = `<span class="si-num">${s.num}</span><span class="si-name">${s.name}</span>`;
-            div.onclick = () => selectHaSurat(type, s.num, s.name);
-            grid.appendChild(div);
-        });
-    }
-
-    function selectHaSurat(type, num, name) {
-        if (type === 'dari') {
-            document.getElementById('haDariNum').textContent  = num;
-            document.getElementById('haDariName').textContent = name;
-            document.getElementById('haDariTrigger').dataset.val = num;
-            document.getElementById('haDariTrigger').classList.add('has-val');
-            // re-highlight grid
-            document.querySelectorAll('#haDariGrid .ha-surat-item').forEach(el => {
-                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
-            });
-            closeHaDropdown('dari');
-        } else {
-            document.getElementById('haSampaiNum').textContent  = num;
-            document.getElementById('haSampaiName').textContent = name;
-            document.getElementById('haSampaiTrigger').dataset.val = num;
-            document.getElementById('haSampaiTrigger').classList.add('has-val');
-            document.querySelectorAll('#haSampaiGrid .ha-surat-item').forEach(el => {
-                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
-            });
-            closeHaDropdown('sampai');
-        }
-        updateHaPreview();
-    }
-
-    function toggleHaDropdown(type) {
-        const dd = document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown');
-        const other = document.getElementById(type === 'dari' ? 'haSampaiDropdown' : 'haDariDropdown');
-        const isOpen = dd.classList.contains('open');
-        other.classList.remove('open');
-        dd.classList.toggle('open', !isOpen);
-        haDropdownOpen = !isOpen ? type : null;
-        // scroll selected item into view
-        if (!isOpen) {
-            setTimeout(() => {
-                const sel = dd.querySelector('.ha-surat-item.selected');
-                if (sel) sel.scrollIntoView({ block: 'nearest' });
-            }, 50);
-        }
-    }
-
-    function closeHaDropdown(type) {
-        document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown').classList.remove('open');
-        if (haDropdownOpen === type) haDropdownOpen = null;
-    }
-
-    function closeAllHaDropdowns() {
-        document.querySelectorAll('.ha-dropdown').forEach(el => el.classList.remove('open'));
-        haDropdownOpen = null;
-    }
-
-    function pilihHaJenis(jenis) {
-        haJenisSelected = jenis;
-        document.querySelectorAll('.ha-jenis-opt').forEach(el => {
-            el.classList.remove('sel-tasmi', 'sel-muroja', 'sel-belum');
-            if (el.dataset.jenis === jenis) {
-                el.classList.add('sel-' + jenis);
-            }
-        });
-        // Sembunyikan rentang surat jika Tasmi'
-        const rentangArea = document.getElementById('haRentangArea');
-        if (jenis === 'tasmi') {
-            rentangArea.classList.add('hidden');
-        } else {
-            rentangArea.classList.remove('hidden');
-        }
-    }
-
-    function getHaRange() {
-        const dariVal   = parseInt(document.getElementById('haDariTrigger').dataset.val);
-        const sampaiVal = parseInt(document.getElementById('haSampaiTrigger').dataset.val);
-        return { dari: dariVal, sampai: sampaiVal };
-    }
-
-    function generateHaSuratArray(dari, sampai) {
-        // Arah otomatis: mundur jika dari >= sampai, maju jika dari < sampai
-        const result = [];
-        if (isNaN(dari) || isNaN(sampai)) return result;
+    function buildHaAyatInputs(dari, sampai) {
+        const container = document.getElementById('haAyatContainer');
+        if (!container) return;
+        
+        // Generate array surat
+        const arr = [];
         if (dari >= sampai) {
-            // mundur: 114 → 78
             for (let n = dari; n >= sampai; n--) {
-                if (JUZ30_SURAT.includes(n)) result.push(n);
+                if (JUZ30_SURAT.includes(n)) arr.push(n);
             }
         } else {
-            // maju: 78 → 114
             for (let n = dari; n <= sampai; n++) {
-                if (JUZ30_SURAT.includes(n)) result.push(n);
+                if (JUZ30_SURAT.includes(n)) arr.push(n);
             }
         }
-        return result;
+        
+        if (!arr.length) {
+            container.innerHTML = '<div class="ha-ayat-preview">Pilih rentang surat terlebih dahulu</div>';
+            return;
+        }
+        
+        const namaMap = {};
+        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+        
+        container.innerHTML = arr.map(num => {
+            const savedAyat = haAyatInputs[num] || '';
+            return `
+                <div class="ha-ayat-row">
+                    <label class="lbl">${num}. ${namaMap[num] || 'Surat ' + num}</label>
+                    <input type="text" class="ha-ayat-input" data-surat="${num}" placeholder="Contoh: 1-5, 10, 15-20" value="${escapeHtml(savedAyat)}" onchange="updateHaAyatInput(this)">
+                    <div class="ha-ayat-preview" id="ayatPreview-${num}">
+                        ${formatAyatPreview(savedAyat, namaMap[num])}
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
-
+    
+    function formatAyatPreview(ayatStr, suratName) {
+        if (!ayatStr || ayatStr.trim() === '') {
+            return '<span>📖 Belum diisi</span>';
+        }
+        // Parse format: 1-5, 10, 15-20
+        const parts = ayatStr.split(',').map(p => p.trim());
+        let totalAyat = 0;
+        const ranges = [];
+        for (const part of parts) {
+            if (part.includes('-')) {
+                const [start, end] = part.split('-').map(Number);
+                if (!isNaN(start) && !isNaN(end)) {
+                    totalAyat += (end - start + 1);
+                    ranges.push(`${start}-${end}`);
+                }
+            } else {
+                const num = Number(part);
+                if (!isNaN(num)) {
+                    totalAyat++;
+                    ranges.push(num.toString());
+                }
+            }
+        }
+        return `<span>📖 ${totalAyat} ayat: ${ranges.join(', ')}</span>`;
+    }
+    
+    function updateHaAyatInput(input) {
+        const suratNum = parseInt(input.dataset.surat);
+        const value = input.value.trim();
+        haAyatInputs[suratNum] = value;
+        
+        // Update preview
+        const namaMap = {};
+        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+        const previewEl = document.getElementById(`ayatPreview-${suratNum}`);
+        if (previewEl) {
+            previewEl.innerHTML = formatAyatPreview(value, namaMap[suratNum]);
+        }
+    }
+    
     function updateHaPreview() {
         const { dari, sampai } = getHaRange();
         const previewList = document.getElementById('haPreviewList');
@@ -3989,6 +3999,118 @@ self.addEventListener('message', e => {
         }
         const totalEl = document.getElementById('haPreviewTotal');
         totalEl.textContent = `${arr.length} surat`;
+        
+        // Build ayat inputs berdasarkan rentang baru
+        buildHaAyatInputs(dari, sampai);
+    }
+
+    function closeHafalanAwalModal(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('hafalanAwalModal').classList.remove('active');
+        hafalanAwalSiswaId = null;
+        haDropdownOpen = null;
+        haAyatInputs = {};
+        closeAllHaDropdowns();
+    }
+
+    function buildHaSuratGrid(type, selectedNum) {
+        const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
+        grid.innerHTML = '';
+        JUZ30_ASC.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'ha-surat-item' + (s.num === selectedNum ? ' selected' : '');
+            div.innerHTML = `<span class="si-num">${s.num}</span><span class="si-name">${s.name}</span>`;
+            div.onclick = () => selectHaSurat(type, s.num, s.name);
+            grid.appendChild(div);
+        });
+    }
+
+    function selectHaSurat(type, num, name) {
+        if (type === 'dari') {
+            document.getElementById('haDariNum').textContent  = num;
+            document.getElementById('haDariName').textContent = name;
+            document.getElementById('haDariTrigger').dataset.val = num;
+            document.getElementById('haDariTrigger').classList.add('has-val');
+            document.querySelectorAll('#haDariGrid .ha-surat-item').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
+            });
+            closeHaDropdown('dari');
+        } else {
+            document.getElementById('haSampaiNum').textContent  = num;
+            document.getElementById('haSampaiName').textContent = name;
+            document.getElementById('haSampaiTrigger').dataset.val = num;
+            document.getElementById('haSampaiTrigger').classList.add('has-val');
+            document.querySelectorAll('#haSampaiGrid .ha-surat-item').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.querySelector('.si-num').textContent) === num);
+            });
+            closeHaDropdown('sampai');
+        }
+        updateHaPreview();
+    }
+
+    function toggleHaDropdown(type) {
+        const dd = document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown');
+        const other = document.getElementById(type === 'dari' ? 'haSampaiDropdown' : 'haDariDropdown');
+        const isOpen = dd.classList.contains('open');
+        other.classList.remove('open');
+        dd.classList.toggle('open', !isOpen);
+        haDropdownOpen = !isOpen ? type : null;
+        if (!isOpen) {
+            setTimeout(() => {
+                const sel = dd.querySelector('.ha-surat-item.selected');
+                if (sel) sel.scrollIntoView({ block: 'nearest' });
+            }, 50);
+        }
+    }
+
+    function closeHaDropdown(type) {
+        document.getElementById(type === 'dari' ? 'haDariDropdown' : 'haSampaiDropdown').classList.remove('open');
+        if (haDropdownOpen === type) haDropdownOpen = null;
+    }
+
+    function closeAllHaDropdowns() {
+        document.querySelectorAll('.ha-dropdown').forEach(el => el.classList.remove('open'));
+        haDropdownOpen = null;
+    }
+
+    function pilihHaJenis(jenis) {
+        haJenisSelected = jenis;
+        document.querySelectorAll('.ha-jenis-opt').forEach(el => {
+            el.classList.remove('sel-tasmi', 'sel-muroja', 'sel-belum');
+            if (el.dataset.jenis === jenis) {
+                el.classList.add('sel-' + jenis);
+            }
+        });
+        const rentangArea = document.getElementById('haRentangArea');
+        const ayatArea = document.getElementById('haAyatArea');
+        if (jenis === 'tasmi') {
+            rentangArea.classList.add('hidden');
+            if (ayatArea) ayatArea.style.display = 'none';
+        } else {
+            rentangArea.classList.remove('hidden');
+            if (ayatArea) ayatArea.style.display = 'block';
+        }
+    }
+
+    function getHaRange() {
+        const dariVal   = parseInt(document.getElementById('haDariTrigger').dataset.val);
+        const sampaiVal = parseInt(document.getElementById('haSampaiTrigger').dataset.val);
+        return { dari: dariVal, sampai: sampaiVal };
+    }
+
+    function generateHaSuratArray(dari, sampai) {
+        const result = [];
+        if (isNaN(dari) || isNaN(sampai)) return result;
+        if (dari >= sampai) {
+            for (let n = dari; n >= sampai; n--) {
+                if (JUZ30_SURAT.includes(n)) result.push(n);
+            }
+        } else {
+            for (let n = dari; n <= sampai; n++) {
+                if (JUZ30_SURAT.includes(n)) result.push(n);
+            }
+        }
+        return result;
     }
 
     function simpanHafalanAwal() {
@@ -4004,44 +4126,85 @@ self.addEventListener('message', e => {
         siswa.jenisHafalanAwal = haJenisSelected;
 
         // Hapus entri hafalan awal lama
-        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan === 'Hafalan Awal'));
+        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan && s.keterangan.startsWith('Hafalan Awal')));
 
         if (haJenisSelected === 'tasmi') {
-            // Jika Tasmi': tandai khatam penuh + simpan tasmi
             siswa.hafalanAwal = [...JUZ30_SURAT];
+            siswa.hafalanAwalAyat = {};
+            JUZ30_SURAT.forEach(num => {
+                const suratInfo = (ALL_SURAT[30] || []).find(s => s.num === num);
+                siswa.hafalanAwalAyat[num] = `1-${suratInfo?.ayat || 1}`;
+            });
+            
             const allTasmi = getTasmiData();
             const existing = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId);
-            const record = { siswaId: hafalanAwalSiswaId, juz: 30, tanggal: todayStr(), nilai: 'L', penguji: '', catatan: 'Input Hafalan Awal' };
+            const record = { siswaId: hafalanAwalSiswaId, juz: 30, tanggal: todayStr(), nilai: 'L', penguji: '', catatan: 'Input Hafalan Awal - Tasmi\'' };
             if (existing !== -1) allTasmi[existing] = record; else allTasmi.push(record);
             saveTasmiData(allTasmi);
+            
+            const surahEntry = JUZ30_SURAT.map(n => { 
+                const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); 
+                return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] };
+            });
             state.dataSetoran.unshift({
                 id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
                 tanggal: todayStr(), jenis: 'setoran', keterangan: 'Hafalan Awal · Tasmi\'',
-                juz: '30', surah: JUZ30_SURAT.map(n => { const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] }; }),
-                status: 'lancar'
+                juz: '30', surah: surahEntry, status: 'lancar'
             });
             saveAllData();
-            showToast(`✅ Hafalan awal tersimpan: Tasmi'`);
+            showToast(`✅ Hafalan awal tersimpan: Tasmi' (${JUZ30_SURAT.length} surat)`);
         } else {
-            // Belum Khatam / Muroja'ah: pakai rentang surat
             const { dari, sampai } = getHaRange();
             const arr = generateHaSuratArray(dari, sampai);
             if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
 
             const sudahAda = new Set(siswa.hafalanAwal || []);
-            arr.forEach(n => sudahAda.add(n));
+            const sudahAdaAyat = siswa.hafalanAwalAyat || {};
+            arr.forEach(n => {
+                sudahAda.add(n);
+                if (haAyatInputs[n]) {
+                    sudahAdaAyat[n] = haAyatInputs[n];
+                }
+            });
             siswa.hafalanAwal = [...sudahAda];
+            siswa.hafalanAwalAyat = sudahAdaAyat;
 
             const jenisLabel = haJenisSelected === 'muroja' ? "Hafalan Awal · Muroja'ah" : 'Hafalan Awal · Belum Khatam';
             const jenisSetoran = haJenisSelected === 'muroja' ? 'muroja' : 'setoran';
-            const surahEntry = arr.map(n => { const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] }; });
+            
+            const surahEntry = arr.map(n => { 
+                const s = (ALL_SURAT[30]||[]).find(x=>x.num===n);
+                const ayatRange = haAyatInputs[n];
+                let dariAyat = 1, sampaiAyat = s ? s.ayat : 1;
+                if (ayatRange) {
+                    const parts = ayatRange.split(',').map(p => p.trim());
+                    const firstPart = parts[0];
+                    if (firstPart.includes('-')) {
+                        const [start] = firstPart.split('-').map(Number);
+                        if (!isNaN(start)) dariAyat = start;
+                    } else {
+                        const num = Number(firstPart);
+                        if (!isNaN(num)) dariAyat = num;
+                    }
+                    const lastPart = parts[parts.length - 1];
+                    if (lastPart.includes('-')) {
+                        const [, end] = lastPart.split('-').map(Number);
+                        if (!isNaN(end)) sampaiAyat = end;
+                    } else {
+                        const num = Number(lastPart);
+                        if (!isNaN(num)) sampaiAyat = num;
+                    }
+                }
+                return { num: n, name: namaMap[n]||`Surat ${n}`, dari: dariAyat, sampai: sampaiAyat, ayatSalah:[] };
+            });
+            
             state.dataSetoran.unshift({
                 id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
                 tanggal: todayStr(), jenis: jenisSetoran, keterangan: jenisLabel,
                 juz: '30', surah: surahEntry, status: 'lancar'
             });
             saveAllData();
-            showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat`);
+            showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat dengan detail ayat`);
         }
 
         closeHafalanAwalModal();
@@ -4056,12 +4219,11 @@ self.addEventListener('message', e => {
         if (!siswa) return;
         if (!(siswa.hafalanAwal || []).length && !siswa.jenisHafalanAwal) { showToast('ℹ️ Belum ada hafalan awal'); return; }
         siswa.hafalanAwal = [];
+        siswa.hafalanAwalAyat = {};
         siswa.jenisHafalanAwal = null;
-        // Hapus entri setoran hafalan awal
-        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && (s.keterangan || '').startsWith('Hafalan Awal')));
-        // Hapus tasmi jika ada (dari hafalan awal)
+        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan && s.keterangan.startsWith('Hafalan Awal')));
         const allTasmi = getTasmiData();
-        const idx = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId && t.catatan === 'Input Hafalan Awal');
+        const idx = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId && t.catatan && t.catatan.startsWith('Input Hafalan Awal'));
         if (idx !== -1) { allTasmi.splice(idx, 1); saveTasmiData(allTasmi); }
         saveAllData();
         showToast('🗑 Hafalan awal dihapus');
@@ -4071,7 +4233,6 @@ self.addEventListener('message', e => {
         renderDataSiswa();
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.ha-dropdown-wrap')) {
             closeAllHaDropdowns();
@@ -4184,6 +4345,15 @@ self.addEventListener('message', e => {
                         <div id="haPreviewList" class="ha-preview-list"></div>
                     </div>
                 </div><!-- /haRentangArea -->
+
+                <!-- INPUT AYAT PER SURAT -->
+                <div id="haAyatArea">
+                    <div class="lbl" style="margin-top:12px; margin-bottom:8px;">📖 Detail Ayat yang Dihafal</div>
+                    <div id="haAyatContainer"></div>
+                    <div class="ha-ayat-preview" style="margin-top:8px; background:#fef3c7; color:#92400e;">
+                        💡 Format: <strong>1-5, 10, 15-20</strong> (pisahkan dengan koma)
+                    </div>
+                </div>
 
             </div><!-- /haInputArea -->
         </div><!-- /ha-body -->
