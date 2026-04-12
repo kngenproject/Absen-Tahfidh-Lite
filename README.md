@@ -1,11 +1,11 @@
-# 📖 Absensi Tahfidz Pro
+# 📖 Absensi Tahfidz Lite
 
-![GitHub repo size](https://img.shields.io/github/repo-size/USERNAME/REPO?color=059669&label=Repo%20Size)
-![GitHub stars](https://img.shields.io/github/stars/USERNAME/REPO?style=social)
-![GitHub forks](https://img.shields.io/github/forks/USERNAME/REPO?style=social)
-![GitHub last commit](https://img.shields.io/github/last-commit/USERNAME/REPO?color=047857)
-![GitHub issues](https://img.shields.io/github/issues/USERNAME/REPO)
-![GitHub license](https://img.shields.io/github/license/USERNAME/REPO?color=059669)
+![GitHub repo size](https://img.shields.io/github/repo-size/kngenproject/Absen-Tahfidh-Lite?color=059669&label=Repo%20Size)
+![GitHub stars](https://img.shields.io/github/stars/kngenproject/Absen-Tahfidh-Lite?style=social)
+![GitHub forks](https://img.shields.io/github/forks/kngenproject/Absen-Tahfidh-Lite?style=social)
+![GitHub last commit](https://img.shields.io/github/last-commit/kngenproject/Absen-Tahfidh-Lite?color=047857)
+![GitHub issues](https://img.shields.io/github/issues/kngenproject/Absen-Tahfidh-Lite)
+![GitHub license](https://img.shields.io/github/license/kngenproject/Absen-Tahfidh-Lite?color=059669)
 ![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red)
 ![Mobile First](https://img.shields.io/badge/Design-Mobile%20First-green)
 ![Status](https://img.shields.io/badge/status-production--ready-brightgreen)
