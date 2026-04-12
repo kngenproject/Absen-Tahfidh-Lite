@@ -2666,20 +2666,64 @@
         selectedAyatStart = null; selectedAyatEnd = null; ayatPickerContext = null;
     }
     function renderSuratList() {
-        const c = document.getElementById('suratList');
-        c.innerHTML = '';
-        state.selectedSurah.forEach(s => {
+    const c = document.getElementById('suratList');
+    c.innerHTML = '';
+    
+    if (state.selectedSurah.length === 0) {
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'empty-state';
+        emptyMsg.style.padding = '16px';
+        emptyMsg.style.textAlign = 'center';
+        emptyMsg.style.color = 'var(--g4)';
+        emptyMsg.innerHTML = '📖 Belum ada hafalan yang dipilih<br><span style="font-size:10px;">Klik "Pilih surat..." untuk menambah</span>';
+        c.appendChild(emptyMsg);
+    } else {
+        state.selectedSurah.forEach((s, index) => {
             const div = document.createElement('div');
             div.className = 'surat-item';
-            div.innerHTML = `<div class="surat-item-name">${s.name}</div><div class="surat-ayat-pickers"><div class="ayat-picker-col" onclick="openDariModal(${s.num})"><span class="ayat-picker-label">Dari</span><span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span></div><span class="ayat-picker-arrow">→</span><div class="ayat-picker-col" onclick="openSampaiModal(${s.num})"><span class="ayat-picker-label">Sampai</span><span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span></div></div><button class="btn-rm" onclick="removeSurat(${s.num})">✕</button>`;
+            
+            // Badge sumber yang lebih rapi
+            let sumberBadge = '';
+            if (s.sumber === 'hafalan_awal') {
+                sumberBadge = '<span style="background:#dbeafe; color:#1e40af; font-size:8px; padding:2px 6px; border-radius:10px; margin-left:6px;">📝 Hafalan Awal</span>';
+            } else if (s.sumber === 'setoran') {
+                sumberBadge = '<span style="background:#fef3c7; color:#92400e; font-size:8px; padding:2px 6px; border-radius:10px; margin-left:6px;">📋 Setoran Terakhir</span>';
+            }
+            
+            div.innerHTML = `
+                <div class="surat-item-top" style="flex:1; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                    <div class="surat-item-name" style="flex:1; min-width:0;">
+                        ${s.name}${sumberBadge}
+                    </div>
+                    <div class="surat-ayat-pickers" style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                        <div class="ayat-picker-col" onclick="openDariModal(${s.num})">
+                            <span class="ayat-picker-label">Dari</span>
+                            <span class="ayat-picker-val dari-val" id="dari-${s.num}">${s.dari}</span>
+                        </div>
+                        <span class="ayat-picker-arrow">→</span>
+                        <div class="ayat-picker-col" onclick="openSampaiModal(${s.num})">
+                            <span class="ayat-picker-label">Sampai</span>
+                            <span class="ayat-picker-val sampai-val" id="sampai-${s.num}">${s.sampai}</span>
+                        </div>
+                        <button class="btn-rm" onclick="removeSurat(${s.num})" style="margin-left:4px;">✕</button>
+                    </div>
+                </div>
+            `;
             c.appendChild(div);
         });
-        document.getElementById('btnAddSurat').style.display = state.selectedSurah.length ? 'block' : 'none';
-        const sd = document.getElementById('selectSurat');
-        if (state.selectedSurah.length) { sd.classList.remove('empty'); sd.innerHTML = `<span>${state.selectedSurah.length} surat dipilih</span><span class="clickable-ico">▼</span>`; }
-        else { sd.classList.add('empty'); sd.innerHTML = `<span>Pilih surat...</span><span class="clickable-ico">▼</span>`; }
-        updateKoreksiButton();
     }
+    
+    document.getElementById('btnAddSurat').style.display = 'block';
+    const sd = document.getElementById('selectSurat');
+    if (state.selectedSurah.length) { 
+        sd.classList.remove('empty'); 
+        sd.innerHTML = `<span>${state.selectedSurah.length} surat dipilih</span><span class="clickable-ico">▼</span>`; 
+    } else { 
+        sd.classList.add('empty'); 
+        sd.innerHTML = `<span>Pilih surat...</span><span class="clickable-ico">▼</span>`; 
+    }
+    updateKoreksiButton();
+}
     function removeSurat(num) { state.selectedSurah = state.selectedSurah.filter(s => s.num !== num); renderSuratList(); }
     function openKelasModal() {
         const cur = document.getElementById('filterKelas').value;
@@ -2746,57 +2790,120 @@
         document.getElementById('lastSetoranBar').classList.remove('show');
     }
     function loadSetoranTerakhir(siswaId) {
-        const bar = document.getElementById('lastSetoranBar');
-        const txt = document.getElementById('lastSetoranText');
-        const last = getSetoranTerakhir(siswaId);
-        if (!last) { bar.classList.remove('show'); return; }
-        if (last.juz) { document.getElementById('juz').value = String(last.juz); document.getElementById('juzText').textContent = 'Juz ' + last.juz; }
-        state.currentJenis = last.jenis || 'tasmi';
-        document.querySelectorAll('.seg-btn').forEach(b => { b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); });
-        pilihStatus(last.status || 'lancar');
-        // Isi form: gabungkan surat dari setoran terakhir + satu surat terakhir hafalan awal
-        const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
-        const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
-        const juzVal = Number(document.getElementById('juz').value) || 30;
-        state.selectedSurah = [];
-
-        // 1. Load surat dari setoran terakhir (beserta range ayat & ayatSalah-nya)
-        const lastSurahArr = last.surah || [];
-        lastSurahArr.forEach(sr => {
-            state.selectedSurah.push({ ...sr, ayatSalah: sr.ayatSalah || [] });
-        });
-
-        // 2. Tambahkan satu surat terakhir dari hafalan awal (jika belum ada di list)
-        if (hafalanAwalArr.length) {
-            const lastNum = hafalanAwalArr[hafalanAwalArr.length - 1];
-            const sudahAda = state.selectedSurah.some(s => s.num === lastNum);
-            if (!sudahAda) {
-                const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastNum)
-                               || Object.values(ALL_SURAT).flat().find(s => s.num === lastNum);
-                if (suratInfo) {
-                    state.selectedSurah.push({ ...suratInfo, dari: 1, sampai: suratInfo.ayat, ayatSalah: [] });
+    const bar = document.getElementById('lastSetoranBar');
+    const txt = document.getElementById('lastSetoranText');
+    const last = getSetoranTerakhir(siswaId);
+    
+    // Ambil siswa dan hafalan awal
+    const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
+    const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
+    const hafalanAwalAyat = (siswaObj && siswaObj.hafalanAwalAyat) || {};
+    const juzVal = Number(document.getElementById('juz').value) || 30;
+    
+    // RESET selectedSurah
+    state.selectedSurah = [];
+    
+    // Gunakan Set untuk menghindari duplikasi surat
+    const addedSurat = new Set();
+    
+    // 1. AMBIL SURAT TERAKHIR DARI HAFALAN AWAL (jika ada)
+    if (hafalanAwalArr.length > 0) {
+        const lastSuratNum = hafalanAwalArr[hafalanAwalArr.length - 1];
+        const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastSuratNum)
+                       || Object.values(ALL_SURAT).flat().find(s => s.num === lastSuratNum);
+        if (suratInfo) {
+            const ayatRange = hafalanAwalAyat[lastSuratNum] || `1-${suratInfo.ayat}`;
+            let dariAyat = 1, sampaiAyat = suratInfo.ayat;
+            if (ayatRange) {
+                const parts = ayatRange.split(',').map(p => p.trim());
+                const firstPart = parts[0];
+                if (firstPart.includes('-')) {
+                    const [start] = firstPart.split('-').map(Number);
+                    if (!isNaN(start)) dariAyat = start;
+                } else {
+                    const num = Number(firstPart);
+                    if (!isNaN(num)) dariAyat = num;
+                }
+                const lastPart = parts[parts.length - 1];
+                if (lastPart.includes('-')) {
+                    const [, end] = lastPart.split('-').map(Number);
+                    if (!isNaN(end)) sampaiAyat = end;
+                } else {
+                    const num = Number(lastPart);
+                    if (!isNaN(num)) sampaiAyat = num;
                 }
             }
+            state.selectedSurah.push({ 
+                ...suratInfo, 
+                dari: dariAyat, 
+                sampai: sampaiAyat, 
+                ayatSalah: [],
+                sumber: 'hafalan_awal'
+            });
+            addedSurat.add(lastSuratNum);
         }
-
-        renderSuratList();
+    }
+    
+    // 2. AMBIL SURAT TERAKHIR DARI SETORAN TERAKHIR (jika ada dan berbeda dengan hafalan awal)
+    if (last && last.surah && last.surah.length > 0) {
+        const lastSuratFromSetoran = last.surah[last.surah.length - 1];
+        // Hanya tambahkan jika surat ini BELUM ADA dari hafalan awal
+        if (!addedSurat.has(lastSuratFromSetoran.num)) {
+            state.selectedSurah.push({ 
+                ...lastSuratFromSetoran, 
+                ayatSalah: lastSuratFromSetoran.ayatSalah || [],
+                sumber: 'setoran'
+            });
+        }
+    }
+    
+    // Render surat list
+    renderSuratList();
+    
+    // Update form fields berdasarkan setoran terakhir (jika ada)
+    if (last) {
+        if (last.juz) { 
+            document.getElementById('juz').value = String(last.juz); 
+            document.getElementById('juzText').textContent = 'Juz ' + last.juz; 
+        }
+        state.currentJenis = last.jenis || 'tasmi';
+        document.querySelectorAll('.seg-btn').forEach(b => { 
+            b.classList.toggle('active', b.getAttribute('data-jenis') === state.currentJenis); 
+        });
+        pilihStatus(last.status || 'lancar');
+        
+        // Update last setoran bar
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
-        const surahArr = last.surah || [];
         let suratNames;
-        if (surahArr.length === 0) {
+        if (state.selectedSurah.length === 0) {
             suratNames = '-';
-        } else if (surahArr.length === 1) {
-            const sr = surahArr[0];
+        } else if (state.selectedSurah.length === 1) {
+            const sr = state.selectedSurah[0];
             suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
         } else {
-            const lastSr = surahArr[surahArr.length - 1];
-            suratNames = `${surahArr[0].name}–${lastSr.name} (${surahArr.length} surat)`;
+            const sr1 = state.selectedSurah[0];
+            const sr2 = state.selectedSurah[1];
+            suratNames = `${sr1.name} & ${sr2.name}`;
         }
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
         const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
         txt.innerHTML = `<span class="lsb-row1">${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis}</span><span class="lsb-row2">${suratNames} · ${status}</span>`;
         bar.classList.add('show');
+    } else {
+        // Tidak ada setoran, tapi mungkin ada hafalan awal
+        if (state.selectedSurah.length > 0) {
+            const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
+            const sr = state.selectedSurah[0];
+            const suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
+            txt.innerHTML = `<span class="lsb-row1">Hafalan Awal</span><span class="lsb-row2">${suratNames}</span>`;
+            bar.classList.add('show');
+        } else {
+            bar.classList.remove('show');
+        }
     }
+}
+
+// Fungsi baru untuk menampilkan hanya hafalan awal (jika tidak ada setoran)
     function tambahSiswa() {
     const nama = document.getElementById('inputNamaSiswa').value.trim();
     const kelas = document.getElementById('inputKelas').value.trim();
@@ -2854,43 +2961,64 @@
         list.innerHTML = state.dataSiswa.map(s => `<div class="data-card"><div><div class="data-name">${escapeHtml(s.nama)}</div><span class="data-kelas">Kelas ${escapeHtml(s.kelas)}</span></div><button class="btn-del" onclick="deleteSiswa('${s.id}')">🗑</button></div>`).join('');
     }
     function simpanSetoran() {
-        const SiswaId = document.getElementById('namaSiswa').value;
-        const tgl = document.getElementById('tanggal').value;
-        if (!SiswaId) { showToast('⚠️ Pilih Siswa terlebih dahulu'); return; }
-        if (!tgl) { showToast('⚠️ Isi tanggal'); return; }
-        if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
-        const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
-        if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
+    const SiswaId = document.getElementById('namaSiswa').value;
+    const tgl = document.getElementById('tanggal').value;
+    if (!SiswaId) { showToast('⚠️ Pilih Siswa terlebih dahulu'); return; }
+    if (!tgl) { showToast('⚠️ Isi tanggal'); return; }
+    if (!state.selectedSurah.length) { showToast('⚠️ Pilih minimal 1 surat'); return; }
+    const Siswa = state.dataSiswa.find(s => s.id === SiswaId);
+    if (!Siswa) { showToast('⚠️ Siswa tidak ditemukan'); return; }
 
-        // Validasi fase: muroja hanya jika sudah khatam
-        if (state.currentJenis === 'muroja' && !isKhatamJuz30(SiswaId)) {
-            alert('⚠️ Siswa belum khatam Juz 30.\nInput Muroja\'ah hanya bisa dilakukan setelah setoran khatam.');
-            return;
-        }
-
-        state.dataSetoran.unshift({ id: Date.now(), SiswaId, nama: Siswa.nama, kelas: Siswa.kelas, tanggal: tgl, jenis: state.currentJenis, juz: document.getElementById('juz').value, surah: [...state.selectedSurah], status: state.currentStatus });
-        saveAllData();
-        showToast('✅ Setoran tersimpan!');
-        renderResult();
-        renderMonitoring();
-        resetForm();
+    // Validasi fase: muroja hanya jika sudah khatam
+    if (state.currentJenis === 'muroja' && !isKhatamJuz30(SiswaId)) {
+        alert('⚠️ Siswa belum khatam Juz 30.\nInput Muroja\'ah hanya bisa dilakukan setelah setoran khatam.');
+        return;
     }
+
+    // Hapus properti 'sumber' sebelum menyimpan ke dataSetoran
+    const surahToSave = state.selectedSurah.map(s => {
+        const { sumber, ...rest } = s; // Hapus properti sumber
+        return rest;
+    });
+
+    state.dataSetoran.unshift({ 
+        id: Date.now(), 
+        SiswaId, 
+        nama: Siswa.nama, 
+        kelas: Siswa.kelas, 
+        tanggal: tgl, 
+        jenis: state.currentJenis, 
+        juz: document.getElementById('juz').value, 
+        surah: surahToSave, 
+        status: state.currentStatus 
+    });
+    saveAllData();
+    showToast('✅ Setoran tersimpan!');
+    renderResult();
+    renderMonitoring();
+    resetForm();
+}
     function resetForm() {
-        document.getElementById('namaSiswa').value = '';
-        document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
-        document.getElementById('namaSiswaDisplay').classList.add('empty');
-        document.getElementById('kelas').value = '';
-        document.getElementById('lastSetoranBar').classList.remove('show');
-        state.selectedSurah = [];
-        state.currentJenis = 'tasmi';
-        state.currentStatus = 'lancar';
-        pilihStatus('lancar');
-        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-        const tb = document.querySelector('[data-jenis="tasmi"]');
-        if (tb) tb.classList.add('active');
-        renderSuratList();
-        document.getElementById('tanggal').value = todayStr();
-    }
+    document.getElementById('namaSiswa').value = '';
+    document.getElementById('namaSiswaText').textContent = '-- Pilih Nama --';
+    document.getElementById('namaSiswaDisplay').classList.add('empty');
+    document.getElementById('kelas').value = '';
+    document.getElementById('lastSetoranBar').classList.remove('show');
+    // Reset selectedSurah dan hapus properti sumber
+    state.selectedSurah = state.selectedSurah.map(s => {
+        const { sumber, ...rest } = s;
+        return rest;
+    });
+    state.selectedSurah = [];
+    state.currentJenis = 'tasmi';
+    state.currentStatus = 'lancar';
+    pilihStatus('lancar');
+    document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    const tb = document.querySelector('[data-jenis="tasmi"]');
+    if (tb) tb.classList.add('active');
+    renderSuratList();
+    document.getElementById('tanggal').value = todayStr();
+}
     function renderResult() {
     const section = document.getElementById('resultSection');
     const container = document.getElementById('resultList');
