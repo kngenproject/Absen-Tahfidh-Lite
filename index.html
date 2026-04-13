@@ -1768,7 +1768,6 @@
 </head>
 <body>
 <div class="toast" id="toast"></div>
-<div id="offlineBanner">📵 Anda sedang offline — data tersimpan lokal, semua fitur tetap berjalan</div>
 <div class="app">
 
     <div class="header">
@@ -3724,7 +3723,13 @@
     init();
 
     const offlineBanner = document.getElementById('offlineBanner');
-    function updateOnlineStatus() { if (!navigator.onLine) offlineBanner.classList.add('show'); else offlineBanner.classList.remove('show'); }
+    function updateOnlineStatus() {
+    if (!navigator.onLine) {
+        // Tampilkan toast offline (hanya sekali saat status berubah jadi offline)
+        showToast('📵 Anda sedang offline — data tersimpan lokal, semua fitur tetap berjalan', 3000);
+    }
+    // Tidak menampilkan toast saat online (bisa ditambah jika ingin notifikasi "online kembali")
+}
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
