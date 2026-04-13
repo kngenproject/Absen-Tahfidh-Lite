@@ -2850,7 +2850,6 @@
     const txt = document.getElementById('lastSetoranText');
     const last = getSetoranTerakhir(siswaId);
     
-    // Ambil siswa dan hafalan awal
     const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
     const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
     const hafalanAwalAyat = (siswaObj && siswaObj.hafalanAwalAyat) || {};
@@ -2858,11 +2857,9 @@
     
     // RESET selectedSurah
     state.selectedSurah = [];
-    
-    // Gunakan Set untuk menghindari duplikasi surat
     const addedSurat = new Set();
     
-    // 1. AMBIL SURAT TERAKHIR DARI HAFALAN AWAL (jika ada)
+    // 1. Ambil surat terakhir dari hafalan awal (jika ada)
     if (hafalanAwalArr.length > 0) {
         const lastSuratNum = hafalanAwalArr[hafalanAwalArr.length - 1];
         const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastSuratNum)
@@ -2900,10 +2897,9 @@
         }
     }
     
-    // 2. AMBIL SURAT TERAKHIR DARI SETORAN TERAKHIR (jika ada dan berbeda dengan hafalan awal)
+    // 2. Ambil surat terakhir dari setoran terakhir (jika ada dan belum ditambahkan)
     if (last && last.surah && last.surah.length > 0) {
         const lastSuratFromSetoran = last.surah[last.surah.length - 1];
-        // Hanya tambahkan jika surat ini BELUM ADA dari hafalan awal
         if (!addedSurat.has(lastSuratFromSetoran.num)) {
             state.selectedSurah.push({ 
                 ...lastSuratFromSetoran, 
@@ -2913,7 +2909,6 @@
         }
     }
     
-    // Render surat list
     renderSuratList();
     
     // Update form fields berdasarkan setoran terakhir (jika ada)
@@ -2928,19 +2923,22 @@
         });
         pilihStatus(last.status || 'lancar');
         
-        // Update last setoran bar
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
-        let suratNames;
-        if (state.selectedSurah.length === 0) {
-            suratNames = '-';
-        } else if (state.selectedSurah.length === 1) {
+        
+        // Ambil satu surat terakhir dari setoran terakhir
+        let suratTerakhir = null;
+        if (last.surah && last.surah.length > 0) {
+            suratTerakhir = last.surah[last.surah.length - 1];
+        }
+        let suratNames = '-';
+        if (suratTerakhir) {
+            suratNames = `${suratTerakhir.name} (${suratTerakhir.dari}–${suratTerakhir.sampai})`;
+        } else if (state.selectedSurah.length > 0) {
+            // fallback jika tidak ada setoran (misal hanya hafalan awal)
             const sr = state.selectedSurah[0];
             suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
-        } else {
-            const sr1 = state.selectedSurah[0];
-            const sr2 = state.selectedSurah[1];
-            suratNames = `${sr1.name} & ${sr2.name}`;
         }
+        
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
         const status = last.status === 'lancar' ? '✅ L' : '⚠️ KL';
         txt.innerHTML = `<span class="lsb-row1">${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis}</span><span class="lsb-row2">${suratNames} · ${status}</span>`;
@@ -2948,7 +2946,6 @@
     } else {
         // Tidak ada setoran, tapi mungkin ada hafalan awal
         if (state.selectedSurah.length > 0) {
-            const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
             const sr = state.selectedSurah[0];
             const suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
             txt.innerHTML = `<span class="lsb-row1">Hafalan Awal</span><span class="lsb-row2">${suratNames}</span>`;
@@ -2958,7 +2955,6 @@
         }
     }
 }
-
 // Fungsi baru untuk menampilkan hanya hafalan awal (jika tidak ada setoran)
     function tambahSiswa() {
     const nama = document.getElementById('inputNamaSiswa').value.trim();
