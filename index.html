@@ -2584,20 +2584,77 @@
         </div>`;
     }).join('');
 }
+// ========== FUNGSI FILTER SURAT BERDASARKAN STATUS SISWA ==========
+    function getSuratListByStatus(siswaId, juzNumber) {
+    // Jika juz bukan 30, kembalikan daftar surat asli (tidak diubah)
+    if (juzNumber !== 30) {
+        return ALL_SURAT[juzNumber] || [];
+    }
+
+    // Jika belum pilih siswa, default ke status "BELUM KHATAM" (urutan mundur)
+    if (!siswaId) {
+        return getSuratListUrutanMundur(ALL_SURAT[30] || []);
+    }
+
+    const siswa = state.dataSiswa.find(s => s.id === siswaId);
+    if (!siswa) return getSuratListUrutanMundur(ALL_SURAT[30] || []);
+
+    const sudahTasmi = !!getTasmiSiswa(siswaId);
+    const sudahKhatam = isKhatamJuz30(siswaId);
+
+    // 1. TASMI' → surat SELAIN Juz 30 (karena juz=30, kembalikan array kosong)
+    if (sudahTasmi) {
+        return []; // Tidak ada surat Juz 30 untuk siswa yang sudah Tasmi'
+    }
+
+    // 2. MUROJA'AH (sudah khatam, belum Tasmi') → urutan maju 78 → 114
+    if (sudahKhatam) {
+        return getSuratListUrutanMaju(ALL_SURAT[30] || []);
+    }
+
+    // 3. BELUM KHATAM → urutan mundur 114 → 78
+    return getSuratListUrutanMundur(ALL_SURAT[30] || []);
+}
+
+    function getSuratListUrutanMaju(suratList) {
+    // Urutan asli (num kecil ke besar) sudah maju
+    return [...suratList].sort((a, b) => a.num - b.num);
+}
+
+    function getSuratListUrutanMundur(suratList) {
+    return [...suratList].sort((a, b) => b.num - a.num);
+}
     function openSuratModal() {
-        const juzVal = document.getElementById('juz').value || '30';
-        document.getElementById('juzNumber').innerText = juzVal;
-        const grid = document.getElementById('gridContainer');
-        grid.innerHTML = '';
-        (ALL_SURAT[juzVal] || []).forEach(s => {
+    const juzVal = document.getElementById('juz').value || '30';
+    const siswaId = document.getElementById('namaSiswa').value; // ID siswa yang sedang dipilih di form
+    
+    const suratList = getSuratListByStatus(siswaId, Number(juzVal));
+    
+    document.getElementById('juzNumber').innerText = juzVal;
+    const grid = document.getElementById('gridContainer');
+    grid.innerHTML = '';
+    
+    if (suratList.length === 0) {
+        // Tampilkan pesan jika tidak ada surat yang tersedia (misal: siswa Tasmi' di Juz 30)
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'empty-state';
+        emptyMsg.style.gridColumn = '1 / -1';
+        emptyMsg.style.padding = '24px';
+        emptyMsg.style.textAlign = 'center';
+        emptyMsg.innerHTML = '📖 Tidak ada surat yang tersedia untuk status ini.<br><span style="font-size:10px;">Pilih juz lain (1–29) atau ubah status siswa.</span>';
+        grid.appendChild(emptyMsg);
+    } else {
+        suratList.forEach(s => {
             const div = document.createElement('div');
             div.className = 'grid-item';
             div.innerHTML = `<div class="grid-item-num">${s.num}</div><div class="grid-item-name">${s.name}</div>`;
             div.onclick = () => selectSurat(s);
             grid.appendChild(div);
         });
-        document.getElementById('suratModal').classList.add('active');
     }
+    
+    document.getElementById('suratModal').classList.add('active');
+}
     function closeSuratModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('suratModal').classList.remove('active'); }
     function selectSurat(surat) {
         state.currentAyatSurat = surat;
