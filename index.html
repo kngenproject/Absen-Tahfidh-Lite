@@ -2409,7 +2409,8 @@
     let tasmiNilaiSelected = null;
 
 // Variabel untuk Monitoring
-    let monFilterKelas = '';           // Filter kelas di tab monitoring
+    let monProgressFilterKelas = '';   // Filter kelas di sub-tab Progress
+    let monRiwayatFilterKelas = '';    // Filter kelas di sub-tab Riwayat
 
 // Variabel untuk Juz 30
     let JUZ30_LIST = [];               // Daftar surat Juz 30 (78-114)
@@ -2541,7 +2542,7 @@
 
 // ========== FUNGSI UNTUK MONITORING FILTER ==========
     function monSetFilter(kelas) {
-    monFilterKelas = kelas;
+    monProgressFilterKelas = kelas;
     // Update active class pada tombol "Semua"
     const allBtn = document.getElementById('monFilterAll');
     if (allBtn) {
@@ -2654,7 +2655,7 @@
        }
        
        container.innerHTML = kelasList.map(k => 
-           `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+           `<div class="mon-filter-pill${monProgressFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
        ).join('');
    }
 
@@ -3483,29 +3484,12 @@
         });
         return list[0];
     }
-    function renderMonFilterKelas() {
-    const container = document.getElementById('monFilterKelas');
-    if (!container) return;
-    
-    const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
-    
-    container.innerHTML = kelasList.map(k => 
-        `<div class="mon-filter-pill${monFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
-    ).join('');
-}
-
-    function monSetFilter(kelas) {
-    monFilterKelas = kelas;
-    document.getElementById('monFilterAll').classList.toggle('active', kelas === '');
-    renderMonFilterKelas();
-    renderMonitoring();
-}
     function renderMonitoring() {
     updateFilterKelasDropdown();  // Update dropdown options
     const container = document.getElementById('monList');
     if (!container) return;
     let siswaList = state.dataSiswa;
-    if (monFilterKelas) siswaList = siswaList.filter(s => s.kelas === monFilterKelas);
+    if (monProgressFilterKelas) siswaList = siswaList.filter(s => s.kelas === monProgressFilterKelas);
     if (!siswaList.length) { 
         container.innerHTML = `<div class="mon-empty"><div class="mon-empty-icon">📊</div><div class="mon-empty-text">${state.dataSiswa.length ? 'Tidak ada siswa di kelas ini' : 'Belum ada data siswa'}</div><div class="mon-empty-sub">Tambahkan siswa di tab Info terlebih dahulu</div></div>`; 
         return; 
@@ -3623,7 +3607,6 @@
 }
 
     // ── Monitoring Sub-Tab ──
-    let monRiwFilterKelas = '';
 
     function switchMonSubTab(name) {
         ['progress', 'riwayat'].forEach(n => {
@@ -3639,7 +3622,7 @@
     }
 
     function monRiwSetFilter(kelas) {
-        monRiwFilterKelas = kelas;
+        monRiwayatFilterKelas = kelas;
         const allBtn = document.getElementById('monRiwFilterAll');
         if (allBtn) allBtn.classList.toggle('active', kelas === '');
         renderMonRiwFilterKelas();
@@ -3651,7 +3634,7 @@
         if (!container) return;
         const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].sort();
         container.innerHTML = kelasList.map(k =>
-            `<div class="mon-filter-pill${monRiwFilterKelas === k ? ' active' : ''}" onclick="monRiwSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+            `<div class="mon-filter-pill${monRiwayatFilterKelas === k ? ' active' : ''}" onclick="monRiwSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
         ).join('');
     }
 
@@ -3675,10 +3658,10 @@
     });
 
     // Filter berdasarkan kelas jika dipilih
-    if (monFilterKelas) {
+    if (monRiwayatFilterKelas) {
         list = list.filter(s => {
             const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
-            return siswa && siswa.kelas === monFilterKelas;
+            return siswa && siswa.kelas === monRiwayatFilterKelas;
         });
     }
 
@@ -3757,10 +3740,10 @@
     });
 
     // Filter kelas jika ada filter yang aktif di monitoring riwayat
-    if (monRiwFilterKelas) {
+    if (monRiwayatFilterKelas) {
         list = list.filter(s => {
             const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
-            return siswa && siswa.kelas === monRiwFilterKelas;
+            return siswa && siswa.kelas === monRiwayatFilterKelas;
         });
     }
 
@@ -4329,6 +4312,9 @@
     const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
     if (!siswa) return;
     if (!haJenisSelected) { showToast('⚠️ Pilih status hafalan awal terlebih dahulu'); return; }
+
+    // Simpan jenis hafalan awal ke siswa
+    siswa.jenisHafalanAwal = haJenisSelected;
 
     const namaMap = {};
     JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
