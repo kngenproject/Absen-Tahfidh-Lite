@@ -1764,6 +1764,70 @@
             outline: none;
             border-color: var(--p);
         }
+        /* ── ACCORDION MONITORING PROGRESS ── */
+        .mon-accordion-item {
+    margin-bottom: 12px;
+    border-radius: var(--r2);
+    background: white;
+    box-shadow: var(--sh);
+    overflow: hidden;
+    border: 1px solid var(--g2);
+}
+
+        .mon-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    background: var(--g0);
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+        .mon-accordion-header:active {
+    background: var(--g1);
+}
+
+        .mon-accordion-header-left {
+    flex: 1;
+}
+
+        .mon-accordion-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--g9);
+    margin-bottom: 4px;
+}
+
+        .mon-accordion-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+        .mon-accordion-arrow {
+    font-size: 20px;
+    color: var(--g5);
+    transition: transform 0.2s;
+}
+
+        .mon-accordion-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: white;
+}
+
+        .mon-accordion-panel.open {
+    max-height: 800px; /* cukup untuk semua konten */
+    transition: max-height 0.4s ease-in;
+}
+
+        .mon-accordion-body {
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--g2);
+}
     </style>
 </head>
 <body>
@@ -3395,15 +3459,8 @@
             const parts = lastSetoran.tanggal.split('-');
             tanggalText = `${parts[2]}/${parts[1]}/${parts[0]}`;
         }
-        
-        const jenisMap = { 
-            tasmi: "Tasmi'", 
-            muroja: "Muroja'ah", 
-            setoran: "Setoran", 
-            belum: "Blm Khatam" 
-        };
+        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
         jenisText = jenisMap[lastSetoran.jenis] || lastSetoran.jenis || '-';
-        
         if (lastSetoran.jenis === 'tasmi') jenisClass = 'jenis-tasmi';
         else if (lastSetoran.jenis === 'muroja') jenisClass = 'jenis-muroja';
         else if (lastSetoran.jenis === 'setoran') jenisClass = 'jenis-setoran';
@@ -3415,15 +3472,11 @@
             if (lastSetoran.surah.length > 1) {
                 suratText = `${lastSetoran.surah.length} surat · ${suratText}`;
             }
-        } else {
-            suratText = '-';
         }
-        
         statusText = lastSetoran.status === 'lancar' ? 'Lancar' : 'Kurang Lancar';
         statusClass = lastSetoran.status === 'lancar' ? 'status-lancar' : 'status-kurang';
     }
     
-    // Cek apakah sudah ada hafalan awal
     const hasHafalanAwal = (siswa.hafalanAwal && siswa.hafalanAwal.length > 0) || siswa.jenisHafalanAwal;
     const hafalanAwalText = hasHafalanAwal ? '✓ Sudah' : '❌ Belum';
     const hafalanAwalClass = hasHafalanAwal ? 'jenis-selesai' : 'jenis-belum';
@@ -3431,54 +3484,61 @@
     const khatamBadge = khatam ? '<span class="mon-badge-khatam">🎉 Khatam Juz 30</span>' : '';
     const tasmiBadge = tasmi ? '<span class="mon-badge-khatam" style="background:#ede9fe;color:#4c1d95;">🎤 Sudah Tasmi\'</span>' : '';
     
+    // Buat ID unik untuk panel
+    const panelId = `mon-panel-${id}`;
+    
     return `
-        <div class="mon-card-sederhana">
-            <div class="mon-card-head-sederhana">
-                <div class="mon-card-identity">
-                    <div class="mon-card-name">${escapeHtml(nama)}</div>
-                    <div>
+        <div class="mon-accordion-item">
+            <div class="mon-accordion-header" onclick="toggleMonAccordion('${panelId}')">
+                <div class="mon-accordion-header-left">
+                    <div class="mon-accordion-name">${escapeHtml(nama)}</div>
+                    <div class="mon-accordion-badges">
                         <span class="mon-badge-kelas">Kelas ${escapeHtml(kelas)}</span>
                         ${khatamBadge}
                         ${tasmiBadge}
                     </div>
                 </div>
+                <div class="mon-accordion-arrow" id="arrow-${panelId}">▼</div>
             </div>
-            <div class="mon-card-body-sederhana">
-                <div class="mon-info-grid">
-                    <div class="mon-info-item">
-                        <span class="mon-info-icon">📅</span>
-                        <div class="mon-info-label">Tanggal</div>
-                        <div class="mon-info-value">${tanggalText}</div>
+            <div class="mon-accordion-panel" id="${panelId}">
+                <div class="mon-accordion-body">
+                    <div class="mon-info-grid">
+                        <div class="mon-info-item">
+                            <span class="mon-info-icon">📅</span>
+                            <div class="mon-info-label">Tanggal</div>
+                            <div class="mon-info-value">${tanggalText}</div>
+                        </div>
+                        <div class="mon-info-item">
+                            <span class="mon-info-icon">📚</span>
+                            <div class="mon-info-label">Jenis</div>
+                            <div class="mon-info-value ${jenisClass}">${escapeHtml(jenisText)}</div>
+                        </div>
+                        <div class="mon-info-item">
+                            <span class="mon-info-icon">⭐</span>
+                            <div class="mon-info-label">Status</div>
+                            <div class="mon-info-value ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="mon-info-item">
+                            <span class="mon-info-icon">📝</span>
+                            <div class="mon-info-label">Hafalan Awal</div>
+                            <div class="mon-info-value ${hafalanAwalClass}">${hafalanAwalText}</div>
+                        </div>
                     </div>
-                    <div class="mon-info-item">
-                        <span class="mon-info-icon">📚</span>
-                        <div class="mon-info-label">Jenis</div>
-                        <div class="mon-info-value ${jenisClass}">${escapeHtml(jenisText)}</div>
+                    <div class="mon-surat-row">
+                        <span class="mon-surat-icon">📖</span>
+                        <span class="mon-surat-label">Hafalan Terakhir:</span>
+                        <span class="mon-surat-value">${escapeHtml(suratText)}</span>
                     </div>
-                    <div class="mon-info-item">
-                        <span class="mon-info-icon">⭐</span>
-                        <div class="mon-info-label">Status</div>
-                        <div class="mon-info-value ${statusClass}">${statusText}</div>
-                    </div>
-                    <div class="mon-info-item">
-                        <span class="mon-info-icon">📝</span>
-                        <div class="mon-info-label">Hafalan Awal</div>
-                        <div class="mon-info-value ${hafalanAwalClass}">${hafalanAwalText}</div>
+                    <div class="mon-card-foot" style="margin-top: 12px;">
+                        <button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">📝 Input Hafalan Awal</button>
+                        ${!tasmi && khatam ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Tasmi'</button>` : ''}
                     </div>
                 </div>
-                <div class="mon-surat-row">
-                    <span class="mon-surat-icon">📖</span>
-                    <span class="mon-surat-label">Hafalan Terakhir:</span>
-                    <span class="mon-surat-value">${escapeHtml(suratText)}</span>
-                </div>
-            </div>
-            <div class="mon-card-foot">
-                <button class="btn-hafalan-awal" onclick="inputHafalanAwal('${id}')">📝 Input Hafalan Awal</button>
-                ${!tasmi && khatam ? `<button class="btn-tasmi" onclick="openTasmiModal('${id}')">🎤 Tasmi'</button>` : ''}
             </div>
         </div>
-    `;
-}    function escapeHtml(str) {
+    `;}
+}  
+      function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
@@ -4437,6 +4497,32 @@ self.addEventListener('message', e => {
             return m;
         });
     }
+    function toggleMonAccordion(panelId) {
+    const panel = document.getElementById(panelId);
+    const arrow = document.getElementById('arrow-' + panelId);
+    if (!panel || !arrow) return;
+    
+    if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        arrow.style.transform = 'rotate(0deg)';
+        arrow.innerHTML = '▼';
+    } else {
+        // Tutup semua panel lain (opsional, untuk hanya satu yang terbuka)
+        document.querySelectorAll('.mon-accordion-panel').forEach(p => {
+            if (p.id !== panelId) {
+                p.classList.remove('open');
+                const otherArrow = document.getElementById('arrow-' + p.id);
+                if (otherArrow) {
+                    otherArrow.style.transform = 'rotate(0deg)';
+                    otherArrow.innerHTML = '▼';
+                }
+            }
+        });
+        panel.classList.add('open');
+        arrow.style.transform = 'rotate(180deg)';
+        arrow.innerHTML = '▲';
+    }
+}
 
 </script>
 
