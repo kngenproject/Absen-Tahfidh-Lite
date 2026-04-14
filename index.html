@@ -1831,6 +1831,22 @@
     padding: 12px 16px 16px;
     border-top: 1px solid var(--g2);
 }
+/* Pastikan input hafalan awal dapat diklik */
+        .ha-ayat-input {
+    background: white;
+    border: 1.5px solid var(--g2);
+    border-radius: var(--r);
+    padding: 9px 11px;
+    width: 100%;
+    font-size: 13px;
+    font-family: monospace;
+    pointer-events: auto !important;
+    z-index: 10;
+    position: relative;
+}
+        .ha-ayat-row {
+    margin-bottom: 12px;
+}
     </style>
 </head>
 <body>
@@ -2349,6 +2365,7 @@
         { num: 114, name: "An-Nas", ayat: 6 }
     ]
 };
+// Definisikan JUZ30_SURAT sebagai array nomor surat di Juz 30
     const JUZ30_SURAT = (ALL_SURAT[30] || []).map(s => s.num);
     const JUZ30_TOTAL = JUZ30_SURAT.length;
 
@@ -3978,7 +3995,42 @@
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
     const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
     const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
-
+    function updateHaAyatInput(input) {
+    const suratNum = parseInt(input.dataset.surat);
+    const value = input.value.trim();
+    haAyatInputs[suratNum] = value;
+    
+    const namaMap = {};
+    JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+    const previewEl = document.getElementById(`ayatPreview-${suratNum}`);
+    if (previewEl) {
+        previewEl.innerHTML = formatAyatPreview(value, namaMap[suratNum]);
+    }
+}
+    function formatAyatPreview(ayatStr, suratName) {
+    if (!ayatStr || ayatStr.trim() === '') {
+        return '<span>📖 Belum diisi</span>';
+    }
+    const parts = ayatStr.split(',').map(p => p.trim());
+    let totalAyat = 0;
+    const ranges = [];
+    for (const part of parts) {
+        if (part.includes('-')) {
+            const [start, end] = part.split('-').map(Number);
+            if (!isNaN(start) && !isNaN(end)) {
+                totalAyat += (end - start + 1);
+                ranges.push(`${start}-${end}`);
+            }
+        } else {
+            const num = Number(part);
+            if (!isNaN(num)) {
+                totalAyat++;
+                ranges.push(num.toString());
+            }
+        }
+    }
+    return `<span>📖 ${totalAyat} ayat: ${ranges.join(', ')}</span>`;
+}
     function openHafalanAwalModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
@@ -4073,45 +4125,42 @@
         document.getElementById('hafalanAwalModal').classList.add('active');
         haDropdownOpen = null;
     }
-
     function buildHaAyatInputs(dari, sampai) {
-        const container = document.getElementById('haAyatContainer');
-        if (!container) return;
-        
-        // Generate array surat
-        const arr = [];
-        if (dari >= sampai) {
-            for (let n = dari; n >= sampai; n--) {
-                if (JUZ30_SURAT.includes(n)) arr.push(n);
-            }
-        } else {
-            for (let n = dari; n <= sampai; n++) {
-                if (JUZ30_SURAT.includes(n)) arr.push(n);
-            }
+    const container = document.getElementById('haAyatContainer');
+    if (!container) return;
+    
+    const arr = [];
+    if (dari >= sampai) {
+        for (let n = dari; n >= sampai; n--) {
+            if (JUZ30_SURAT.includes(n)) arr.push(n);
         }
-        
-        if (!arr.length) {
-            container.innerHTML = '<div class="ha-ayat-preview">Pilih rentang surat terlebih dahulu</div>';
-            return;
+    } else {
+        for (let n = dari; n <= sampai; n++) {
+            if (JUZ30_SURAT.includes(n)) arr.push(n);
         }
-        
-        const namaMap = {};
-        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
-        
-        container.innerHTML = arr.map(num => {
-            const savedAyat = haAyatInputs[num] || '';
-            return `
-                <div class="ha-ayat-row">
-                    <label class="lbl">${num}. ${namaMap[num] || 'Surat ' + num}</label>
-                    <input type="text" class="ha-ayat-input" data-surat="${num}" placeholder="Contoh: 1-5, 10, 15-20" value="${escapeHtml(savedAyat)}" onchange="updateHaAyatInput(this)">
-                    <div class="ha-ayat-preview" id="ayatPreview-${num}">
-                        ${formatAyatPreview(savedAyat, namaMap[num])}
-                    </div>
-                </div>
-            `;
-        }).join('');
     }
     
+    if (!arr.length) {
+        container.innerHTML = '<div class="ha-ayat-preview">Pilih rentang surat terlebih dahulu</div>';
+        return;
+    }
+    
+    const namaMap = {};
+    JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+    
+    container.innerHTML = arr.map(num => {
+        const savedAyat = haAyatInputs[num] || '';
+        return `
+            <div class="ha-ayat-row">
+                <label class="lbl">${num}. ${namaMap[num] || 'Surat ' + num}</label>
+                <input type="text" class="ha-ayat-input" data-surat="${num}" placeholder="Contoh: 1-5, 10, 15-20" value="${escapeHtml(savedAyat)}" onchange="updateHaAyatInput(this)">
+                <div class="ha-ayat-preview" id="ayatPreview-${num}">
+                    ${formatAyatPreview(savedAyat, namaMap[num])}
+                </div>
+            </div>
+        `;
+    }).join('');
+}    
     function formatAyatPreview(ayatStr, suratName) {
         if (!ayatStr || ayatStr.trim() === '') {
             return '<span>📖 Belum diisi</span>';
@@ -4153,46 +4202,47 @@
     }
     
     function updateHaPreview() {
-        const { dari, sampai } = getHaRange();
-        const previewList = document.getElementById('haPreviewList');
-        const previewWarn = document.getElementById('haPreviewWarn');
-        previewList.innerHTML = '';
-        previewWarn.textContent = '';
+    const { dari, sampai } = getHaRange();
+    const previewList = document.getElementById('haPreviewList');
+    const previewWarn = document.getElementById('haPreviewWarn');
+    previewList.innerHTML = '';
+    previewWarn.textContent = '';
 
-        if (isNaN(dari) || isNaN(sampai)) {
-            previewWarn.textContent = '⚠️ Pilih surat Dari dan Sampai';
-            return;
-        }
-
-        const arr = generateHaSuratArray(dari, sampai);
-        if (!arr.length) {
-            previewWarn.textContent = '⚠️ Rentang tidak valid';
-            return;
-        }
-
-        const namaMap = {};
-        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
-        const MAX_SHOW = 6;
-        arr.slice(0, MAX_SHOW).forEach(n => {
-            const div = document.createElement('div');
-            div.className = 'ha-preview-item';
-            div.textContent = `${n} – ${namaMap[n] || ''}`;
-            previewList.appendChild(div);
-        });
-        if (arr.length > MAX_SHOW) {
-            const div = document.createElement('div');
-            div.className = 'ha-preview-item';
-            div.textContent = `... dan ${arr.length - MAX_SHOW} surat lainnya`;
-            div.style.color = 'var(--g5)';
-            previewList.appendChild(div);
-        }
-        const totalEl = document.getElementById('haPreviewTotal');
-        totalEl.textContent = `${arr.length} surat`;
-        
-        // Build ayat inputs berdasarkan rentang baru
-        buildHaAyatInputs(dari, sampai);
+    if (isNaN(dari) || isNaN(sampai)) {
+        previewWarn.textContent = '⚠️ Pilih surat Dari dan Sampai';
+        buildHaAyatInputs(dari, sampai); // tetap panggil walau error
+        return;
     }
 
+    const arr = generateHaSuratArray(dari, sampai);
+    if (!arr.length) {
+        previewWarn.textContent = '⚠️ Rentang tidak valid';
+        buildHaAyatInputs(dari, sampai);
+        return;
+    }
+
+    const namaMap = {};
+    JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+    const MAX_SHOW = 6;
+    arr.slice(0, MAX_SHOW).forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'ha-preview-item';
+        div.textContent = `${n} – ${namaMap[n] || ''}`;
+        previewList.appendChild(div);
+    });
+    if (arr.length > MAX_SHOW) {
+        const div = document.createElement('div');
+        div.className = 'ha-preview-item';
+        div.textContent = `... dan ${arr.length - MAX_SHOW} surat lainnya`;
+        div.style.color = 'var(--g5)';
+        previewList.appendChild(div);
+    }
+    const totalEl = document.getElementById('haPreviewTotal');
+    totalEl.textContent = `${arr.length} surat`;
+    
+    // 🔥 Panggil buildHaAyatInputs setiap kali rentang berubah
+    buildHaAyatInputs(dari, sampai);
+}
     function closeHafalanAwalModal(e) {
         if (e && e.target !== e.currentTarget) return;
         document.getElementById('hafalanAwalModal').classList.remove('active');
