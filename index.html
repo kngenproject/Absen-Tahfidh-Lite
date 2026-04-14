@@ -4244,14 +4244,9 @@
     buildHaAyatInputs(dari, sampai);
 }
     function closeHafalanAwalModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('hafalanAwalModal').classList.remove('active');
-        hafalanAwalSiswaId = null;
-        haDropdownOpen = null;
-        haAyatInputs = {};
-        closeAllHaDropdowns();
-    }
-
+    if (e && e.target !== e.currentTarget) return;
+    ...
+}
     function buildHaSuratGrid(type, selectedNum) {
         const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
         grid.innerHTML = '';
@@ -4535,116 +4530,6 @@
 
 <!-- HAFALAN AWAL MODAL -->
 <div id="hafalanAwalModal" onclick="closeHafalanAwalModal(event)">
-    <div class="ha-sheet">
-        <div class="ha-header">
-            <div class="ha-header-left">
-                <div class="ha-title">📝 Hafalan Awal <span id="haNamaSiswa"></span></div>
-                <div class="ha-sub">Input hafalan sebelum pakai aplikasi · <span id="haKelasSiswa"></span></div>
-                <div id="haStatusBadges" class="ha-status-badges"></div>
-            </div>
-            <button class="btn-close" onclick="closeHafalanAwalModal()">✕</button>
-        </div>
-        <div class="ha-body">
-
-            <!-- Info tasmi (muncul jika sudah tasmi) -->
-            <div id="haTasmiInfo" class="ha-tasmi-info" style="display:none;">
-                <span class="ha-tasmi-info-icon">🎤</span>
-                <div>Siswa ini sudah <strong>Tasmi'</strong>. Input hafalan Juz Amma dilakukan di luar aplikasi.</div>
-            </div>
-
-            <!-- Area input (tersembunyi jika sudah tasmi) -->
-            <div id="haInputArea">
-
-                <!-- Info hafalan yang sudah tersimpan -->
-                <div id="haExistingBar" class="ha-existing-bar" style="display:none;">
-                    <span class="ha-existing-bar-icon">ℹ️</span>
-                    <span class="ha-existing-text"></span>
-                </div>
-
-                <!-- JENIS HAFALAN AWAL -->
-                <div class="lbl" style="margin-bottom:6px;">Status Hafalan Awal Siswa</div>
-                <div class="ha-jenis-row" id="haJenisRow">
-                    <div class="ha-jenis-opt" data-jenis="belum" onclick="pilihHaJenis('belum')">
-                        <span class="ha-jenis-icon">📖</span>
-                        <div>
-                            <div class="ha-jenis-label">Belum Khatam</div>
-                            <div class="ha-jenis-desc">Masih dalam proses setoran hafalan</div>
-                        </div>
-                    </div>
-                    <div class="ha-jenis-opt" data-jenis="muroja" onclick="pilihHaJenis('muroja')">
-                        <span class="ha-jenis-icon">🔁</span>
-                        <div>
-                            <div class="ha-jenis-label">Muroja'ah</div>
-                            <div class="ha-jenis-desc">Sudah khatam, sedang muroja'ah</div>
-                        </div>
-                    </div>
-                    <div class="ha-jenis-opt" data-jenis="tasmi" onclick="pilihHaJenis('tasmi')">
-                        <span class="ha-jenis-icon">🎤</span>
-                        <div>
-                            <div class="ha-jenis-label">Tasmi'</div>
-                            <div class="ha-jenis-desc">Sudah tasmi' sebelum pakai aplikasi</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="haRentangArea">
-                    <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
-
-                    <!-- DARI -->
-                    <div class="ha-dropdown-wrap" style="margin-bottom:8px;">
-                        <label class="lbl">Dari</label>
-                        <div class="ha-input-trigger" id="haDariTrigger" data-val="" onclick="toggleHaDropdown('dari')">
-                            <div>
-                                <div id="haDariNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
-                                <div id="haDariName" class="trig-sub"></div>
-                            </div>
-                            <span style="color:var(--g4);font-size:12px;">▼</span>
-                        </div>
-                        <div class="ha-dropdown" id="haDariDropdown">
-                            <div class="ha-surat-grid" id="haDariGrid"></div>
-                        </div>
-                    </div>
-
-                    <!-- SAMPAI -->
-                    <div class="ha-dropdown-wrap" style="margin-bottom:12px;">
-                        <label class="lbl">Sampai</label>
-                        <div class="ha-input-trigger" id="haSampaiTrigger" data-val="" onclick="toggleHaDropdown('sampai')">
-                            <div>
-                                <div id="haSampaiNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
-                                <div id="haSampaiName" class="trig-sub"></div>
-                            </div>
-                            <span style="color:var(--g4);font-size:12px;">▼</span>
-                        </div>
-                        <div class="ha-dropdown" id="haSampaiDropdown">
-                            <div class="ha-surat-grid" id="haSampaiGrid"></div>
-                        </div>
-                    </div>
-
-                    <!-- PREVIEW -->
-                    <div class="ha-preview">
-                        <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
-                        <div id="haPreviewWarn" class="ha-preview-warn"></div>
-                        <div id="haPreviewList" class="ha-preview-list"></div>
-                    </div>
-                </div><!-- /haRentangArea -->
-
-                <!-- INPUT AYAT PER SURAT -->
-                <div id="haAyatArea">
-                    <div class="lbl" style="margin-top:12px; margin-bottom:8px;">📖 Detail Ayat yang Dihafal</div>
-                    <div id="haAyatContainer"></div>
-                    <div class="ha-ayat-preview" style="margin-top:8px; background:#fef3c7; color:#92400e;">
-                        💡 Format: <strong>1-5, 10, 15-20</strong> (pisahkan dengan koma)
-                    </div>
-                </div>
-
-            </div><!-- /haInputArea -->
-        </div><!-- /ha-body -->
-
-        <div class="ha-footer">
-            <button class="btn-ha-hapus" onclick="hapusHafalanAwal()">🗑 Hapus</button>
-            <button class="btn-ha-simpan" id="btnHaSimpan" onclick="simpanHafalanAwal()">✅ Simpan Hafalan Awal</button>
-        </div>
-    </div>
-</div>
-</body>
+  
+  </body>
 </html>
