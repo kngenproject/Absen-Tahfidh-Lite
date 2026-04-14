@@ -3537,8 +3537,7 @@
             </div>
         </div>
     `;}
-}  
-      function escapeHtml(str) {
+    function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
@@ -3547,7 +3546,7 @@
         return m;
     });
 }
-      function inputHafalanAwal(siswaId) {
+    function inputHafalanAwal(siswaId) {
     openHafalanAwalModal(siswaId);
 }
 
