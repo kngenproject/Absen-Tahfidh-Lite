@@ -1989,9 +1989,13 @@
 
             <!-- Sub-tab: Progress -->
             <div id="mon-sub-progress" class="mon-subtab-content active" style="flex-direction:column;overflow:hidden;">
-                <div class="mon-toolbar">
-                    <div class="mon-filter-pill active" id="monFilterAll" onclick="monSetFilter('')">Semua</div>
-                    <div id="monFilterKelas" style="display:contents;"></div>
+                <div class="mon-toolbar" style="gap: 12px; flex-wrap: nowrap;">
+                    <div style="display: flex; gap: 8px; align-items: center; flex: 0 0 auto;">
+                        <label class="lbl" style="margin: 0; white-space: nowrap;">Filter Kelas:</label>
+                        <select id="filterKelasDropdown" class="field sel" style="flex: 0 1 150px; margin: 0;" onchange="filterMonitoringByKelas()">
+                            <option value="">Semua Kelas</option>
+                        </select>
+                    </div>
                     <button class="btn-export-mon" onclick="exportMonitoringBulanan()">📤 Export</button>
                 </div>
                 <div class="mon-list" id="monList">
@@ -2005,10 +2009,12 @@
 
             <!-- Sub-tab: Riwayat -->
             <div id="mon-sub-riwayat" class="mon-subtab-content" style="flex-direction:column;overflow:hidden;">
-                <div class="mon-toolbar" style="justify-content:space-between;">
-                    <div style="display:flex;gap:6px;align-items:center;flex:1;overflow-x:auto;">
-                        <div class="mon-filter-pill active" id="monRiwFilterAll" onclick="monRiwSetFilter('')">Semua</div>
-                        <div id="monRiwFilterKelas" style="display:contents;"></div>
+                <div class="mon-toolbar" style="justify-content: space-between;">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <label class="lbl" style="margin: 0; white-space: nowrap;">Filter Kelas:</label>
+                        <select id="filterKelasRiwayat" class="field sel" style="flex: 0 1 150px; margin: 0;" onchange="filterRiwayatByKelas()">
+                            <option value="">Semua Kelas</option>
+                        </select>
                     </div>
                     <button class="btn-export-mon" onclick="exportRiwayatMonitoring()">📤 Export</button>
                 </div>
@@ -2543,9 +2549,60 @@
             allBtn.classList.remove('active');
         }
     }
+    // Update dropdown jika ada
+    const dropdown = document.getElementById('filterKelasDropdown');
+    if (dropdown) dropdown.value = kelas;
     renderMonFilterKelas();
     renderMonitoring();
 }
+
+    // Fungsi untuk handle perubahan dropdown filter kelas di monitoring
+    function filterMonitoringByKelas() {
+        const dropdown = document.getElementById('filterKelasDropdown');
+        if (!dropdown) return;
+        const selectedKelas = dropdown.value;
+        monSetFilter(selectedKelas);
+    }
+
+    // Fungsi untuk handle perubahan dropdown filter kelas di riwayat
+    function filterRiwayatByKelas() {
+        const dropdown = document.getElementById('filterKelasRiwayat');
+        if (!dropdown) return;
+        const selectedKelas = dropdown.value;
+        monFilterKelas = selectedKelas;
+        renderMonRiwayat();
+    }
+
+    // Update dropdown filter saat render
+    function updateFilterKelasDropdown() {
+        const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+        const dropdown = document.getElementById('filterKelasDropdown');
+        const dropdownRiwayat = document.getElementById('filterKelasRiwayat');
+        
+        if (dropdown) {
+            const currentVal = dropdown.value;
+            dropdown.innerHTML = '<option value="">Semua Kelas</option>';
+            kelasList.forEach(k => {
+                const option = document.createElement('option');
+                option.value = k;
+                option.textContent = 'Kelas ' + k;
+                dropdown.appendChild(option);
+            });
+            dropdown.value = currentVal;
+        }
+        
+        if (dropdownRiwayat) {
+            const currentVal = dropdownRiwayat.value;
+            dropdownRiwayat.innerHTML = '<option value="">Semua Kelas</option>';
+            kelasList.forEach(k => {
+                const option = document.createElement('option');
+                option.value = k;
+                option.textContent = 'Kelas ' + k;
+                dropdownRiwayat.appendChild(option);
+            });
+            dropdownRiwayat.value = currentVal;
+        }
+    }
 
 // ========== PASTIKAN FUNGSI changeJenis dan pilihStatus BERADA DI LEVEL ROOT ==========
     function changeJenis(btn) {
@@ -3442,6 +3499,7 @@
     renderMonitoring();
 }
     function renderMonitoring() {
+    updateFilterKelasDropdown();  // Update dropdown options
     const container = document.getElementById('monList');
     if (!container) return;
     let siswaList = state.dataSiswa;
@@ -3596,6 +3654,7 @@
     }
 
     function renderMonRiwayat() {
+    updateFilterKelasDropdown();  // Update dropdown options
     const container = document.getElementById('monRiwList');
     if (!container) return;
 
@@ -3614,10 +3673,10 @@
     });
 
     // Filter berdasarkan kelas jika dipilih
-    if (monRiwFilterKelas) {
+    if (monFilterKelas) {
         list = list.filter(s => {
             const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
-            return siswa && siswa.kelas === monRiwFilterKelas;
+            return siswa && siswa.kelas === monFilterKelas;
         });
     }
 
