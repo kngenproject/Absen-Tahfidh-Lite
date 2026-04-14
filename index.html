@@ -2851,61 +2851,58 @@
     const last = getSetoranTerakhir(siswaId);
     
     const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
-    const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
-    const hafalanAwalAyat = (siswaObj && siswaObj.hafalanAwalAyat) || {};
     const juzVal = Number(document.getElementById('juz').value) || 30;
     
     // RESET selectedSurah
     state.selectedSurah = [];
-    const addedSurat = new Set();
     
-    // 1. Ambil surat terakhir dari hafalan awal (jika ada)
-    if (hafalanAwalArr.length > 0) {
-        const lastSuratNum = hafalanAwalArr[hafalanAwalArr.length - 1];
-        const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastSuratNum)
-                       || Object.values(ALL_SURAT).flat().find(s => s.num === lastSuratNum);
-        if (suratInfo) {
-            const ayatRange = hafalanAwalAyat[lastSuratNum] || `1-${suratInfo.ayat}`;
-            let dariAyat = 1, sampaiAyat = suratInfo.ayat;
-            if (ayatRange) {
-                const parts = ayatRange.split(',').map(p => p.trim());
-                const firstPart = parts[0];
-                if (firstPart.includes('-')) {
-                    const [start] = firstPart.split('-').map(Number);
-                    if (!isNaN(start)) dariAyat = start;
-                } else {
-                    const num = Number(firstPart);
-                    if (!isNaN(num)) dariAyat = num;
-                }
-                const lastPart = parts[parts.length - 1];
-                if (lastPart.includes('-')) {
-                    const [, end] = lastPart.split('-').map(Number);
-                    if (!isNaN(end)) sampaiAyat = end;
-                } else {
-                    const num = Number(lastPart);
-                    if (!isNaN(num)) sampaiAyat = num;
-                }
-            }
-            state.selectedSurah.push({ 
-                ...suratInfo, 
-                dari: dariAyat, 
-                sampai: sampaiAyat, 
-                ayatSalah: [],
-                sumber: 'hafalan_awal'
-            });
-            addedSurat.add(lastSuratNum);
-        }
-    }
-    
-    // 2. Ambil surat terakhir dari setoran terakhir (jika ada dan belum ditambahkan)
+    // PRIORITAS: Setoran terakhir (jika ada)
     if (last && last.surah && last.surah.length > 0) {
-        const lastSuratFromSetoran = last.surah[last.surah.length - 1];
-        if (!addedSurat.has(lastSuratFromSetoran.num)) {
-            state.selectedSurah.push({ 
-                ...lastSuratFromSetoran, 
-                ayatSalah: lastSuratFromSetoran.ayatSalah || [],
-                sumber: 'setoran'
-            });
+        // Ambil SEMUA surat dari setoran terakhir (bisa lebih dari 1)
+        state.selectedSurah = last.surah.map(sr => ({ 
+            ...sr, 
+            ayatSalah: sr.ayatSalah || [],
+            sumber: 'setoran' 
+        }));
+    } 
+    // Jika TIDAK ADA setoran, baru ambil dari hafalan awal
+    else {
+        const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
+        const hafalanAwalAyat = (siswaObj && siswaObj.hafalanAwalAyat) || {};
+        if (hafalanAwalArr.length > 0) {
+            const lastSuratNum = hafalanAwalArr[hafalanAwalArr.length - 1];
+            const suratInfo = (ALL_SURAT[juzVal] || []).find(s => s.num === lastSuratNum)
+                           || Object.values(ALL_SURAT).flat().find(s => s.num === lastSuratNum);
+            if (suratInfo) {
+                const ayatRange = hafalanAwalAyat[lastSuratNum] || `1-${suratInfo.ayat}`;
+                let dariAyat = 1, sampaiAyat = suratInfo.ayat;
+                if (ayatRange) {
+                    const parts = ayatRange.split(',').map(p => p.trim());
+                    const firstPart = parts[0];
+                    if (firstPart.includes('-')) {
+                        const [start] = firstPart.split('-').map(Number);
+                        if (!isNaN(start)) dariAyat = start;
+                    } else {
+                        const num = Number(firstPart);
+                        if (!isNaN(num)) dariAyat = num;
+                    }
+                    const lastPart = parts[parts.length - 1];
+                    if (lastPart.includes('-')) {
+                        const [, end] = lastPart.split('-').map(Number);
+                        if (!isNaN(end)) sampaiAyat = end;
+                    } else {
+                        const num = Number(lastPart);
+                        if (!isNaN(num)) sampaiAyat = num;
+                    }
+                }
+                state.selectedSurah.push({ 
+                    ...suratInfo, 
+                    dari: dariAyat, 
+                    sampai: sampaiAyat, 
+                    ayatSalah: [],
+                    sumber: 'hafalan_awal'
+                });
+            }
         }
     }
     
@@ -2925,18 +2922,11 @@
         
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
         
-        // Ambil satu surat terakhir dari setoran terakhir
-        let suratTerakhir = null;
-        if (last.surah && last.surah.length > 0) {
-            suratTerakhir = last.surah[last.surah.length - 1];
-        }
+        // Tampilkan informasi setoran terakhir di bar
         let suratNames = '-';
-        if (suratTerakhir) {
-            suratNames = `${suratTerakhir.name} (${suratTerakhir.dari}–${suratTerakhir.sampai})`;
-        } else if (state.selectedSurah.length > 0) {
-            // fallback jika tidak ada setoran (misal hanya hafalan awal)
-            const sr = state.selectedSurah[0];
-            suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
+        if (last.surah && last.surah.length > 0) {
+            const lastSurat = last.surah[last.surah.length - 1];
+            suratNames = `${lastSurat.name} (${lastSurat.dari}–${lastSurat.sampai})`;
         }
         
         const tgl = last.tanggal ? last.tanggal.split('-').reverse().join('/') : '-';
@@ -2944,7 +2934,7 @@
         txt.innerHTML = `<span class="lsb-row1">${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis}</span><span class="lsb-row2">${suratNames} · ${status}</span>`;
         bar.classList.add('show');
     } else {
-        // Tidak ada setoran, tapi mungkin ada hafalan awal
+        // Tidak ada setoran, cek apakah ada hafalan awal
         if (state.selectedSurah.length > 0) {
             const sr = state.selectedSurah[0];
             const suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
@@ -2954,8 +2944,7 @@
             bar.classList.remove('show');
         }
     }
-}
-// Fungsi baru untuk menampilkan hanya hafalan awal (jika tidak ada setoran)
+}// Fungsi baru untuk menampilkan hanya hafalan awal (jika tidak ada setoran)
     function tambahSiswa() {
     const nama = document.getElementById('inputNamaSiswa').value.trim();
     const kelas = document.getElementById('inputKelas').value.trim();
