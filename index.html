@@ -4269,8 +4269,9 @@ self.addEventListener('message', e => {
     });
     const rentangArea = document.getElementById('haRentangArea');
     const ayatArea = document.getElementById('haAyatArea');
-    // Sembunyikan area rentang dan detail ayat jika jenis = tasmi ATAU muroja
-    if (jenis === 'tasmi' || jenis === 'muroja') {
+    
+    // Hanya Tasmi' yang menyembunyikan area surat (Muroja'ah tetap tampil)
+    if (jenis === 'tasmi') {
         rentangArea.classList.add('hidden');
         if (ayatArea) ayatArea.style.display = 'none';
     } else {
@@ -4278,7 +4279,6 @@ self.addEventListener('message', e => {
         if (ayatArea) ayatArea.style.display = 'block';
     }
 }
-
     function getHaRange() {
         const dariVal   = parseInt(document.getElementById('haDariTrigger').dataset.val);
         const sampaiVal = parseInt(document.getElementById('haSampaiTrigger').dataset.val);
@@ -4301,127 +4301,118 @@ self.addEventListener('message', e => {
     }
 
     function simpanHafalanAwal() {
-        if (!hafalanAwalSiswaId) return;
-        const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
-        if (!siswa) return;
-        if (!haJenisSelected) { showToast('⚠️ Pilih status hafalan awal terlebih dahulu'); return; }
+    if (!hafalanAwalSiswaId) return;
+    const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
+    if (!siswa) return;
+    if (!haJenisSelected) { showToast('⚠️ Pilih status hafalan awal terlebih dahulu'); return; }
 
-        const namaMap = {};
-        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+    const namaMap = {};
+    JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
 
-        // Simpan jenis hafalan awal ke data siswa
-        siswa.jenisHafalanAwal = haJenisSelected;
+    // Hapus entri setoran hafalan awal yang lama (jika ada)
+    state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan && s.keterangan.startsWith('Hafalan Awal')));
 
-        // Hapus entri hafalan awal lama
-        state.dataSetoran = state.dataSetoran.filter(s => !(s.SiswaId === hafalanAwalSiswaId && s.keterangan && s.keterangan.startsWith('Hafalan Awal')));
+    if (haJenisSelected === 'tasmi') {
+        // TASMI': semua surat Juz 30
+        siswa.hafalanAwal = [...JUZ30_SURAT];
+        siswa.hafalanAwalAyat = {};
+        JUZ30_SURAT.forEach(num => {
+            const suratInfo = (ALL_SURAT[30] || []).find(s => s.num === num);
+            siswa.hafalanAwalAyat[num] = `1-${suratInfo?.ayat || 1}`;
+        });
+        
+        // Simpan ke data Tasmi'
+        const allTasmi = getTasmiData();
+        const existing = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId);
+        const record = { siswaId: hafalanAwalSiswaId, juz: 30, tanggal: todayStr(), nilai: 'L', penguji: '', catatan: 'Input Hafalan Awal - Tasmi\'' };
+        if (existing !== -1) allTasmi[existing] = record; else allTasmi.push(record);
+        saveTasmiData(allTasmi);
+        
+        const surahEntry = JUZ30_SURAT.map(n => { 
+            const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); 
+            return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] };
+        });
+        state.dataSetoran.unshift({
+            id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
+            tanggal: todayStr(), jenis: 'setoran', keterangan: 'Hafalan Awal · Tasmi\'',
+            juz: '30', surah: surahEntry, status: 'lancar'
+        });
+        showToast(`✅ Hafalan awal tersimpan: Tasmi' (${JUZ30_SURAT.length} surat)`);
+        
+    } else {
+        // Untuk MUROJA'AH dan BELUM KHATAM: ambil dari rentang surat yang dipilih
+        const { dari, sampai } = getHaRange();
+        const arr = generateHaSuratArray(dari, sampai);
+        if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
 
-        if (haJenisSelected === 'tasmi') {
-            siswa.hafalanAwal = [...JUZ30_SURAT];
-            siswa.hafalanAwalAyat = {};
-            JUZ30_SURAT.forEach(num => {
-                const suratInfo = (ALL_SURAT[30] || []).find(s => s.num === num);
-                siswa.hafalanAwalAyat[num] = `1-${suratInfo?.ayat || 1}`;
-            });
-            
-            const allTasmi = getTasmiData();
-            const existing = allTasmi.findIndex(t => t.siswaId === hafalanAwalSiswaId);
-            const record = { siswaId: hafalanAwalSiswaId, juz: 30, tanggal: todayStr(), nilai: 'L', penguji: '', catatan: 'Input Hafalan Awal - Tasmi\'' };
-            if (existing !== -1) allTasmi[existing] = record; else allTasmi.push(record);
-            saveTasmiData(allTasmi);
-            
-            const surahEntry = JUZ30_SURAT.map(n => { 
-                const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); 
-                return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] };
-            });
-            state.dataSetoran.unshift({
-                id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
-                tanggal: todayStr(), jenis: 'setoran', keterangan: 'Hafalan Awal · Tasmi\'',
-                juz: '30', surah: surahEntry, status: 'lancar'
-            });
-            saveAllData();
-            showToast(`✅ Hafalan awal tersimpan: Tasmi' (${JUZ30_SURAT.length} surat)`);
-            saveAllData();
-        } else if (haJenisSelected === 'muroja') {
-    // Muroja'ah → langsung anggap khatam semua surat Juz 30
-    siswa.hafalanAwal = [...JUZ30_SURAT];
-    siswa.hafalanAwalAyat = {};
-    JUZ30_SURAT.forEach(num => {
-        const suratInfo = (ALL_SURAT[30] || []).find(s => s.num === num);
-        siswa.hafalanAwalAyat[num] = `1-${suratInfo?.ayat || 1}`;
-    });
-    const jenisLabel = "Hafalan Awal · Muroja'ah";
-    const surahEntry = JUZ30_SURAT.map(n => { 
-        const s = (ALL_SURAT[30]||[]).find(x=>x.num===n); 
-        return { num: n, name: namaMap[n]||`Surat ${n}`, dari:1, sampai: s ? s.ayat : 1, ayatSalah:[] };
-    });
-    state.dataSetoran.unshift({
-        id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
-        tanggal: todayStr(), jenis: 'muroja', keterangan: jenisLabel,
-        juz: '30', surah: surahEntry, status: 'lancar'
-    });
-    showToast(`✅ Hafalan awal tersimpan: Muroja'ah (${JUZ30_SURAT.length} surat)`);
-    saveAllData();
-        } else { // jenis === 'belum'
-    const { dari, sampai } = getHaRange();
-    const arr = generateHaSuratArray(dari, sampai);
-    if (!arr.length) { showToast('⚠️ Pilih rentang surat yang valid'); return; }
-
-    const sudahAda = new Set(siswa.hafalanAwal || []);
-    const sudahAdaAyat = siswa.hafalanAwalAyat || {};
-    arr.forEach(n => {
-        sudahAda.add(n);
-        if (haAyatInputs[n]) {
-            sudahAdaAyat[n] = haAyatInputs[n];
-        }
-    });
-    siswa.hafalanAwal = [...sudahAda];
-    siswa.hafalanAwalAyat = sudahAdaAyat;
-
-    const jenisLabel = 'Hafalan Awal · Belum Khatam';
-    const jenisSetoran = 'setoran';
-    
-    const surahEntry = arr.map(n => { 
-        const s = (ALL_SURAT[30]||[]).find(x=>x.num===n);
-        const ayatRange = haAyatInputs[n];
-        let dariAyat = 1, sampaiAyat = s ? s.ayat : 1;
-        if (ayatRange) {
-            const parts = ayatRange.split(',').map(p => p.trim());
-            const firstPart = parts[0];
-            if (firstPart.includes('-')) {
-                const [start] = firstPart.split('-').map(Number);
-                if (!isNaN(start)) dariAyat = start;
-            } else {
-                const num = Number(firstPart);
-                if (!isNaN(num)) dariAyat = num;
+        // Update data hafalan awal siswa (hapus yang lama, tambah yang baru)
+        const sudahAda = new Set(siswa.hafalanAwal || []);
+        const sudahAdaAyat = siswa.hafalanAwalAyat || {};
+        arr.forEach(n => {
+            sudahAda.add(n);
+            if (haAyatInputs[n]) {
+                sudahAdaAyat[n] = haAyatInputs[n];
             }
-            const lastPart = parts[parts.length - 1];
-            if (lastPart.includes('-')) {
-                const [, end] = lastPart.split('-').map(Number);
-                if (!isNaN(end)) sampaiAyat = end;
-            } else {
-                const num = Number(lastPart);
-                if (!isNaN(num)) sampaiAyat = num;
-            }
-        }
-        return { num: n, name: namaMap[n]||`Surat ${n}`, dari: dariAyat, sampai: sampaiAyat, ayatSalah:[] };
-    });
-    
-    state.dataSetoran.unshift({
-        id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
-        tanggal: todayStr(), jenis: jenisSetoran, keterangan: jenisLabel,
-        juz: '30', surah: surahEntry, status: 'lancar'
-    });
-    saveAllData();
-    showToast(`✅ Hafalan awal tersimpan: ${siswa.hafalanAwal.length} surat dengan detail ayat`);
-    saveAllData();
-}
+        });
+        siswa.hafalanAwal = [...sudahAda];
+        siswa.hafalanAwalAyat = sudahAdaAyat;
 
-        closeHafalanAwalModal();
-        renderResult();
-        renderMonitoring();
-        renderDataSiswa();
+        // Tentukan jenis dan keterangan setoran
+        let jenisSetoran = 'setoran';
+        let keterangan = '';
+        if (haJenisSelected === 'muroja') {
+            jenisSetoran = 'muroja';
+            keterangan = 'Hafalan Awal · Muroja\'ah';
+        } else { // 'belum'
+            jenisSetoran = 'setoran';
+            keterangan = 'Hafalan Awal · Belum Khatam';
+        }
+
+        // Buat entri setoran untuk surat-surat dalam rentang
+        const surahEntry = arr.map(n => { 
+            const s = (ALL_SURAT[30]||[]).find(x=>x.num===n);
+            const ayatRange = haAyatInputs[n];
+            let dariAyat = 1, sampaiAyat = s ? s.ayat : 1;
+            if (ayatRange) {
+                const parts = ayatRange.split(',').map(p => p.trim());
+                const firstPart = parts[0];
+                if (firstPart.includes('-')) {
+                    const [start] = firstPart.split('-').map(Number);
+                    if (!isNaN(start)) dariAyat = start;
+                } else {
+                    const num = Number(firstPart);
+                    if (!isNaN(num)) dariAyat = num;
+                }
+                const lastPart = parts[parts.length - 1];
+                if (lastPart.includes('-')) {
+                    const [, end] = lastPart.split('-').map(Number);
+                    if (!isNaN(end)) sampaiAyat = end;
+                } else {
+                    const num = Number(lastPart);
+                    if (!isNaN(num)) sampaiAyat = num;
+                }
+            }
+            return { num: n, name: namaMap[n]||`Surat ${n}`, dari: dariAyat, sampai: sampaiAyat, ayatSalah:[] };
+        });
+        
+        state.dataSetoran.unshift({
+            id: Date.now(), SiswaId: hafalanAwalSiswaId, nama: siswa.nama, kelas: siswa.kelas,
+            tanggal: todayStr(), jenis: jenisSetoran, keterangan: keterangan,
+            juz: '30', surah: surahEntry, status: 'lancar'
+        });
+        
+        showToast(`✅ Hafalan awal tersimpan: ${arr.length} surat (${haJenisSelected === 'muroja' ? 'Muroja\'ah' : 'Belum Khatam'})`);
     }
 
+    // Simpan semua perubahan
+    saveAllData();
+    
+    // Tutup modal dan refresh tampilan
+    closeHafalanAwalModal();
+    renderResult();
+    renderMonitoring();
+    renderDataSiswa();
+}
     function hapusHafalanAwal() {
         if (!hafalanAwalSiswaId) return;
         const siswa = state.dataSiswa.find(s => s.id === hafalanAwalSiswaId);
