@@ -4147,6 +4147,20 @@
         updateHaPreview();
 
         document.getElementById('hafalanAwalModal').classList.add('active');
+        // Debug: pastikan input ter-render
+        setTimeout(() => {
+    const inputs = document.querySelectorAll('#haAyatContainer .ha-ayat-input');
+    console.log('Jumlah input yang dirender:', inputs.length);
+    if (inputs.length === 0) {
+        console.warn('Tidak ada input! Periksa buildHaAyatInputs');
+    } else {
+        inputs.forEach(inp => {
+            console.log('Input ditemukan:', inp);
+            // Pastikan tidak ada atribut disabled
+            inp.removeAttribute('disabled');
+        });
+    }
+}, 100);
         haDropdownOpen = null;
     }
     function buildHaAyatInputs(dari, sampai) {
@@ -4274,7 +4288,11 @@
 }
     function closeHafalanAwalModal(e) {
     if (e && e.target !== e.currentTarget) return;
-    ...
+    document.getElementById('hafalanAwalModal').classList.remove('active');
+    hafalanAwalSiswaId = null;
+    haDropdownOpen = null;
+    haAyatInputs = {};
+    closeAllHaDropdowns();
 }
     function buildHaSuratGrid(type, selectedNum) {
         const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
