@@ -1939,7 +1939,7 @@
         <div id="tab-keterangan" class="tab-content">
             <div class="sub-tab-nav">
                 <button class="sub-tab-btn active" id="subBtn-siswa" onclick="switchSubTab('siswa')">👥 Data Siswa</button>
-                <button class="sub-tab-btn" id="subBtn-riwayat" onclick="switchSubTab('riwayat')">📋 Riwayat Setoran</button>
+                <button class="sub-tab-btn" id="subBtn-riwayat" onclick="switchSubTab('riwayat')">📋 Arsip Setoran</button>
             </div>
             <div id="sub-siswa" class="sub-tab-content active">
                 <div class="ptr-indicator" id="ptrIndicator">
@@ -3584,73 +3584,85 @@
     }
 
     function renderMonRiwayat() {
-        const container = document.getElementById('monRiwList');
-        if (!container) return;
-        let list = [...state.dataSetoran].sort((a, b) => {
-            if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
-            return b.id - a.id;
+    const container = document.getElementById('monRiwList');
+    if (!container) return;
+
+    // Ambil hanya 1 setoran TERAKHIR per siswa (sama seperti di tab Setoran)
+    const lastPerSiswa = new Map();
+    state.dataSetoran.forEach(s => {
+        const existing = lastPerSiswa.get(s.SiswaId);
+        if (!existing || (s.tanggal || '') > (existing.tanggal || '')) {
+            lastPerSiswa.set(s.SiswaId, s);
+        }
+    });
+
+    let list = Array.from(lastPerSiswa.values()).sort((a, b) => {
+        if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
+        return b.id - a.id;
+    });
+
+    // Filter berdasarkan kelas jika dipilih
+    if (monRiwFilterKelas) {
+        list = list.filter(s => {
+            const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
+            return siswa && siswa.kelas === monRiwFilterKelas;
         });
-        if (monRiwFilterKelas) {
-            list = list.filter(s => {
-                const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
-                return siswa && siswa.kelas === monRiwFilterKelas;
-            });
+    }
+
+    if (!list.length) {
+        container.innerHTML = '<div class="mon-riwayat-empty">📋 Belum ada riwayat setoran</div>';
+        return;
+    }
+
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+    const jenisBadge = { tasmi: 'badge-tasmi', muroja: 'badge-muroja', setoran: 'badge-setoran', belum: 'badge-belum' };
+
+    const rows = list.map(s => {
+        const jenisLabel = s.keterangan || jenisMap[s.jenis] || s.jenis || '-';
+        const jBadge = jenisBadge[s.jenis] || 'badge-belum';
+        const statBadge = s.status === 'lancar' ? 'badge-l' : 'badge-kl';
+        const statLabel = s.status === 'lancar' ? 'L' : 'KL';
+
+        // Surat terakhir (hanya satu surat terakhir dari array surah)
+        let suratTerakhir = '-';
+        if (s.surah && s.surah.length) {
+            const lastSurat = s.surah[s.surah.length - 1];
+            suratTerakhir = `${lastSurat.name} (${lastSurat.dari}-${lastSurat.sampai})`;
+            if (s.surah.length > 1) {
+                suratTerakhir = `${s.surah.length} surat · ${suratTerakhir}`;
+            }
         }
-        if (!list.length) {
-            container.innerHTML = '<div class="mon-riwayat-empty">📋 Belum ada riwayat setoran</div>';
-            return;
+
+        let tglText = '-';
+        if (s.tanggal) {
+            const p = s.tanggal.split('-');
+            tglText = `${p[2]}/${p[1]}`;
         }
-        const jenisMap  = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
-        const jenisBadge= { tasmi:'badge-tasmi', muroja:'badge-muroja', setoran:'badge-setoran', belum:'badge-belum' };
-        const rows = list.map(s => {
-            const jenisLabel = s.keterangan || jenisMap[s.jenis] || s.jenis || '-';
-            const jBadge = jenisBadge[s.jenis] || 'badge-belum';
-            const statBadge = s.status === 'lancar' ? 'badge-l' : 'badge-kl';
-            const statLabel = s.status === 'lancar' ? 'L' : 'KL';
-            let suratText = '-';
-            if (s.surah && s.surah.length) {
-                if (s.surah.length === 1) {
-                    suratText = s.surah[0].name;
-                } else {
-                    suratText = s.surah.length + ' surat';
-                }
-            }
-            // Surat terakhir = surat paling akhir dalam array surah
-            let suratTerakhir = '-';
-            if (s.surah && s.surah.length) {
-                const last = s.surah[s.surah.length - 1];
-                suratTerakhir = last.name || '-';
-                if (last.sampai) suratTerakhir += ' :' + last.sampai;
-            }
-            let tglText = '-';
-            if (s.tanggal) {
-                const p = s.tanggal.split('-');
-                tglText = p[2] + '/' + p[1];
-            }
-            return `<tr>
-                <td class="col-tgl">${tglText}</td>
-                <td class="col-nama" title="${escapeHtml(s.nama||'-')}">${escapeHtml(s.nama||'-')}</td>
-                <td class="col-kelas">${escapeHtml(s.kelas||'-')}</td>
-                <td class="col-jenis"><span class="badge-jenis ${jBadge}">${jenisLabel}</span></td>
-                <td class="col-stat"><span class="${statBadge}">${statLabel}</span></td>
-                <td class="col-surat" title="${escapeHtml(suratText)}">${escapeHtml(suratText)}</td>
-                <td class="col-surat-last" title="${escapeHtml(suratTerakhir)}">${escapeHtml(suratTerakhir)}</td>
-            </tr>`;
-        }).join('');
-        container.innerHTML = `<table class="mon-riwayat-table">
-            <thead><tr>
+
+        return `<tr>
+            <td class="col-tgl">${tglText}</td>
+            <td class="col-nama" title="${escapeHtml(s.nama || '-')}">${escapeHtml(s.nama || '-')}</td>
+            <td class="col-kelas">${escapeHtml(s.kelas || '-')}</td>
+            <td class="col-jenis"><span class="badge-jenis ${jBadge}">${jenisLabel}</span></td>
+            <td class="col-stat"><span class="${statBadge}">${statLabel}</span></td>
+            <td class="col-surat" title="${escapeHtml(suratTerakhir)}">${escapeHtml(suratTerakhir)}</td>
+        </tr>`;
+    }).join('');
+
+    container.innerHTML = `<table class="mon-riwayat-table">
+        <thead>
+            <tr>
                 <th class="col-tgl">Tgl</th>
                 <th class="col-nama">Nama</th>
                 <th class="col-kelas">Kelas</th>
                 <th class="col-jenis">Jenis</th>
                 <th class="col-stat">Status</th>
-                <th class="col-surat">Surat</th>
-                <th class="col-surat-last">Surat Terakhir</th>
-            </tr></thead>
-            <tbody>${rows}</tbody>
-        </table>`;
-    }
-
+                <th class="col-surat">Surat Terakhir</th>
+            </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+    </table>`;
+}
     function exportRiwayatMonitoring() {
         if (!state.dataSetoran.length) { showToast('⚠️ Belum ada data riwayat'); return; }
         let list = [...state.dataSetoran].sort((a, b) => {
