@@ -1772,7 +1772,7 @@
     border-radius: var(--r2);
     background: white;
     box-shadow: var(--sh);
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid var(--g2);
 }
 
@@ -1822,7 +1822,8 @@
 }
 
         .mon-accordion-panel.open {
-    max-height: 800px; /* cukup untuk semua konten */
+    max-height: 2000px;
+    overflow: visible;
     transition: max-height 0.4s ease-in;
 }
 
@@ -2467,11 +2468,6 @@
     closeTasmiModal();
     renderResult();
     renderMonitoring();
-}
-
-// Fungsi untuk hafalan awal
-    function inputHafalanAwal(siswaId) {
-    openHafalanAwalModal(siswaId);
 }
 
     function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
