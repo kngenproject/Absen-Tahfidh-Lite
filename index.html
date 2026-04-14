@@ -1847,6 +1847,30 @@
         .ha-ayat-row {
     margin-bottom: 12px;
 }
+/* Perkuat agar input hafalan awal dapat diklik */
+        .ha-ayat-input {
+    pointer-events: auto !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    touch-action: manipulation !important;
+    position: relative;
+    z-index: 1000;
+}
+
+        .ha-ayat-row {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1000;
+}
+
+#hafalanAwalModal 
+        .ha-sheet {
+    pointer-events: auto;
+}
+
+#hafalanAwalModal {
+    pointer-events: auto;
+}
     </style>
 </head>
 <body>
@@ -4151,16 +4175,21 @@
     container.innerHTML = arr.map(num => {
         const savedAyat = haAyatInputs[num] || '';
         return `
-            <div class="ha-ayat-row">
+            <div class="ha-ayat-row" onclick="event.stopPropagation()">
                 <label class="lbl">${num}. ${namaMap[num] || 'Surat ' + num}</label>
-                <input type="text" class="ha-ayat-input" data-surat="${num}" placeholder="Contoh: 1-5, 10, 15-20" value="${escapeHtml(savedAyat)}" onchange="updateHaAyatInput(this)">
+                <input type="text" class="ha-ayat-input" data-surat="${num}" 
+                    placeholder="Contoh: 1-5, 10, 15-20" 
+                    value="${escapeHtml(savedAyat)}" 
+                    onchange="updateHaAyatInput(this)" 
+                    onclick="event.stopPropagation()"
+                    ontouchstart="event.stopPropagation()">
                 <div class="ha-ayat-preview" id="ayatPreview-${num}">
                     ${formatAyatPreview(savedAyat, namaMap[num])}
                 </div>
             </div>
         `;
     }).join('');
-}    
+}
     function formatAyatPreview(ayatStr, suratName) {
         if (!ayatStr || ayatStr.trim() === '') {
             return '<span>📖 Belum diisi</span>';
