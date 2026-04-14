@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Aplikasi manajemen setoran hafalan Al-Qur'an dengan sistem pencatatan dan monitoring yang komprehensif">
     <!-- PWA -->
 <script id="manifest-inline">
 (function() {
@@ -4463,12 +4465,12 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return str.replace(/[&<>]/g, function(m) { return map[m]; });
     }
     function toggleMonAccordion(panelId) {
     const panel = document.getElementById(panelId);
