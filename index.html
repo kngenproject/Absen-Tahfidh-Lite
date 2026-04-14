@@ -3664,44 +3664,81 @@
     </table>`;
 }
     function exportRiwayatMonitoring() {
-        if (!state.dataSetoran.length) { showToast('⚠️ Belum ada data riwayat'); return; }
-        let list = [...state.dataSetoran].sort((a, b) => {
-            if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
-            return b.id - a.id;
-        });
-        if (monRiwFilterKelas) {
-            list = list.filter(s => {
-                const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
-                return siswa && siswa.kelas === monRiwFilterKelas;
-            });
-        }
-        const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
-        const rows = list.map((s, i) => {
-            let suratText = '-';
-            if (s.surah && s.surah.length) {
-                suratText = s.surah.map(sr => `${sr.name} (${sr.dari}-${sr.sampai})`).join(', ');
-            }
-            return {
-                'No': i + 1,
-                'Tanggal': s.tanggal || '-',
-                'Nama': s.nama || '-',
-                'Kelas': s.kelas || '-',
-                'Jenis': jenisMap[s.jenis] || s.jenis || '-',
-                'Juz': s.juz || '-',
-                'Surat': suratText,
-                'Status': s.status === 'lancar' ? 'Lancar' : 'Kurang Lancar',
-            };
-        });
-        const ws = XLSX.utils.json_to_sheet(rows);
-        ws['!cols'] = [{wch:5},{wch:12},{wch:25},{wch:8},{wch:14},{wch:6},{wch:50},{wch:14}];
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Riwayat_Setoran');
-        const now = new Date();
-        const tgl = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-        XLSX.writeFile(wb, `Riwayat_Setoran_${tgl}.xlsx`);
-        showToast('✅ Export riwayat berhasil!');
+    if (!state.dataSetoran.length) { 
+        showToast('⚠️ Belum ada data riwayat'); 
+        return; 
     }
 
+    // Ambil hanya 1 setoran TERAKHIR per siswa
+    const lastPerSiswa = new Map();
+    state.dataSetoran.forEach(s => {
+        const existing = lastPerSiswa.get(s.SiswaId);
+        if (!existing || (s.tanggal || '') > (existing.tanggal || '')) {
+            lastPerSiswa.set(s.SiswaId, s);
+        }
+    });
+
+    let list = Array.from(lastPerSiswa.values()).sort((a, b) => {
+        if (a.tanggal && b.tanggal) return b.tanggal.localeCompare(a.tanggal);
+        return b.id - a.id;
+    });
+
+    // Filter kelas jika ada filter yang aktif di monitoring riwayat
+    if (monRiwFilterKelas) {
+        list = list.filter(s => {
+            const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
+            return siswa && siswa.kelas === monRiwFilterKelas;
+        });
+    }
+
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+    
+    const rows = list.map((s, i) => {
+        // Ambil surat TERAKHIR dari array surah (jika ada)
+        let suratText = '-';
+        if (s.surah && s.surah.length) {
+            const lastSurat = s.surah[s.surah.length - 1];
+            suratText = `${lastSurat.name} (${lastSurat.dari}-${lastSurat.sampai})`;
+            if (s.surah.length > 1) {
+                suratText = `${s.surah.length} surat · ${suratText}`;
+            }
+        }
+        
+        return {
+            'No': i + 1,
+            'Tanggal': s.tanggal || '-',
+            'Nama': s.nama || '-',
+            'Kelas': s.kelas || '-',
+            'Jenis': jenisMap[s.jenis] || s.jenis || '-',
+            'Juz': s.juz || '-',
+            'Surat & Ayat Terakhir': suratText,
+            'Status': s.status === 'lancar' ? 'Lancar' : 'Kurang Lancar',
+        };
+    });
+
+    if (!rows.length) {
+        showToast('⚠️ Tidak ada data untuk diekspor');
+        return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [
+        { wch: 5 },   // No
+        { wch: 12 },  // Tanggal
+        { wch: 25 },  // Nama
+        { wch: 8 },   // Kelas
+        { wch: 14 },  // Jenis
+        { wch: 6 },   // Juz
+        { wch: 40 },  // Surat & Ayat Terakhir
+        { wch: 14 }   // Status
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Setoran_Terakhir');
+    const now = new Date();
+    const tgl = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    XLSX.writeFile(wb, `Setoran_Terakhir_Siswa_${tgl}.xlsx`);
+    showToast(`✅ Ekspor ${rows.length} data setoran terakhir berhasil!`);
+}
     function exportMonitoringBulanan() {
     if (!state.dataSiswa.length) { 
         showToast('⚠️ Belum ada data siswa'); 
