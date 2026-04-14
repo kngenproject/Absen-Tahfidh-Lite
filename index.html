@@ -1847,30 +1847,6 @@
         .ha-ayat-row {
     margin-bottom: 12px;
 }
-/* Perkuat agar input hafalan awal dapat diklik */
-        .ha-ayat-input {
-    pointer-events: auto !important;
-    user-select: text !important;
-    -webkit-user-select: text !important;
-    touch-action: manipulation !important;
-    position: relative;
-    z-index: 1000;
-}
-
-        .ha-ayat-row {
-    pointer-events: auto !important;
-    position: relative;
-    z-index: 1000;
-}
-
-#hafalanAwalModal 
-        .ha-sheet {
-    pointer-events: auto;
-}
-
-#hafalanAwalModal {
-    pointer-events: auto;
-}
     </style>
 </head>
 <body>
@@ -4112,17 +4088,7 @@
             existingBar.style.display = 'none';
         }
 
-        // Set jenis hafalan default berdasarkan data tersimpan atau status siswa
-        haJenisSelected = null;
-        let defaultJenis = siswa.jenisHafalanAwal || null;
-        if (!defaultJenis) {
-            if (tasmi) defaultJenis = 'tasmi';
-            else if (khatam) defaultJenis = 'muroja';
-            else defaultJenis = 'belum';
-        }
-        pilihHaJenis(defaultJenis);
-
-        // Default nilai
+        // Default nilai dari/sampai — HARUS di-set SEBELUM pilihHaJenis agar getHaRange() valid
         const isMuroja = khatam; // jika sudah khatam, arah maju default
         const defaultDari   = isMuroja ? 78  : 114;
         const defaultSampai = isMuroja ? 114 : 78;
@@ -4136,31 +4102,21 @@
         document.getElementById('haDariTrigger').classList.add('has-val');
         document.getElementById('haSampaiTrigger').classList.add('has-val');
 
-        // Build grids
+        // Build grids surat
         buildHaSuratGrid('dari',   defaultDari);
         buildHaSuratGrid('sampai', defaultSampai);
 
-        // Build ayat input untuk surat-surat yang dipilih
-        buildHaAyatInputs(defaultDari, defaultSampai);
-
-        // Preview
-        updateHaPreview();
+        // Set jenis hafalan default — setelah nilai dari/sampai siap agar updateHaPreview() berjalan benar
+        haJenisSelected = null;
+        let defaultJenis = siswa.jenisHafalanAwal || null;
+        if (!defaultJenis) {
+            if (tasmi) defaultJenis = 'tasmi';
+            else if (khatam) defaultJenis = 'muroja';
+            else defaultJenis = 'belum';
+        }
+        pilihHaJenis(defaultJenis);
 
         document.getElementById('hafalanAwalModal').classList.add('active');
-        // Debug: pastikan input ter-render
-        setTimeout(() => {
-    const inputs = document.querySelectorAll('#haAyatContainer .ha-ayat-input');
-    console.log('Jumlah input yang dirender:', inputs.length);
-    if (inputs.length === 0) {
-        console.warn('Tidak ada input! Periksa buildHaAyatInputs');
-    } else {
-        inputs.forEach(inp => {
-            console.log('Input ditemukan:', inp);
-            // Pastikan tidak ada atribut disabled
-            inp.removeAttribute('disabled');
-        });
-    }
-}, 100);
         haDropdownOpen = null;
     }
     function buildHaAyatInputs(dari, sampai) {
@@ -4189,21 +4145,16 @@
     container.innerHTML = arr.map(num => {
         const savedAyat = haAyatInputs[num] || '';
         return `
-            <div class="ha-ayat-row" onclick="event.stopPropagation()">
+            <div class="ha-ayat-row">
                 <label class="lbl">${num}. ${namaMap[num] || 'Surat ' + num}</label>
-                <input type="text" class="ha-ayat-input" data-surat="${num}" 
-                    placeholder="Contoh: 1-5, 10, 15-20" 
-                    value="${escapeHtml(savedAyat)}" 
-                    onchange="updateHaAyatInput(this)" 
-                    onclick="event.stopPropagation()"
-                    ontouchstart="event.stopPropagation()">
+                <input type="text" class="ha-ayat-input" data-surat="${num}" placeholder="Contoh: 1-5, 10, 15-20" value="${escapeHtml(savedAyat)}" onchange="updateHaAyatInput(this)">
                 <div class="ha-ayat-preview" id="ayatPreview-${num}">
                     ${formatAyatPreview(savedAyat, namaMap[num])}
                 </div>
             </div>
         `;
     }).join('');
-}
+}    
     function formatAyatPreview(ayatStr, suratName) {
         if (!ayatStr || ayatStr.trim() === '') {
             return '<span>📖 Belum diisi</span>';
@@ -4287,13 +4238,14 @@
     buildHaAyatInputs(dari, sampai);
 }
     function closeHafalanAwalModal(e) {
-    if (e && e.target !== e.currentTarget) return;
-    document.getElementById('hafalanAwalModal').classList.remove('active');
-    hafalanAwalSiswaId = null;
-    haDropdownOpen = null;
-    haAyatInputs = {};
-    closeAllHaDropdowns();
-}
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('hafalanAwalModal').classList.remove('active');
+        hafalanAwalSiswaId = null;
+        haDropdownOpen = null;
+        haAyatInputs = {};
+        closeAllHaDropdowns();
+    }
+
     function buildHaSuratGrid(type, selectedNum) {
         const grid = document.getElementById(type === 'dari' ? 'haDariGrid' : 'haSampaiGrid');
         grid.innerHTML = '';
@@ -4372,6 +4324,8 @@
     } else {
         rentangArea.classList.remove('hidden');
         if (ayatArea) ayatArea.style.display = 'block';
+        // Render preview & input ayat setelah area ditampilkan
+        updateHaPreview();
     }
 }
     function getHaRange() {
@@ -4577,6 +4531,116 @@
 
 <!-- HAFALAN AWAL MODAL -->
 <div id="hafalanAwalModal" onclick="closeHafalanAwalModal(event)">
-  
-  </body>
+    <div class="ha-sheet">
+        <div class="ha-header">
+            <div class="ha-header-left">
+                <div class="ha-title">📝 Hafalan Awal <span id="haNamaSiswa"></span></div>
+                <div class="ha-sub">Input hafalan sebelum pakai aplikasi · <span id="haKelasSiswa"></span></div>
+                <div id="haStatusBadges" class="ha-status-badges"></div>
+            </div>
+            <button class="btn-close" onclick="closeHafalanAwalModal()">✕</button>
+        </div>
+        <div class="ha-body">
+
+            <!-- Info tasmi (muncul jika sudah tasmi) -->
+            <div id="haTasmiInfo" class="ha-tasmi-info" style="display:none;">
+                <span class="ha-tasmi-info-icon">🎤</span>
+                <div>Siswa ini sudah <strong>Tasmi'</strong>. Input hafalan Juz Amma dilakukan di luar aplikasi.</div>
+            </div>
+
+            <!-- Area input (tersembunyi jika sudah tasmi) -->
+            <div id="haInputArea">
+
+                <!-- Info hafalan yang sudah tersimpan -->
+                <div id="haExistingBar" class="ha-existing-bar" style="display:none;">
+                    <span class="ha-existing-bar-icon">ℹ️</span>
+                    <span class="ha-existing-text"></span>
+                </div>
+
+                <!-- JENIS HAFALAN AWAL -->
+                <div class="lbl" style="margin-bottom:6px;">Status Hafalan Awal Siswa</div>
+                <div class="ha-jenis-row" id="haJenisRow">
+                    <div class="ha-jenis-opt" data-jenis="belum" onclick="pilihHaJenis('belum')">
+                        <span class="ha-jenis-icon">📖</span>
+                        <div>
+                            <div class="ha-jenis-label">Belum Khatam</div>
+                            <div class="ha-jenis-desc">Masih dalam proses setoran hafalan</div>
+                        </div>
+                    </div>
+                    <div class="ha-jenis-opt" data-jenis="muroja" onclick="pilihHaJenis('muroja')">
+                        <span class="ha-jenis-icon">🔁</span>
+                        <div>
+                            <div class="ha-jenis-label">Muroja'ah</div>
+                            <div class="ha-jenis-desc">Sudah khatam, sedang muroja'ah</div>
+                        </div>
+                    </div>
+                    <div class="ha-jenis-opt" data-jenis="tasmi" onclick="pilihHaJenis('tasmi')">
+                        <span class="ha-jenis-icon">🎤</span>
+                        <div>
+                            <div class="ha-jenis-label">Tasmi'</div>
+                            <div class="ha-jenis-desc">Sudah tasmi' sebelum pakai aplikasi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="haRentangArea">
+                    <div class="lbl" style="margin-bottom:6px;">Rentang Surat yang Sudah Dihafal</div>
+
+                    <!-- DARI -->
+                    <div class="ha-dropdown-wrap" style="margin-bottom:8px;">
+                        <label class="lbl">Dari</label>
+                        <div class="ha-input-trigger" id="haDariTrigger" data-val="" onclick="toggleHaDropdown('dari')">
+                            <div>
+                                <div id="haDariNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                                <div id="haDariName" class="trig-sub"></div>
+                            </div>
+                            <span style="color:var(--g4);font-size:12px;">▼</span>
+                        </div>
+                        <div class="ha-dropdown" id="haDariDropdown">
+                            <div class="ha-surat-grid" id="haDariGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- SAMPAI -->
+                    <div class="ha-dropdown-wrap" style="margin-bottom:12px;">
+                        <label class="lbl">Sampai</label>
+                        <div class="ha-input-trigger" id="haSampaiTrigger" data-val="" onclick="toggleHaDropdown('sampai')">
+                            <div>
+                                <div id="haSampaiNum" style="font-size:15px;font-weight:900;line-height:1;"></div>
+                                <div id="haSampaiName" class="trig-sub"></div>
+                            </div>
+                            <span style="color:var(--g4);font-size:12px;">▼</span>
+                        </div>
+                        <div class="ha-dropdown" id="haSampaiDropdown">
+                            <div class="ha-surat-grid" id="haSampaiGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- PREVIEW -->
+                    <div class="ha-preview">
+                        <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
+                        <div id="haPreviewWarn" class="ha-preview-warn"></div>
+                        <div id="haPreviewList" class="ha-preview-list"></div>
+                    </div>
+                </div><!-- /haRentangArea -->
+
+                <!-- INPUT AYAT PER SURAT -->
+                <div id="haAyatArea">
+                    <div class="lbl" style="margin-top:12px; margin-bottom:8px;">📖 Detail Ayat yang Dihafal</div>
+                    <div id="haAyatContainer"></div>
+                    <div class="ha-ayat-preview" style="margin-top:8px; background:#fef3c7; color:#92400e;">
+                        💡 Format: <strong>1-5, 10, 15-20</strong> (pisahkan dengan koma)
+                    </div>
+                </div>
+
+            </div><!-- /haInputArea -->
+        </div><!-- /ha-body -->
+
+        <div class="ha-footer">
+            <button class="btn-ha-hapus" onclick="hapusHafalanAwal()">🗑 Hapus</button>
+            <button class="btn-ha-simpan" id="btnHaSimpan" onclick="simpanHafalanAwal()">✅ Simpan Hafalan Awal</button>
+        </div>
+    </div>
+</div>
+</body>
 </html>
