@@ -3376,7 +3376,19 @@
         hafalanAwal.forEach(num => { if (JUZ30_SURAT.includes(num)) suratDihafalSet.add(num); });
         return suratDihafalSet.size;
     }
-    function isKhatamJuz30(siswaId) { return hitungProgressJuz30(siswaId) >= JUZ30_TOTAL; }
+    function isKhatamJuz30(siswaId) {
+    // 1. Cek apakah jumlah surat yang dihafal sudah mencapai total surat Juz 30 (114 surat)
+    const progress = hitungProgressJuz30(siswaId);
+    if (progress < JUZ30_TOTAL) return false;
+
+    // 2. Jika sudah lengkap, ambil setoran terakhir siswa
+    const last = getSetoranTerakhir(siswaId);
+    if (!last) {
+        // Tidak ada setoran (hanya hafalan awal) -> anggap lancar
+        return true;
+    }
+    // Setoran terakhir harus berstatus 'lancar' (L)
+    return last.status === 'lancar';}
     function hitungProgressMuroja(siswaId) {
         const setoranMuroja = state.dataSetoran.filter(s => s.SiswaId === siswaId && String(s.juz) === '30' && s.jenis === 'muroja');
         const suratMurojaSet = new Set();
