@@ -2518,7 +2518,6 @@
     }
 }
 
-// ========== FUNGSI SWITCH TAB UTAMA (Setoran, Info, Monitoring) ==========
     function switchTab(tabName) {
     // Sembunyikan semua tab content
     document.querySelectorAll('.tab-content').forEach(tab => {
@@ -2540,8 +2539,8 @@
     
     // Render ulang konten yang perlu dirender
     if (tabName === 'monitoring') {
-        renderMonFilterKelas();
-        renderMonitoring();
+        // ❌ HAPUS baris: renderMonFilterKelas();
+        renderMonitoring();  // tetap panggil renderMonitoring
     }
     if (tabName === 'keterangan') {
         renderDataSiswa();
@@ -2552,7 +2551,6 @@
         }
     }
 }
-
 // ========== FUNGSI UNTUK MONITORING FILTER ==========
     function monSetFilter(kelas) {
     monProgressFilterKelas = kelas;
@@ -3622,34 +3620,20 @@
     // ── Monitoring Sub-Tab ──
 
     function switchMonSubTab(name) {
-        ['progress', 'riwayat'].forEach(n => {
-            const btn = document.getElementById('monSubBtn-' + n);
-            const panel = document.getElementById('mon-sub-' + n);
-            if (btn) btn.classList.toggle('active', n === name);
-            if (panel) panel.classList.toggle('active', n === name);
-        });
-        if (name === 'riwayat') {
-            renderMonRiwFilterKelas();
-            renderMonRiwayat();
-        }
-    }
-
-    function monRiwSetFilter(kelas) {
-        monRiwayatFilterKelas = kelas;
-        const allBtn = document.getElementById('monRiwFilterAll');
-        if (allBtn) allBtn.classList.toggle('active', kelas === '');
-        renderMonRiwFilterKelas();
+    // Update tombol dan panel sub-tab monitoring
+    ['progress', 'riwayat'].forEach(n => {
+        const btn = document.getElementById('monSubBtn-' + n);
+        const panel = document.getElementById('mon-sub-' + n);
+        if (btn) btn.classList.toggle('active', n === name);
+        if (panel) panel.classList.toggle('active', n === name);
+    });
+    
+    // Jika sub-tab yang dipilih adalah riwayat, langsung render riwayat
+    if (name === 'riwayat') {
+        // ❌ HAPUS baris: renderMonRiwFilterKelas();
         renderMonRiwayat();
     }
-
-    function renderMonRiwFilterKelas() {
-        const container = document.getElementById('monRiwFilterKelas');
-        if (!container) return;
-        const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].sort();
-        container.innerHTML = kelasList.map(k =>
-            `<div class="mon-filter-pill${monRiwayatFilterKelas === k ? ' active' : ''}" onclick="monRiwSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
-        ).join('');
-    }
+}
 
     function renderMonRiwayat() {
     updateFilterKelasDropdown();  // Update dropdown options
@@ -3814,10 +3798,11 @@
         return; 
     }
     
-    // Gunakan filter kelas yang sedang dipilih di monitoring
+    // Gunakan filter kelas yang sedang dipilih di monitoring (progress)
     let siswaList = state.dataSiswa;
-    if (monFilterKelas) {
-        siswaList = siswaList.filter(s => s.kelas === monFilterKelas);
+    // ✅ Perbaiki: gunakan monProgressFilterKelas (bukan monFilterKelas)
+    if (monProgressFilterKelas) {
+        siswaList = siswaList.filter(s => s.kelas === monProgressFilterKelas);
     }
     
     if (!siswaList.length) {
