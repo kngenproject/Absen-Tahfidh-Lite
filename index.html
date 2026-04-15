@@ -4015,8 +4015,8 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     renderDataSiswa();
     renderResult();
     pilihStatus('lancar');
-    ...
-}    init();
+}
+init();
     // Registrasi service worker dari file terpisah
     if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -4072,9 +4072,7 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     }
 }
 
-    // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
-    const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
-    const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
+    // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal (sudah dideklarasikan di atas)
     function openHafalanAwalModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
