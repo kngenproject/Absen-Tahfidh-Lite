@@ -3937,7 +3937,6 @@
     document.getElementById('tanggal').value = todayStr();
     loadAllData();
     
-    // Inisialisasi JUZ30_LIST HARUS sebelum render apapun
     JUZ30_LIST = (ALL_SURAT[30] || []).map(s => ({ num: s.num, name: s.name }));
     JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);
     JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);
@@ -3945,10 +3944,8 @@
     renderDataSiswa();
     renderResult();
     pilihStatus('lancar');
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) document.getElementById('tanggal').value = todayStr(); });
-    window.addEventListener('focus', () => { document.getElementById('tanggal').value = todayStr(); });
-}
-    init();
+    ...
+}    init();
     // Registrasi service worker dari file terpisah
     if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -4003,7 +4000,6 @@
         }, 10000);
     }
 }
-
 
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
     const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
