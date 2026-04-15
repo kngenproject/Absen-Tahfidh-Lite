@@ -2645,7 +2645,6 @@
     // Update dropdown jika ada
     const dropdown = document.getElementById('filterKelasDropdown');
     if (dropdown) dropdown.value = kelas;
-    renderMonFilterKelas();
     renderMonitoring();
 }
 
@@ -3171,7 +3170,6 @@
     
     saveAllData();
     renderDataSiswa();
-    renderMonFilterKelas();  // Perbarui filter kelas di monitoring
     renderMonitoring();       // Perbarui tampilan monitoring
     
     // Reset form
@@ -3301,50 +3299,6 @@
 }// ══════════════════════════════════════════
 // ── RENDER SEMUA RIWAYAT (untuk tab Riwayat) ──
 // ══════════════════════════════════════════
-
-    function renderAllRiwayat() {
-    const container = document.getElementById('resultList');
-    const empty = document.getElementById('riwayatEmpty');
-    
-    if (!state.dataSetoran.length) { 
-        if (container) container.innerHTML = '';
-        if (empty) empty.style.display = 'block'; 
-        return; 
-    }
-    
-    if (empty) empty.style.display = 'none';
-    
-    // Urutkan dari yang terbaru ke terlama
-    const riwayatList = [...state.dataSetoran].sort((a, b) => {
-        const tglA = a.tanggal || '';
-        const tglB = b.tanggal || '';
-        if (tglA !== tglB) return tglB.localeCompare(tglA);
-        return (b.id || 0) - (a.id || 0);
-    });
-    
-    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", belum: "Blm Khatam", setoran: "Setoran" };
-    
-    container.innerHTML = riwayatList.map(s => {
-        const surahArr = s.surah || [];
-        // Tampilkan semua surat dalam setoran ini
-        const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
-        const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
-        
-        return `<div class="result-card">
-            <div class="rc-left">
-                <div class="rc-name">${escapeHtml(s.nama)} 
-                    <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${escapeHtml(jLabel)}</span>
-                </div>
-                <div class="rc-meta">Kelas ${escapeHtml(s.kelas)} &nbsp;·&nbsp; ${(s.tanggal || '').split('-').reverse().join('/')}</div>
-                <div class="rc-surat">📖 ${escapeHtml(suratText) || '-'}</div>
-            </div>
-            <div class="rc-actions">
-                <button class="btn-stat ${s.status === 'lancar' ? 'al' : ''}" onclick="updateStatus(${s.id}, 'lancar')">L</button>
-                <button class="btn-stat ${s.status === 'kurang' ? 'akl' : ''}" onclick="updateStatus(${s.id}, 'kurang')">KL</button>
-            </div>
-        </div>`;
-    }).join('');
-}
     function updateStatus(setoranId, newStatus) {
     const item = state.dataSetoran.find(i => i.id === setoranId);
     if (item) {
@@ -3851,11 +3805,57 @@
     }
     
     let siswaList = state.dataSiswa;
-    if (monProgressFilterKelas) {   // ✅ perbaiki
+    if (monProgressFilterKelas) {
         siswaList = siswaList.filter(s => s.kelas === monProgressFilterKelas);
     }
-    
-    // ... sisanya tetap sama (tidak diubah)
+
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+
+    const rows = siswaList.map((siswa, i) => {
+        const lastSetoran = getSetoranTerakhir(siswa.id);
+        const khatam = isKhatamJuz30(siswa.id);
+        const tasmi = getTasmiSiswa(siswa.id);
+
+        let tanggal = '-', jenis = '-', surat = '-', status = '-';
+        if (lastSetoran) {
+            tanggal = lastSetoran.tanggal || '-';
+            jenis = lastSetoran.keterangan || jenisMap[lastSetoran.jenis] || lastSetoran.jenis || '-';
+            if (lastSetoran.surah && lastSetoran.surah.length) {
+                const lastSr = lastSetoran.surah[lastSetoran.surah.length - 1];
+                surat = `${lastSr.name} (${lastSr.dari}-${lastSr.sampai})`;
+                if (lastSetoran.surah.length > 1) surat = `${lastSetoran.surah.length} surat · ${surat}`;
+            }
+            status = lastSetoran.status === 'lancar' ? 'Lancar' : 'Kurang Lancar';
+        }
+
+        return {
+            'No': i + 1,
+            'Nama': siswa.nama || '-',
+            'Kelas': siswa.kelas || '-',
+            'Tanggal Setoran': tanggal,
+            'Jenis': jenis,
+            'Hafalan Terakhir': surat,
+            'Status': status,
+            'Khatam Juz 30': khatam ? 'Ya' : 'Tidak',
+            "Tasmi'": tasmi ? 'Ya' : 'Tidak',
+            'Hafalan Awal': (siswa.hafalanAwal && siswa.hafalanAwal.length) ? `${siswa.hafalanAwal.length} surat` : '-'
+        };
+    });
+
+    if (!rows.length) { showToast('⚠️ Tidak ada data untuk diekspor'); return; }
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [
+        { wch: 4 }, { wch: 25 }, { wch: 8 }, { wch: 14 },
+        { wch: 14 }, { wch: 40 }, { wch: 14 }, { wch: 12 }, { wch: 10 }, { wch: 14 }
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Progress_Siswa');
+    const now = new Date();
+    const tgl = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const suffix = monProgressFilterKelas ? `_Kelas${monProgressFilterKelas}` : '';
+    XLSX.writeFile(wb, `Progress_Siswa${suffix}_${tgl}.xlsx`);
+    showToast(`✅ Ekspor ${rows.length} data progress berhasil!`);
 }
     function init() {
     document.getElementById('tanggal').value = todayStr();
@@ -4395,15 +4395,6 @@
         }
     });
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        return str.replace(/[&<>]/g, function(m) { return map[m]; });
-    }
     function toggleMonAccordion(panelId) {
     const panel = document.getElementById(panelId);
     const arrow = document.getElementById('arrow-' + panelId);
