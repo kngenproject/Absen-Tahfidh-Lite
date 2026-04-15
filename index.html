@@ -1425,27 +1425,16 @@
     flex-wrap: wrap;
 }
 
-        .mon-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
         .mon-info-item {
     flex: 1;
-    min-width: 0;
+    min-width: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 8px;
+    padding: 8px 6px;
     background: var(--g1);
     border-radius: var(--r);
     text-align: center;
-    cursor: default;
-    pointer-events: auto;
 }
 
         .mon-info-icon {
@@ -1466,27 +1455,21 @@
     font-weight: 700;
     color: var(--g8);
     margin-top: 3px;
-    word-break: break-word;
 }
 
         .mon-info-value.jenis-tasmi { color: var(--purple); }
         .mon-info-value.jenis-muroja { color: #2563eb; }
         .mon-info-value.jenis-setoran { color: #16a34a; }
-        .mon-info-value.jenis-selesai { color: #16a34a; }
-        .mon-info-value.jenis-belum { color: var(--danger); }
-        .mon-info-value.status-lancar { color: #16a34a; font-weight: 900; }
-        .mon-info-value.status-kurang { color: var(--danger); font-weight: 900; }
+        .mon-info-value.jenis-kosong { color: var(--g5); }
 
         .mon-surat-row {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 10px;
+    padding: 8px 6px;
     background: var(--p4);
     border-radius: var(--r);
     border-left: 3px solid var(--p);
-    margin: 8px 0;
-    pointer-events: auto;
 }
 
         .mon-surat-icon {
@@ -1509,63 +1492,6 @@
     font-weight: 500;
     word-break: break-word;
     flex: 1;
-}
-
-        .mon-card-foot {
-    padding: 12px 0;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    pointer-events: auto;
-    margin-top: 8px;
-}
-
-        .btn-hafalan-awal {
-    flex: 1;
-    min-width: 120px;
-    padding: 10px 12px;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-    color: white;
-    border: none;
-    border-radius: var(--r);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(14,165,233,.3);
-    transition: all 0.15s ease;
-    pointer-events: auto;
-    z-index: 10;
-    position: relative;
-            white-space: nowrap;
-        }
-
-        .btn-hafalan-awal:active {
-    opacity: 0.85;
-    transform: scale(0.98);
-}
-
-        .btn-tasmi {
-    flex: 1;
-    min-width: 100px;
-    padding: 10px 12px;
-    background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
-    color: white;
-    border: none;
-    border-radius: var(--r);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(124,58,237,.3);
-    transition: all 0.15s ease;
-    pointer-events: auto;
-    z-index: 10;
-    position: relative;
-            white-space: nowrap;
-        }
-
-        .btn-tasmi:active {
-    opacity: 0.85;
-    transform: scale(0.98);
 }
         /* ── MONITORING SEDERHANA (DIPERBAIKI) ── */
         .mon-card-sederhana {
@@ -1842,11 +1768,11 @@
         }
         /* ── ACCORDION MONITORING PROGRESS ── */
         .mon-accordion-item {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     border-radius: var(--r2);
     background: white;
     box-shadow: var(--sh);
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid var(--g2);
 }
 
@@ -1859,8 +1785,6 @@
     background: var(--g0);
     transition: background 0.15s;
     -webkit-tap-highlight-color: transparent;
-    z-index: 2;
-    position: relative;
 }
 
         .mon-accordion-header:active {
@@ -1869,9 +1793,6 @@
 
         .mon-accordion-header-left {
     flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
 }
 
         .mon-accordion-name {
@@ -1879,7 +1800,6 @@
     font-size: 15px;
     color: var(--g9);
     margin-bottom: 4px;
-    word-break: break-word;
 }
 
         .mon-accordion-badges {
@@ -1889,35 +1809,27 @@
 }
 
         .mon-accordion-arrow {
-    font-size: 18px;
+    font-size: 20px;
     color: var(--g5);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0;
-    margin-left: 8px;
+    transition: transform 0.2s;
 }
 
         .mon-accordion-panel {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out;
+    transition: max-height 0.3s ease-out;
     background: white;
-    z-index: 1;
-    position: relative;
 }
 
         .mon-accordion-panel.open {
-    max-height: 3000px;
+    max-height: 2000px;
     overflow: visible;
-    transition: max-height 0.5s ease-in;
+    transition: max-height 0.4s ease-in;
 }
 
         .mon-accordion-body {
-    padding: 16px;
+    padding: 12px 16px 16px;
     border-top: 1px solid var(--g2);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: auto;
 }
 /* Pastikan input hafalan awal dapat diklik */
         .ha-ayat-input {
@@ -2517,6 +2429,7 @@
 // Variabel untuk Monitoring
     let monProgressFilterKelas = '';   // Filter kelas di sub-tab Progress
     let monRiwayatFilterKelas = '';    // Filter kelas di sub-tab Riwayat
+    let monFilterKelas = '';           // Filter kelas di export monitoring bulanan
 
 // Variabel untuk Juz 30
     let JUZ30_LIST = [];               // Daftar surat Juz 30 (78-114)
@@ -2606,31 +2519,42 @@
     }
 }
 
+// ========== FUNGSI SWITCH TAB UTAMA (Setoran, Info, Monitoring) ==========
     function switchTab(tabName) {
+    // Sembunyikan semua tab content
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
+    
+    // Tampilkan tab yang dipilih
     const activeTab = document.getElementById('tab-' + tabName);
     if (activeTab) activeTab.classList.add('active');
     
+    // Update active class pada tombol tab
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
+    
+    // Cari tombol yang sesuai dan aktifkan
     const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
     if (activeBtn) activeBtn.classList.add('active');
     
+    // Render ulang konten yang perlu dirender
     if (tabName === 'monitoring') {
-        // ❌ HAPUS baris: renderMonFilterKelas();
-        renderMonitoring();  // tetap panggil
+        renderMonFilterKelas();
+        renderMonitoring();
     }
     if (tabName === 'keterangan') {
         renderDataSiswa();
+        // Pastikan sub-tab yang aktif dirender
         const activeSub = document.querySelector('#tab-keterangan .sub-tab-content.active');
         if (activeSub && activeSub.id === 'sub-riwayat') {
             renderAllRiwayat();
         }
     }
-}// ========== FUNGSI UNTUK MONITORING FILTER ==========
+}
+
+// ========== FUNGSI UNTUK MONITORING FILTER ==========
     function monSetFilter(kelas) {
     monProgressFilterKelas = kelas;
     // Update active class pada tombol "Semua"
@@ -2645,6 +2569,7 @@
     // Update dropdown jika ada
     const dropdown = document.getElementById('filterKelasDropdown');
     if (dropdown) dropdown.value = kelas;
+    renderMonFilterKelas();
     renderMonitoring();
 }
 
@@ -2655,13 +2580,17 @@
         const selectedKelas = dropdown.value;
         monSetFilter(selectedKelas);
     }
+
+    // Fungsi untuk handle perubahan dropdown filter kelas di riwayat
     function filterRiwayatByKelas() {
-    const dropdown = document.getElementById('filterKelasRiwayat');
-    if (!dropdown) return;
-    const selectedKelas = dropdown.value;
-    monRiwayatFilterKelas = selectedKelas;   // ✅ perbaiki
-    renderMonRiwayat();
-}
+        const dropdown = document.getElementById('filterKelasRiwayat');
+        if (!dropdown) return;
+        const selectedKelas = dropdown.value;
+        monFilterKelas = selectedKelas;
+        renderMonRiwayat();
+    }
+
+    // Update dropdown filter saat render
     function updateFilterKelasDropdown() {
         const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
         const dropdown = document.getElementById('filterKelasDropdown');
@@ -2726,6 +2655,25 @@
     console.log('Status hafalan:', status);
 }
 
+// ========== RENDER MONITORING FILTER KELAS ==========
+    function renderMonFilterKelas() {
+       const container = document.getElementById('monFilterKelas');
+       if (!container) return;
+       
+       // Ambil semua kelas unik dari data siswa
+       const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].filter(Boolean).sort();
+       
+       if (kelasList.length === 0) {
+           container.innerHTML = '<div style="color:var(--g4); font-size:11px;">Belum ada kelas</div>';
+           return;
+       }
+       
+       container.innerHTML = kelasList.map(k => 
+           `<div class="mon-filter-pill${monProgressFilterKelas === k ? ' active' : ''}" onclick="monSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+       ).join('');
+   }
+
+// ========== RENDER SEMUA RIWAYAT (untuk tab Riwayat) ==========
     function renderAllRiwayat() {
     const container = document.getElementById('resultList');
     const empty = document.getElementById('riwayatEmpty');
@@ -3170,6 +3118,7 @@
     
     saveAllData();
     renderDataSiswa();
+    renderMonFilterKelas();  // Perbarui filter kelas di monitoring
     renderMonitoring();       // Perbarui tampilan monitoring
     
     // Reset form
@@ -3299,6 +3248,50 @@
 }// ══════════════════════════════════════════
 // ── RENDER SEMUA RIWAYAT (untuk tab Riwayat) ──
 // ══════════════════════════════════════════
+
+    function renderAllRiwayat() {
+    const container = document.getElementById('resultList');
+    const empty = document.getElementById('riwayatEmpty');
+    
+    if (!state.dataSetoran.length) { 
+        if (container) container.innerHTML = '';
+        if (empty) empty.style.display = 'block'; 
+        return; 
+    }
+    
+    if (empty) empty.style.display = 'none';
+    
+    // Urutkan dari yang terbaru ke terlama
+    const riwayatList = [...state.dataSetoran].sort((a, b) => {
+        const tglA = a.tanggal || '';
+        const tglB = b.tanggal || '';
+        if (tglA !== tglB) return tglB.localeCompare(tglA);
+        return (b.id || 0) - (a.id || 0);
+    });
+    
+    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", belum: "Blm Khatam", setoran: "Setoran" };
+    
+    container.innerHTML = riwayatList.map(s => {
+        const surahArr = s.surah || [];
+        // Tampilkan semua surat dalam setoran ini
+        const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
+        
+        return `<div class="result-card">
+            <div class="rc-left">
+                <div class="rc-name">${escapeHtml(s.nama)} 
+                    <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${escapeHtml(jLabel)}</span>
+                </div>
+                <div class="rc-meta">Kelas ${escapeHtml(s.kelas)} &nbsp;·&nbsp; ${(s.tanggal || '').split('-').reverse().join('/')}</div>
+                <div class="rc-surat">📖 ${escapeHtml(suratText) || '-'}</div>
+            </div>
+            <div class="rc-actions">
+                <button class="btn-stat ${s.status === 'lancar' ? 'al' : ''}" onclick="updateStatus(${s.id}, 'lancar')">L</button>
+                <button class="btn-stat ${s.status === 'kurang' ? 'akl' : ''}" onclick="updateStatus(${s.id}, 'kurang')">KL</button>
+            </div>
+        </div>`;
+    }).join('');
+}
     function updateStatus(setoranId, newStatus) {
     const item = state.dataSetoran.find(i => i.id === setoranId);
     if (item) {
@@ -3630,17 +3623,35 @@
     // ── Monitoring Sub-Tab ──
 
     function switchMonSubTab(name) {
-    ['progress', 'riwayat'].forEach(n => {
-        const btn = document.getElementById('monSubBtn-' + n);
-        const panel = document.getElementById('mon-sub-' + n);
-        if (btn) btn.classList.toggle('active', n === name);
-        if (panel) panel.classList.toggle('active', n === name);
-    });
-    if (name === 'riwayat') {
-        // ❌ HAPUS baris: renderMonRiwFilterKelas();
+        ['progress', 'riwayat'].forEach(n => {
+            const btn = document.getElementById('monSubBtn-' + n);
+            const panel = document.getElementById('mon-sub-' + n);
+            if (btn) btn.classList.toggle('active', n === name);
+            if (panel) panel.classList.toggle('active', n === name);
+        });
+        if (name === 'riwayat') {
+            renderMonRiwFilterKelas();
+            renderMonRiwayat();
+        }
+    }
+
+    function monRiwSetFilter(kelas) {
+        monRiwayatFilterKelas = kelas;
+        const allBtn = document.getElementById('monRiwFilterAll');
+        if (allBtn) allBtn.classList.toggle('active', kelas === '');
+        renderMonRiwFilterKelas();
         renderMonRiwayat();
     }
-}
+
+    function renderMonRiwFilterKelas() {
+        const container = document.getElementById('monRiwFilterKelas');
+        if (!container) return;
+        const kelasList = [...new Set(state.dataSiswa.map(s => s.kelas))].sort();
+        container.innerHTML = kelasList.map(k =>
+            `<div class="mon-filter-pill${monRiwayatFilterKelas === k ? ' active' : ''}" onclick="monRiwSetFilter('${escapeHtml(k)}')">Kelas ${escapeHtml(k)}</div>`
+        ).join('');
+    }
+
     function renderMonRiwayat() {
     updateFilterKelasDropdown();  // Update dropdown options
     const container = document.getElementById('monRiwList');
@@ -3804,64 +3815,123 @@
         return; 
     }
     
+    // Gunakan filter kelas yang sedang dipilih di monitoring
     let siswaList = state.dataSiswa;
-    if (monProgressFilterKelas) {
-        siswaList = siswaList.filter(s => s.kelas === monProgressFilterKelas);
+    if (monFilterKelas) {
+        siswaList = siswaList.filter(s => s.kelas === monFilterKelas);
     }
-
-    const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
-
-    const rows = siswaList.map((siswa, i) => {
-        const lastSetoran = getSetoranTerakhir(siswa.id);
-        const khatam = isKhatamJuz30(siswa.id);
-        const tasmi = getTasmiSiswa(siswa.id);
-
-        let tanggal = '-', jenis = '-', surat = '-', status = '-';
-        if (lastSetoran) {
-            tanggal = lastSetoran.tanggal || '-';
-            jenis = lastSetoran.keterangan || jenisMap[lastSetoran.jenis] || lastSetoran.jenis || '-';
-            if (lastSetoran.surah && lastSetoran.surah.length) {
-                const lastSr = lastSetoran.surah[lastSetoran.surah.length - 1];
-                surat = `${lastSr.name} (${lastSr.dari}-${lastSr.sampai})`;
-                if (lastSetoran.surah.length > 1) surat = `${lastSetoran.surah.length} surat · ${surat}`;
+    
+    if (!siswaList.length) {
+        showToast('⚠️ Tidak ada siswa di kelas ini');
+        return;
+    }
+    
+    const now = new Date();
+    const bulanIni = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const namaBulan = now.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+    
+    const rows = siswaList.map(siswa => {
+        const { id, nama, kelas } = siswa;
+        
+        // Status utama siswa
+        const statusUtama = getStatusUtama(id);
+        const statusMap = { 
+            belum: 'Belum Mulai', 
+            setoran: 'Setoran Hafalan', 
+            siap_muroja: 'Siap Muroja\'ah', 
+            muroja: 'Muroja\'ah', 
+            siap: 'Siap Tasmi\'', 
+            selesai: 'Tasmi\' Selesai' 
+        };
+        
+        // Progress Juz 30
+        const progressJuz = hitungProgressJuz30(id);
+        const khatam = progressJuz >= JUZ30_TOTAL;
+        const progressText = khatam ? `Khatam (${JUZ30_TOTAL}/${JUZ30_TOTAL})` : `${progressJuz} / ${JUZ30_TOTAL} surat`;
+        
+        // Data Tasmi'
+        const tasmi = getTasmiSiswa(id);
+        const tasmiText = tasmi ? `${tasmi.nilai} · ${tasmi.tanggal || '-'} · ${tasmi.penguji || '-'}` : 'Belum Tasmi\'';
+        
+        // Setoran bulan ini
+        const setoranBulanIni = state.dataSetoran.filter(s => 
+            s.SiswaId === id && s.tanggal && s.tanggal.startsWith(bulanIni)
+        );
+        
+        // Setoran terakhir
+        const last = getSetoranTerakhir(id);
+        let lastText = '-';
+        let lastSuratText = '-';
+        if (last) {
+            const jenisMap = { tasmi: "Tasmi'", muroja: "Muroja'ah", setoran: "Setoran", belum: "Blm Khatam" };
+            lastText = `${last.tanggal || '-'} · ${jenisMap[last.jenis] || last.jenis}`;
+            if (last.surah && last.surah.length) {
+                lastSuratText = last.surah.map(sr => `${sr.name} (${sr.dari}-${sr.sampai})`).join(', ');
             }
-            status = lastSetoran.status === 'lancar' ? 'Lancar' : 'Kurang Lancar';
         }
-
+        
+        // Hitung total surat yang sudah dihafal (dari setoran + hafalan awal)
+        const hafalanSet = new Set();
+        state.dataSetoran.filter(s => s.SiswaId === id && String(s.juz) === '30').forEach(s => {
+            (s.surah || []).forEach(sr => {
+                if (JUZ30_SURAT.includes(sr.num)) hafalanSet.add(sr.num);
+            });
+        });
+        const siswaObj = state.dataSiswa.find(s => s.id === id);
+        (siswaObj?.hafalanAwal || []).forEach(num => {
+            if (JUZ30_SURAT.includes(num)) hafalanSet.add(num);
+        });
+        
+        // Nama surat yang sudah dihafal
+        const namaMap = {};
+        JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
+        const suratHafalan = [...hafalanSet].sort((a,b) => a-b).map(n => `${n}. ${namaMap[n] || n}`).join(', ');
+        
         return {
-            'No': i + 1,
-            'Nama': siswa.nama || '-',
-            'Kelas': siswa.kelas || '-',
-            'Tanggal Setoran': tanggal,
-            'Jenis': jenis,
-            'Hafalan Terakhir': surat,
-            'Status': status,
-            'Khatam Juz 30': khatam ? 'Ya' : 'Tidak',
-            "Tasmi'": tasmi ? 'Ya' : 'Tidak',
-            'Hafalan Awal': (siswa.hafalanAwal && siswa.hafalanAwal.length) ? `${siswa.hafalanAwal.length} surat` : '-'
+            'No': 0,
+            'Nama': nama,
+            'Kelas': kelas,
+            'Status': statusMap[statusUtama] || statusUtama,
+            'Progress Juz 30': progressText,
+            'Surat Sudah Dihafal': suratHafalan || '-',
+            'Total Setoran Bulan Ini': setoranBulanIni.length,
+            'Setoran Terakhir (Tgl)': lastText,
+            'Surat Terakhir': lastSuratText,
+            'Tasmi\'': tasmiText
         };
     });
-
-    if (!rows.length) { showToast('⚠️ Tidak ada data untuk diekspor'); return; }
-
+    
+    // Tambahkan nomor urut
+    rows.forEach((row, idx) => { row['No'] = idx + 1; });
+    
+    // Buat worksheet
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [
-        { wch: 4 }, { wch: 25 }, { wch: 8 }, { wch: 14 },
-        { wch: 14 }, { wch: 40 }, { wch: 14 }, { wch: 12 }, { wch: 10 }, { wch: 14 }
-    ];
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Progress_Siswa');
-    const now = new Date();
-    const tgl = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-    const suffix = monProgressFilterKelas ? `_Kelas${monProgressFilterKelas}` : '';
-    XLSX.writeFile(wb, `Progress_Siswa${suffix}_${tgl}.xlsx`);
-    showToast(`✅ Ekspor ${rows.length} data progress berhasil!`);
+    XLSX.utils.book_append_sheet(wb, ws, `Monitoring_${bulanIni}`);
+    
+    // Set lebar kolom
+    ws['!cols'] = [
+        { wch: 5 },   // No
+        { wch: 25 },  // Nama
+        { wch: 8 },   // Kelas
+        { wch: 18 },  // Status
+        { wch: 18 },  // Progress
+        { wch: 50 },  // Surat Sudah Dihafal
+        { wch: 22 },  // Total Setoran
+        { wch: 20 },  // Setoran Terakhir
+        { wch: 35 },  // Surat Terakhir
+        { wch: 20 }   // Tasmi'
+    ];
+    
+    // Download file
+    XLSX.writeFile(wb, `Monitoring_Tahfidz_${bulanIni}.xlsx`);
+    showToast(`✅ Export ${namaBulan} berhasil! (${rows.length} siswa)`);
 }
     function init() {
     document.getElementById('tanggal').value = todayStr();
     loadAllData();
     
-    // Inisialisasi JUZ30_LIST
+    // Inisialisasi JUZ30_LIST HARUS sebelum render apapun
     JUZ30_LIST = (ALL_SURAT[30] || []).map(s => ({ num: s.num, name: s.name }));
     
     renderDataSiswa();
@@ -3880,6 +3950,10 @@
     });
 }
 
+    function updateOnlineStatus() {
+        const banner = document.getElementById('offlineBanner');
+        if (banner) banner.classList.toggle('show', !navigator.onLine);
+    }
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     function showUpdateNotification() {
@@ -3926,7 +4000,6 @@
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
     const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
     const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
-    
     function openHafalanAwalModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
@@ -3984,7 +4057,17 @@
             existingBar.style.display = 'none';
         }
 
-        // Default nilai dari/sampai — HARUS di-set SEBELUM pilihHaJenis agar getHaRange() valid
+        // Set jenis hafalan default berdasarkan data tersimpan atau status siswa
+        haJenisSelected = null;
+        let defaultJenis = siswa.jenisHafalanAwal || null;
+        if (!defaultJenis) {
+            if (tasmi) defaultJenis = 'tasmi';
+            else if (khatam) defaultJenis = 'muroja';
+            else defaultJenis = 'belum';
+        }
+        pilihHaJenis(defaultJenis);
+
+        // Default nilai
         const isMuroja = khatam; // jika sudah khatam, arah maju default
         const defaultDari   = isMuroja ? 78  : 114;
         const defaultSampai = isMuroja ? 114 : 78;
@@ -3998,27 +4081,15 @@
         document.getElementById('haDariTrigger').classList.add('has-val');
         document.getElementById('haSampaiTrigger').classList.add('has-val');
 
-        // Build grids surat
+        // Build grids
         buildHaSuratGrid('dari',   defaultDari);
         buildHaSuratGrid('sampai', defaultSampai);
 
-        // Set jenis hafalan default — setelah nilai dari/sampai siap agar updateHaPreview() berjalan benar
-        haJenisSelected = null;
-        let defaultJenis = siswa.jenisHafalanAwal || null;
-        if (!defaultJenis) {
-            if (tasmi) defaultJenis = 'tasmi';
-            else if (khatam) defaultJenis = 'muroja';
-            else defaultJenis = 'belum';
-        }
-        pilihHaJenis(defaultJenis);
+        // Build ayat input untuk surat-surat yang dipilih
+        buildHaAyatInputs(defaultDari, defaultSampai);
 
-        // Ensure content is rendered (fallback untuk memastikan ayat inputs ditampilkan)
-        if (defaultJenis !== 'tasmi') {
-            const { dari, sampai } = getHaRange();
-            if (!isNaN(dari) && !isNaN(sampai)) {
-                buildHaAyatInputs(dari, sampai);
-            }
-        }
+        // Preview
+        updateHaPreview();
 
         document.getElementById('hafalanAwalModal').classList.add('active');
         haDropdownOpen = null;
@@ -4228,8 +4299,6 @@
     } else {
         rentangArea.classList.remove('hidden');
         if (ayatArea) ayatArea.style.display = 'block';
-        // Render preview & input ayat setelah area ditampilkan
-        updateHaPreview();
     }
 }
     function getHaRange() {
@@ -4400,39 +4469,25 @@
     const arrow = document.getElementById('arrow-' + panelId);
     if (!panel || !arrow) return;
     
-    const isOpen = panel.classList.contains('open');
-    
-    if (isOpen) {
+    if (panel.classList.contains('open')) {
         panel.classList.remove('open');
         arrow.style.transform = 'rotate(0deg)';
         arrow.innerHTML = '▼';
-        arrow.setAttribute('aria-expanded', 'false');
     } else {
-        // Tutup semua panel lain (accordion tunggal)
-        document.querySelectorAll('.mon-accordion-panel.open').forEach(p => {
+        // Tutup semua panel lain (opsional, untuk hanya satu yang terbuka)
+        document.querySelectorAll('.mon-accordion-panel').forEach(p => {
             if (p.id !== panelId) {
                 p.classList.remove('open');
                 const otherArrow = document.getElementById('arrow-' + p.id);
                 if (otherArrow) {
                     otherArrow.style.transform = 'rotate(0deg)';
                     otherArrow.innerHTML = '▼';
-                    otherArrow.setAttribute('aria-expanded', 'false');
                 }
             }
         });
-        
         panel.classList.add('open');
         arrow.style.transform = 'rotate(180deg)';
         arrow.innerHTML = '▲';
-        arrow.setAttribute('aria-expanded', 'true');
-        
-        // Scroll ke panel agar terlihat
-        setTimeout(() => {
-            const panelHeader = panel.previousElementSibling;
-            if (panelHeader) {
-                panelHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }, 50);
     }
 }
 
