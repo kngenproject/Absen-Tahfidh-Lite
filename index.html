@@ -2434,7 +2434,7 @@
 // Variabel untuk Juz 30
     let JUZ30_LIST = [];               // Daftar surat Juz 30 (78-114)
     let JUZ30_ASC  = [];               // Urutan maju 78→114
-    let JUZ30_DESC = [];               // Urutan mundur 114→78
+    let JUZ30_DESC = [];               // Urutan mundur 114ⅸ78
 
 // Variabel untuk Hafalan Awal
     let hafalanAwalSiswaId = null;
@@ -2588,7 +2588,7 @@
         const dropdown = document.getElementById('filterKelasRiwayat');
         if (!dropdown) return;
         const selectedKelas = dropdown.value;
-        monFilterKelas = selectedKelas;
+        monRiwayatFilterKelas = selectedKelas;
         renderMonRiwayat();
     }
 
@@ -2599,7 +2599,6 @@
         const dropdownRiwayat = document.getElementById('filterKelasRiwayat');
         
         if (dropdown) {
-            const currentVal = dropdown.value;
             dropdown.innerHTML = '<option value="">Semua Kelas</option>';
             kelasList.forEach(k => {
                 const option = document.createElement('option');
@@ -2607,11 +2606,11 @@
                 option.textContent = 'Kelas ' + k;
                 dropdown.appendChild(option);
             });
-            dropdown.value = currentVal;
+            // Sinkron dengan variabel state, bukan dari DOM
+            dropdown.value = monProgressFilterKelas;
         }
         
         if (dropdownRiwayat) {
-            const currentVal = dropdownRiwayat.value;
             dropdownRiwayat.innerHTML = '<option value="">Semua Kelas</option>';
             kelasList.forEach(k => {
                 const option = document.createElement('option');
@@ -2619,7 +2618,8 @@
                 option.textContent = 'Kelas ' + k;
                 dropdownRiwayat.appendChild(option);
             });
-            dropdownRiwayat.value = currentVal;
+            // Sinkron dengan variabel state, bukan dari DOM
+            dropdownRiwayat.value = monRiwayatFilterKelas;
         }
     }
 
@@ -3453,7 +3453,7 @@
         return suratDihafalSet.size;
     }
     function isKhatamJuz30(siswaId) {
-    // 0. Jika hafalan awal sudah di-input sebagai Muroja'ah, langsung dianggap khatam
+    // 0. Jika hafalan awal di-input sebagai Muroja'ah, langsung dianggap khatam
     const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
     if (siswaObj && siswaObj.jenisHafalanAwal === 'muroja') return true;
 
@@ -3939,9 +3939,8 @@
     
     // Inisialisasi JUZ30_LIST HARUS sebelum render apapun
     JUZ30_LIST = (ALL_SURAT[30] || []).map(s => ({ num: s.num, name: s.name }));
-    // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
-    JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
-    JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114ⅸ78
+    JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);
+    JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);
     
     renderDataSiswa();
     renderResult();
@@ -4006,6 +4005,9 @@
 }
 
 
+    // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
+    const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
+    const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
     function openHafalanAwalModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
