@@ -3838,42 +3838,7 @@
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
     const JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
     const JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
-    function updateHaAyatInput(input) {
-    const suratNum = parseInt(input.dataset.surat);
-    const value = input.value.trim();
-    haAyatInputs[suratNum] = value;
     
-    const namaMap = {};
-    JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
-    const previewEl = document.getElementById(`ayatPreview-${suratNum}`);
-    if (previewEl) {
-        previewEl.innerHTML = formatAyatPreview(value, namaMap[suratNum]);
-    }
-}
-    function formatAyatPreview(ayatStr, suratName) {
-    if (!ayatStr || ayatStr.trim() === '') {
-        return '<span>📖 Belum diisi</span>';
-    }
-    const parts = ayatStr.split(',').map(p => p.trim());
-    let totalAyat = 0;
-    const ranges = [];
-    for (const part of parts) {
-        if (part.includes('-')) {
-            const [start, end] = part.split('-').map(Number);
-            if (!isNaN(start) && !isNaN(end)) {
-                totalAyat += (end - start + 1);
-                ranges.push(`${start}-${end}`);
-            }
-        } else {
-            const num = Number(part);
-            if (!isNaN(num)) {
-                totalAyat++;
-                ranges.push(num.toString());
-            }
-        }
-    }
-    return `<span>📖 ${totalAyat} ayat: ${ranges.join(', ')}</span>`;
-}
     function openHafalanAwalModal(siswaId) {
         const siswa = state.dataSiswa.find(s => s.id === siswaId);
         if (!siswa) return;
@@ -3958,6 +3923,14 @@
             else defaultJenis = 'belum';
         }
         pilihHaJenis(defaultJenis);
+
+        // Ensure content is rendered (fallback untuk memastikan ayat inputs ditampilkan)
+        if (defaultJenis !== 'tasmi') {
+            const { dari, sampai } = getHaRange();
+            if (!isNaN(dari) && !isNaN(sampai)) {
+                buildHaAyatInputs(dari, sampai);
+            }
+        }
 
         document.getElementById('hafalanAwalModal').classList.add('active');
         haDropdownOpen = null;
