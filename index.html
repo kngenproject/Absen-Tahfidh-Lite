@@ -20,17 +20,17 @@
     "lang": "id",
     "scope": "./",
     "icons": [
-      { "src": "icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
-      { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+      { "src": "icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+      { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
     ]
   });
-  var blob = new Blob([manifestData], {type: 'application/manifest+json'});
+  var blob = new Blob([manifestData], {type: 'application/json'});
   var url = URL.createObjectURL(blob);
   var link = document.createElement('link');
   link.rel = 'manifest';
@@ -1848,6 +1848,77 @@
     margin-bottom: 12px;
 }
     </style>
+<script>
+// ========== COMPREHENSIVE FUNCTION STUBS ==========
+// Ini adalah placeholder functions yang akan digantikan oleh definisi real di main script
+// Tujuan: Mencegah ReferenceError saat HTML event handlers dijalankan sebelum main script siap
+
+// Tab Navigation
+function switchTab(name) { console.log('[STUB] switchTab:', name); }
+function switchSubTab(name) { console.log('[STUB] switchSubTab:', name); }
+function switchMonSubTab(name) { console.log('[STUB] switchMonSubTab:', name); }
+
+// Modal Functions
+function openSiswaModal() { console.log('[STUB] openSiswaModal'); }
+function closeSiswaModal() { console.log('[STUB] closeSiswaModal'); }
+function openKelasModal() { console.log('[STUB] openKelasModal'); }
+function closeKelasModal() { console.log('[STUB] closeKelasModal'); }
+function openJuzModal() { console.log('[STUB] openJuzModal'); }
+function closeJuzModal() { console.log('[STUB] closeJuzModal'); }
+function openSuratModal() { console.log('[STUB] openSuratModal'); }
+function closeSuratModal() { console.log('[STUB] closeSuratModal'); }
+function openDariModal() { console.log('[STUB] openDariModal'); }
+function openSampaiModal() { console.log('[STUB] openSampaiModal'); }
+function openKoreksi() { console.log('[STUB] openKoreksi'); }
+function closeKoreksi() { console.log('[STUB] closeKoreksi'); }
+function closeKoreksiOnOverlay() { console.log('[STUB] closeKoreksiOnOverlay'); }
+function openAyatModal() { console.log('[STUB] openAyatModal'); }
+function closeAyatModal() { console.log('[STUB] closeAyatModal'); }
+function openTasmiModal() { console.log('[STUB] openTasmiModal'); }
+function closeTasmiModal() { console.log('[STUB] closeTasmiModal'); }
+function openHafalanAwalModal() { console.log('[STUB] openHafalanAwalModal'); }
+function closeHafalanAwalModal() { console.log('[STUB] closeHafalanAwalModal'); }
+
+// Form Handlers
+function changeJenis(el) { console.log('[STUB] changeJenis:', el); }
+function pilihStatus(status) { console.log('[STUB] pilihStatus:', status); }
+function simpanSetoran() { console.log('[STUB] simpanSetoran'); }
+function updateStatus(field, val) { console.log('[STUB] updateStatus:', field, val); }
+
+// Data Management
+function tambahSiswa() { console.log('[STUB] tambahSiswa'); }
+function deleteSiswa(id) { console.log('[STUB] deleteSiswa:', id); }
+function importSiswaFromFile() { console.log('[STUB] importSiswaFromFile'); }
+
+// Hafalan Awal
+function inputHafalanAwal(siswaId) { console.log('[STUB] inputHafalanAwal:', siswaId); }
+function simpanHafalanAwal() { console.log('[STUB] simpanHafalanAwal'); }
+function hapusHafalanAwal() { console.log('[STUB] hapusHafalanAwal'); }
+function pilihHaJenis(jenis) { console.log('[STUB] pilihHaJenis:', jenis); }
+function toggleHaDropdown(type) { console.log('[STUB] toggleHaDropdown:', type); }
+function updateHaAyatInput(surahNum) { console.log('[STUB] updateHaAyatInput:', surahNum); }
+function confirmAyatGrid() { console.log('[STUB] confirmAyatGrid'); }
+function removeSurat(surahNum) { console.log('[STUB] removeSurat:', surahNum); }
+
+// Tasmi
+function simpanTasmi() { console.log('[STUB] simpanTasmi'); }
+function pilihTasmiNilai(nilai) { console.log('[STUB] pilihTasmiNilai:', nilai); }
+
+// Monitoring & Filters
+function monSetFilter(kelas) { console.log('[STUB] monSetFilter:', kelas); }
+function filterMonitoringByKelas() { console.log('[STUB] filterMonitoringByKelas'); }
+function monRiwSetFilter(kelas) { console.log('[STUB] monRiwSetFilter:', kelas); }
+function filterRiwayatByKelas() { console.log('[STUB] filterRiwayatByKelas'); }
+function toggleMonAccordion(panelId) { console.log('[STUB] toggleMonAccordion:', panelId); }
+
+// Export Functions
+function downloadTemplate() { console.log('[STUB] downloadTemplate'); }
+function exportMonitoringBulanan() { console.log('[STUB] exportMonitoringBulanan'); }
+function exportRiwayatMonitoring() { console.log('[STUB] exportRiwayatMonitoring'); }
+
+// Utility
+function stopPropagation(e) { if(e) e.stopPropagation(); }
+</script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
