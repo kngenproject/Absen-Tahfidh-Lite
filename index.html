@@ -3453,6 +3453,10 @@
         return suratDihafalSet.size;
     }
     function isKhatamJuz30(siswaId) {
+    // 0. Jika hafalan awal sudah di-input sebagai Muroja'ah, langsung dianggap khatam
+    const siswaObj = state.dataSiswa.find(s => s.id === siswaId);
+    if (siswaObj && siswaObj.jenisHafalanAwal === 'muroja') return true;
+
     // 1. Cek apakah jumlah surat yang dihafal sudah mencapai total surat Juz 30 (114 surat)
     const progress = hitungProgressJuz30(siswaId);
     if (progress < JUZ30_TOTAL) return false;
@@ -3937,7 +3941,7 @@
     JUZ30_LIST = (ALL_SURAT[30] || []).map(s => ({ num: s.num, name: s.name }));
     // JUZ30_ASC / JUZ30_DESC dipakai di modul Hafalan Awal
     JUZ30_ASC  = [...JUZ30_LIST].sort((a,b) => a.num - b.num);  // 78→114
-    JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114→78
+    JUZ30_DESC = [...JUZ30_LIST].sort((a,b) => b.num - a.num);  // 114ⅸ78
     
     renderDataSiswa();
     renderResult();
