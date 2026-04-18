@@ -1365,52 +1365,6 @@
         /* Sembunyikan rentang surat jika Tasmi' dipilih */
         #haRentangArea { transition: opacity .2s; }
         #haRentangArea.hidden { display: none; }
-
-        /* ── SURAT TERAKHIR INFO CARD ── */
-        .ha-surat-terakhir {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 1.5px solid #f59e0b;
-            border-radius: var(--r);
-            padding: 10px 12px;
-            margin-top: 8px;
-            margin-bottom: 4px;
-            display: none;
-        }
-        .ha-surat-terakhir.show { display: block; }
-        .ha-surat-terakhir-label {
-            font-size: 9px; font-weight: 800;
-            color: #92400e; text-transform: uppercase;
-            letter-spacing: 0.5px; margin-bottom: 5px;
-            display: flex; align-items: center; gap: 4px;
-        }
-        .ha-surat-terakhir-content {
-            display: flex; align-items: center; gap: 10px;
-        }
-        .ha-surat-terakhir-num {
-            background: #f59e0b; color: white;
-            font-size: 16px; font-weight: 900;
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; line-height: 1;
-        }
-        .ha-surat-terakhir-info { flex: 1; min-width: 0; }
-        .ha-surat-terakhir-name {
-            font-size: 14px; font-weight: 800;
-            color: #78350f; line-height: 1.2;
-        }
-        .ha-surat-terakhir-ayat {
-            font-size: 11px; color: #92400e;
-            font-weight: 600; margin-top: 3px;
-        }
-        .ha-surat-terakhir-ayat span {
-            background: white;
-            border-radius: 6px;
-            padding: 2px 7px;
-            margin-right: 4px;
-            color: #b45309;
-            font-weight: 700;
-        }
         /* ── MONITORING SEDERHANA ── */
         .mon-card-sederhana {
     background: white;
@@ -4170,14 +4124,8 @@ init();
             existingBar.style.display = 'flex';
             const namaMap = {};
             JUZ30_LIST.forEach(s => { namaMap[s.num] = s.name; });
-            // Surat terakhir dari hafalan awal (nomor terbesar atau terkecil tergantung urutan)
-            const sortedHafalan = [...existingHafalan].sort((a, b) => a - b);
-            const lastSuratNum = sortedHafalan[sortedHafalan.length - 1];
-            const lastSuratName = namaMap[lastSuratNum] || ('Surat ' + lastSuratNum);
-            const lastAyatStr = existingAyat[lastSuratNum] ? ` · Ayat: ${existingAyat[lastSuratNum]}` : '';
             existingBar.querySelector('.ha-existing-text').innerHTML = 
-                `Tersimpan ${existingHafalan.length} surat: ` + existingHafalan.map(n => `${n}. ${namaMap[n] || n}`).join(', ')
-                + `<br><strong>📌 Terakhir: ${lastSuratNum}. ${lastSuratName}${lastAyatStr}</strong>`;
+                `Tersimpan ${existingHafalan.length} surat: ` + existingHafalan.map(n => `${n}. ${namaMap[n] || n}`).join(', ');
         } else {
             existingBar.style.display = 'none';
         }
@@ -4293,13 +4241,6 @@ init();
         if (previewEl) {
             previewEl.innerHTML = formatAyatPreview(value, namaMap[suratNum]);
         }
-
-        // Refresh surat terakhir card jika surat yang diubah adalah surat terakhir dalam rentang
-        const { dari, sampai } = getHaRange();
-        const arr = generateHaSuratArray(dari, sampai);
-        if (arr.length && arr[arr.length - 1] === suratNum) {
-            updateHaSuratTerakhirCard(arr, namaMap);
-        }
     }
     
     function updateHaPreview() {
@@ -4308,10 +4249,6 @@ init();
     const previewWarn = document.getElementById('haPreviewWarn');
     previewList.innerHTML = '';
     previewWarn.textContent = '';
-
-    // Reset surat terakhir card
-    const suratTerakhirCard = document.getElementById('haSuratTerakhirCard');
-    if (suratTerakhirCard) suratTerakhirCard.classList.remove('show');
 
     if (isNaN(dari) || isNaN(sampai)) {
         previewWarn.textContent = '⚠️ Pilih surat Dari dan Sampai';
@@ -4344,49 +4281,9 @@ init();
     }
     const totalEl = document.getElementById('haPreviewTotal');
     totalEl.textContent = `${arr.length} surat`;
-
-    // ── Update info Surat & Ayat Terakhir ──
-    updateHaSuratTerakhirCard(arr, namaMap);
     
     // 🔥 Panggil buildHaAyatInputs setiap kali rentang berubah
     buildHaAyatInputs(dari, sampai);
-}
-
-    function updateHaSuratTerakhirCard(arr, namaMap) {
-    const card = document.getElementById('haSuratTerakhirCard');
-    if (!card || !arr || !arr.length) return;
-
-    // Surat terakhir = elemen paling akhir dari array rentang
-    const lastNum = arr[arr.length - 1];
-    const lastName = namaMap[lastNum] || ('Surat ' + lastNum);
-
-    // Cari info ayat dari ALL_SURAT[30]
-    const suratInfo = (ALL_SURAT[30] || []).find(s => s.num === lastNum);
-    const totalAyat = suratInfo ? suratInfo.ayat : '?';
-
-    // Cek apakah user sudah isi ayat di input
-    const ayatInput = haAyatInputs[lastNum];
-    let ayatText = '';
-    if (ayatInput && ayatInput.trim()) {
-        // Hitung ayat terakhir dari input user
-        const parts = ayatInput.split(',').map(p => p.trim()).filter(Boolean);
-        const lastPart = parts[parts.length - 1];
-        let ayatAkhir = '';
-        if (lastPart && lastPart.includes('-')) {
-            const [, end] = lastPart.split('-').map(s => s.trim());
-            ayatAkhir = end || '';
-        } else {
-            ayatAkhir = lastPart || '';
-        }
-        ayatText = `<span>Ayat ${ayatAkhir || totalAyat}</span> dari total ${totalAyat} ayat`;
-    } else {
-        ayatText = `<span>Ayat ${totalAyat}</span> (seluruh ${totalAyat} ayat)`;
-    }
-
-    document.getElementById('haSuratTerakhirNum').textContent = lastNum;
-    document.getElementById('haSuratTerakhirNama').textContent = lastName;
-    document.getElementById('haSuratTerakhirAyat').innerHTML = ayatText;
-    card.classList.add('show');
 }
     function closeHafalanAwalModal(e) {
         if (e && e.target !== e.currentTarget) return;
@@ -4761,18 +4658,6 @@ init();
                         <div class="ha-preview-title">Preview Surat · <span id="haPreviewTotal">–</span></div>
                         <div id="haPreviewWarn" class="ha-preview-warn"></div>
                         <div id="haPreviewList" class="ha-preview-list"></div>
-                    </div>
-
-                    <!-- SURAT & AYAT TERAKHIR -->
-                    <div class="ha-surat-terakhir" id="haSuratTerakhirCard">
-                        <div class="ha-surat-terakhir-label">📌 Surat &amp; Ayat Terakhir Hafalan</div>
-                        <div class="ha-surat-terakhir-content">
-                            <div class="ha-surat-terakhir-num" id="haSuratTerakhirNum">–</div>
-                            <div class="ha-surat-terakhir-info">
-                                <div class="ha-surat-terakhir-name" id="haSuratTerakhirNama">–</div>
-                                <div class="ha-surat-terakhir-ayat" id="haSuratTerakhirAyat">–</div>
-                            </div>
-                        </div>
                     </div>
                 </div><!-- /haRentangArea -->
 
