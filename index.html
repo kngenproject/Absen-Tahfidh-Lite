@@ -3067,16 +3067,16 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     // RESET selectedSurah
     state.selectedSurah = [];
     
-    // PRIORITAS: Setoran terakhir (jika ada)
+    // PRIORITAS: Setoran terakhir (jika ada) -> ambil surat TERAKHIR saja
     if (last && last.surah && last.surah.length > 0) {
-        // Ambil SEMUA surat dari setoran terakhir (bisa lebih dari 1)
-        state.selectedSurah = last.surah.map(sr => ({ 
-            ...sr, 
-            ayatSalah: sr.ayatSalah || [],
-            sumber: 'setoran' 
-        }));
+        const lastSurat = last.surah[last.surah.length - 1];
+        state.selectedSurah = [{
+            ...lastSurat,
+            ayatSalah: lastSurat.ayatSalah || [],
+            sumber: 'setoran'
+        }];
     } 
-    // Jika TIDAK ADA setoran, baru ambil dari hafalan awal
+    // Jika TIDAK ADA setoran, ambil dari hafalan awal (hanya surat terakhir)
     else {
         const hafalanAwalArr = (siswaObj && siswaObj.hafalanAwal) || [];
         const hafalanAwalAyat = (siswaObj && siswaObj.hafalanAwalAyat) || {};
@@ -3133,7 +3133,6 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
         
         const jenisMap = { tasmi:"Tasmi'", muroja:"Muroja'ah", setoran:"Setoran", belum:"Blm Khatam" };
         
-        // Tampilkan informasi setoran terakhir di bar
         let suratNames = '-';
         if (last.surah && last.surah.length > 0) {
             const lastSurat = last.surah[last.surah.length - 1];
@@ -3145,7 +3144,6 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
         txt.innerHTML = `<span class="lsb-row1">${tgl} · ${last.keterangan || jenisMap[last.jenis]||last.jenis}</span><span class="lsb-row2">${suratNames} · ${status}</span>`;
         bar.classList.add('show');
     } else {
-        // Tidak ada setoran, cek apakah ada hafalan awal
         if (state.selectedSurah.length > 0) {
             const sr = state.selectedSurah[0];
             const suratNames = `${sr.name} (${sr.dari}–${sr.sampai})`;
@@ -3154,8 +3152,7 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
         } else {
             bar.classList.remove('show');
         }
-    }
-}// Fungsi baru untuk menampilkan hanya hafalan awal (jika tidak ada setoran)
+    }}
     function tambahSiswa() {
     const nama = document.getElementById('inputNamaSiswa').value.trim();
     const kelas = document.getElementById('inputKelas').value.trim();
@@ -3285,7 +3282,6 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     if (section) section.style.display = 'block';
     if (empty) empty.style.display = 'none';
     
-    // Ambil hanya 1 setoran TERAKHIR per siswa
     const lastPerSiswa = new Map();
     state.dataSetoran.forEach(s => {
         const existing = lastPerSiswa.get(s.SiswaId);
@@ -3318,23 +3314,27 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
             </div>
         </div>`;
     }).join('');
-}// ══════════════════════════════════════════
+}
 // ── RENDER SEMUA RIWAYAT (untuk tab Riwayat) ──
 // ══════════════════════════════════════════
 
     function renderAllRiwayat() {
     const container = document.getElementById('resultList');
     const empty = document.getElementById('riwayatEmpty');
+    const section = document.getElementById('resultSection');
+    
+    if (!container) return;
     
     if (!state.dataSetoran.length) { 
         if (container) container.innerHTML = '';
         if (empty) empty.style.display = 'block'; 
+        if (section) section.style.display = 'none';
         return; 
     }
     
     if (empty) empty.style.display = 'none';
+    if (section) section.style.display = 'block';
     
-    // Urutkan dari yang terbaru ke terlama
     const riwayatList = [...state.dataSetoran].sort((a, b) => {
         const tglA = a.tanggal || '';
         const tglB = b.tanggal || '';
@@ -3346,8 +3346,8 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     
     container.innerHTML = riwayatList.map(s => {
         const surahArr = s.surah || [];
-        // Tampilkan semua surat dalam setoran ini
-        const suratText = surahArr.map(sr => `${sr.name} (${sr.dari}–${sr.sampai})`).join(', ');
+        const lastSr = surahArr.length ? surahArr[surahArr.length - 1] : null;
+        const suratText = lastSr ? `${lastSr.name} (${lastSr.dari}–${lastSr.sampai})` : '-';
         const jLabel = s.keterangan || jenisMap[s.jenis] || s.jenis;
         
         return `<div class="result-card">
@@ -3356,7 +3356,7 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
                     <span style="color:var(--g4);font-weight:500;font-size:10px;">· ${escapeHtml(jLabel)}</span>
                 </div>
                 <div class="rc-meta">Kelas ${escapeHtml(s.kelas)} &nbsp;·&nbsp; ${(s.tanggal || '').split('-').reverse().join('/')}</div>
-                <div class="rc-surat">📖 ${escapeHtml(suratText) || '-'}</div>
+                <div class="rc-surat">📖 ${escapeHtml(suratText)}</div>
             </div>
             <div class="rc-actions">
                 <button class="btn-stat ${s.status === 'lancar' ? 'al' : ''}" onclick="updateStatus(${s.id}, 'lancar')">L</button>
@@ -3730,11 +3730,10 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
     }
 
     function renderMonRiwayat() {
-    updateFilterKelasDropdown();  // Update dropdown options
+    updateFilterKelasDropdown();
     const container = document.getElementById('monRiwList');
     if (!container) return;
 
-    // Ambil hanya 1 setoran TERAKHIR per siswa (sama seperti di tab Setoran)
     const lastPerSiswa = new Map();
     state.dataSetoran.forEach(s => {
         const existing = lastPerSiswa.get(s.SiswaId);
@@ -3748,7 +3747,6 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
         return b.id - a.id;
     });
 
-    // Filter berdasarkan kelas jika dipilih
     if (monRiwayatFilterKelas) {
         list = list.filter(s => {
             const siswa = state.dataSiswa.find(x => x.id === s.SiswaId);
@@ -3770,14 +3768,10 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
         const statBadge = s.status === 'lancar' ? 'badge-l' : 'badge-kl';
         const statLabel = s.status === 'lancar' ? 'L' : 'KL';
 
-        // Surat terakhir (hanya satu surat terakhir dari array surah)
         let suratTerakhir = '-';
         if (s.surah && s.surah.length) {
             const lastSurat = s.surah[s.surah.length - 1];
             suratTerakhir = `${lastSurat.name} (${lastSurat.dari}-${lastSurat.sampai})`;
-            if (s.surah.length > 1) {
-                suratTerakhir = `${s.surah.length} surat · ${suratTerakhir}`;
-            }
         }
 
         let tglText = '-';
@@ -3793,7 +3787,7 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
             <td class="col-jenis"><span class="badge-jenis ${jBadge}">${jenisLabel}</span></td>
             <td class="col-stat"><span class="${statBadge}">${statLabel}</span></td>
             <td class="col-surat" title="${escapeHtml(suratTerakhir)}">${escapeHtml(suratTerakhir)}</td>
-        </tr>`;
+        </table>`;
     }).join('');
 
     container.innerHTML = `<table class="mon-riwayat-table">
@@ -3808,8 +3802,7 @@ function stopPropagation(e) { if(e) e.stopPropagation(); }
             </tr>
         </thead>
         <tbody>${rows}</tbody>
-    </table>`;
-}
+    </table>`;}
     function exportRiwayatMonitoring() {
     if (!state.dataSetoran.length) { 
         showToast('⚠️ Belum ada data riwayat'); 
