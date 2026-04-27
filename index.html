@@ -6,38 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Aplikasi manajemen setoran hafalan Al-Qur'an dengan sistem pencatatan dan monitoring yang komprehensif">
     <!-- PWA -->
-<script id="manifest-inline">
-(function() {
-  var manifestData = JSON.stringify({
-    "name": "Absensi Tahfidz Lite",
-    "short_name": "Tahfidz",
-    "description": "Aplikasi Setoran Hafalan Al-Qur'an",
-    "start_url": "./",
-    "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#059669",
-    "theme_color": "#059669",
-    "lang": "id",
-    "scope": "./",
-    "icons": [
-      { "src": "icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
-      { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
-    ]
-  });
-  var blob = new Blob([manifestData], {type: 'application/json'});
-  var url = URL.createObjectURL(blob);
-  var link = document.createElement('link');
-  link.rel = 'manifest';
-  link.href = url;
-  document.head.appendChild(link);
-})();
-</script>
+    <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
